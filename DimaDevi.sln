@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1622
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DimaDevi", "DimaDevi\DimaDevi.csproj", "{FDAF1D99-0594-45BC-B691-25EA176C4EA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDAF1D99-0594-45BC-B691-25EA176C4EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDAF1D99-0594-45BC-B691-25EA176C4EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDAF1D99-0594-45BC-B691-25EA176C4EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDAF1D99-0594-45BC-B691-25EA176C4EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {495D6F6D-72E9-4574-A64A-BB945B93F8FD}
+	EndGlobalSection
+EndGlobal
