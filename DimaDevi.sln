@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.1622
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DimaDevi", "DimaDevi\DimaDevi.csproj", "{FDAF1D99-0594-45BC-B691-25EA176C4EA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DimaDeviTest", "DimaDeviTest\DimaDeviTest.csproj", "{B9C8B3DF-81A2-4228-8CEF-0CD7E39B30AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FDAF1D99-0594-45BC-B691-25EA176C4EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDAF1D99-0594-45BC-B691-25EA176C4EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDAF1D99-0594-45BC-B691-25EA176C4EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9C8B3DF-81A2-4228-8CEF-0CD7E39B30AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9C8B3DF-81A2-4228-8CEF-0CD7E39B30AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9C8B3DF-81A2-4228-8CEF-0CD7E39B30AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9C8B3DF-81A2-4228-8CEF-0CD7E39B30AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

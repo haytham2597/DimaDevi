@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FDAF1D99-0594-45BC-B691-25EA176C4EA4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DimaDevi</RootNamespace>
-    <AssemblyName>DimaDevi</AssemblyName>
+    <ProjectGuid>{B9C8B3DF-81A2-4228-8CEF-0CD7E39B30AB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DimaDeviTest</RootNamespace>
+    <AssemblyName>DimaDeviTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,14 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>K:\Frameworks for Net\NewtonSoftJson\v130r1\Bin\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,37 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\AssemblyComp.cs" />
-    <Compile Include="Components\DeviComp.cs" />
-    <Compile Include="Components\FileComp.cs" />
-    <Compile Include="Components\NetworkComp.cs" />
-    <Compile Include="Components\RegistryComp.cs" />
-    <Compile Include="Components\WMIComp.cs" />
-    <Compile Include="DeviBuild.cs" />
-    <Compile Include="DeviBuildExt.cs" />
-    <Compile Include="Formatters\AESForm.cs" />
-    <Compile Include="Formatters\ChaCha20Form.cs" />
-    <Compile Include="Formatters\HashForm.cs" />
-    <Compile Include="Formatters\JsonForm.cs" />
-    <Compile Include="Formatters\RSAForm.cs" />
-    <Compile Include="Formatters\XmlForm.cs" />
-    <Compile Include="Hardware\CPU.cs" />
-    <Compile Include="Hardware\Disk.cs" />
-    <Compile Include="Hardware\Hardwares.cs" />
-    <Compile Include="Hardware\MacAddress.cs" />
-    <Compile Include="Hardware\Motherboard.cs" />
-    <Compile Include="Hardware\Ram.cs" />
-    <Compile Include="IDeviComponent.cs" />
-    <Compile Include="IDeviFormatter.cs" />
-    <Compile Include="Libs\Dict.cs" />
-    <Compile Include="Libs\Enumerations.cs" />
-    <Compile Include="Libs\Ext.cs" />
-    <Compile Include="Libs\Property.cs" />
-    <Compile Include="Modules\ChaCha20.cs" />
-    <Compile Include="Modules\ElipticCurveDiffieHellman.cs" />
-    <Compile Include="Modules\IPMacMapper.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DimaDevi\DimaDevi.csproj">
+      <Project>{fdaf1d99-0594-45bc-b691-25ea176c4ea4}</Project>
+      <Name>DimaDevi</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
