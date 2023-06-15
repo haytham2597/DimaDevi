@@ -1,10 +1,57 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using DimaDevi.Libs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DimaDevi.Hardware
 {
+    public class HardwareComponents
+    {
+        private static HardwareComponents instance;
+        private readonly Dictionary<Type, IList<string>> dicthard = new Dictionary<Type, IList<string>>();
+        /// <summary>
+        /// Throw exception if put bad Type
+        /// </summary>
+        public bool AllowException = false;
+        private HardwareComponents(){}
+
+        public Dictionary<Type, IList<string>> GetHardware()
+        {
+            return dicthard;
+        }
+
+        public HardwareComponents AddComponent(Type enumType, string field)
+        {
+            HardwareComponents.GetInstance().AddComp(enumType, field);
+            return GetInstance();
+        }
+        private void AddComp(Type enumType, string field)
+        {
+            if (!enumType.IsEnum)
+            {
+                if (AllowException)
+                    throw new Exception("Not valid enumeration");
+                return;
+            }
+            if(!Dict.DictOfEnum.ContainsKey(enumType.Name))
+                throw new Exception("This enum type do not exists");
+
+            if (dicthard.ContainsKey(enumType))
+            {
+                dicthard[enumType].Add(field);
+                return;
+            }
+            dicthard.Add(enumType, new List<string>(){field});
+        }
+
+        public static HardwareComponents GetInstance()
+        {
+            return instance ?? (instance = new HardwareComponents());
+        }
+    }
     public sealed class Hardwares
     {
         public CPU Cpu { set; get; }
@@ -12,7 +59,6 @@ namespace DimaDevi.Hardware
         public Motherboard Motherboard { set; get; }
         public Ram Ram { set; get; }
         public MacAddress MacAddress { set; get; }
-
         /*public Hardwares(string import)
         {
             try

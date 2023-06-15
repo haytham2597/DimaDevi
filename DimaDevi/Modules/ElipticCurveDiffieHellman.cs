@@ -17,6 +17,7 @@ namespace DimaDevi.Modules
                 HashAlgorithm = CngAlgorithm.Sha256,
                 KeySize = key_size
             };
+            
         }
 
         /// <summary>

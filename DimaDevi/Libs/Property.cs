@@ -30,7 +30,7 @@ namespace DimaDevi.Libs
                 Username = user;
                 Password = pass;
             }
-            [Obfuscation(Feature = "all")]
+            //[Obfuscation(Feature = "all")]
             public bool IsEmpty()
             {
                 return this.GetType().GetProperties().Where(x=>x.GetValue(this) != null).All(x => string.IsNullOrEmpty(x.GetValue(this).ToString()));

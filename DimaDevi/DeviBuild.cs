@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DimaDevi.Components;
 using DimaDevi.Formatters;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
@@ -21,11 +22,28 @@ namespace DimaDevi
     {
         public ISet<IDeviComponent> Components { set; get; }
         public IDeviFormatter Formatter { set; get; }
-        public Property.RemoteWMICredential WmiCredential { set; get; }
-        public bool IsObfuscated { set; get; }
+        private Property.RemoteWMICredential wmiCredential;
+        public Property.RemoteWMICredential WmiCredential
+        {
+            set
+            {
+                wmiCredential = value;
+                using (var enumer = Components.GetEnumerator())
+                {
+                    while (enumer.MoveNext())
+                    {
+                        if (enumer.Current is WMIComp wmiComp)
+                            wmiComp.WmiCredential = wmiCredential;
+                    }
+                }
+            }
+            get => wmiCredential;
+        }
+
         public bool ClearAfterProcess { set; get; }
 
         private bool preventComponentDuplication;
+
         public bool PreventComponentDuplication
         {
             set
@@ -39,7 +57,17 @@ namespace DimaDevi
         public DeviBuild()
         {
             Components = new HashSet<IDeviComponent>();
-            this.IsObfuscated = nameof(DeviBuild) == "DeviBuild";
+
+            var hard = HardwareComponents.GetInstance().GetHardware();
+            for (int i = 0; i < hard.Count; i++)
+            {
+                var elem = hard.ElementAt(i);
+                var last = elem.Key.Name;
+                if (string.IsNullOrEmpty(last) || !Dict.DictOfEnum.ContainsKey(last))
+                    continue;
+                for (int j = 0; j < elem.Value.Count; j++)
+                    this.Components.Add(new WMIComp(elem.Value[j], Dict.DictOfEnum[last], elem.Value[j]) { BaseHardware = last });
+            }
         }
 
         public DeviBuild(IDeviFormatter formatter) : this()
@@ -57,6 +85,12 @@ namespace DimaDevi
             File.WriteAllText(Path.Combine(pathToSave), ToString(separator));
         }
 
+        /// <summary>
+        /// Save all information on the disk with formatter
+        /// </summary>
+        /// <param name="pathToSave"></param>
+        /// <param name="formatter"></param>
+        /// <param name="separator"></param>
         public void Save(string pathToSave, IDeviFormatter formatter, string separator = null)
         {
             File.WriteAllText(Path.Combine(pathToSave), ToString(formatter, separator));
@@ -67,8 +101,10 @@ namespace DimaDevi
             return Decryption(result) == Decryption(ToString(separator));
         }
 
+        ///
         public virtual double Validate(Hardwares hardwares)
         {
+            //WARNING: Bad validation if user-defined new components with HardwareComponents
             var this_hard = this.GetHardwares();
             var props_hard = this_hard.GetType().GetProperties();
             var props_hardwares = hardwares.GetType().GetProperties();
@@ -100,6 +136,17 @@ namespace DimaDevi
         {
             if (Formatter == null)
                 return content;
+            if (General.GetInstance().IsObfuscated)
+            {
+                var methods = Formatter.GetType().GetMethods(BindingFlags.Public);
+                for (int i = 0; i < methods.Length; i++)
+                {
+                    var attr = methods[i].GetCustomAttributes(true);
+                    for (int j = 0; j < attr.Length; j++)
+                        if (attr[j] is Attrs.MethodNameAttribute mna && mna.MethodName == "Decrypt")
+                            return methods[i].Invoke(Formatter, new object[] { content }).ToString();
+                }
+            }
             var decrypt = Formatter.GetType().GetMethod("Decrypt");
             return decrypt != null ? decrypt.Invoke(Formatter, new object[] { content }).ToString() : content;
         }
@@ -134,7 +181,7 @@ namespace DimaDevi
                         {
                             for (int j = 0; j < propsInstance.Length; j++)
                             {
-                                if (enumer.Current?.Name != nameof(MacAddress) && propsInstance[j].Name.ToLower() != enumer.Current?.Name.ToLower()) //ToLower for prevent possible error human about uppercase, capitalize, etc.
+                                if (enumer.Current?.Name != nameof(MacAddress) && propsInstance[j].Name.ToLower() != enumer.Current?.Name?.ToLower()) //ToLower for prevent possible error human about uppercase, capitalize, etc.
                                     continue;
 
                                 var result = enumer.Current.GetValue();
@@ -217,7 +264,7 @@ namespace DimaDevi
         }
 
         /// <summary>
-        /// Import formatter provider user because if you want decrypt content, you should set settings formatter or import
+        /// Import formatter provider by user because if you want decrypt content, you should set settings formatter or import
         /// </summary>
         /// <param name="str"></param>
         public void ImportFormatter(string str)
@@ -246,7 +293,7 @@ namespace DimaDevi
             using (var mso = new MemoryStream())
             {
                 using (var gs = new GZipStream(mso, CompressionMode.Compress))
-                    Ext.CopyTo(msi, gs);
+                    msi.CopyTo(gs);
                 return mso.ToArray();
             }
         }
@@ -261,7 +308,7 @@ namespace DimaDevi
             using (var mso = new MemoryStream())
             {
                 using (var gs = new GZipStream(msi, CompressionMode.Decompress))
-                    Ext.CopyTo(gs, mso);
+                    gs.CopyTo(mso);
                 return Encoding.UTF8.GetString(mso.ToArray());
             }
         }

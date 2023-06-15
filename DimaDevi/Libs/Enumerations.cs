@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DimaDevi.Libs
 {
     public static class Enumerations
     {
+        
         public enum DeriveSecure
         {
             PasswordDeriveBytes,
@@ -49,6 +51,9 @@ namespace DimaDevi.Libs
         {
             Name = 1,
             Description = Name << 1,
+            DriverDate = Description << 1,
+            DriverVersion = DriverDate << 1,
+            SystemName = DriverVersion << 1,
             All = ~0
         }
         [Flags]

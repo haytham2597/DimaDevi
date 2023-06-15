@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using DimaDevi.Modules;
@@ -48,6 +49,15 @@ namespace DimaDevi.Libs
             return AddPublic(ecdh, ecdh1.GetPublicKey());
         }
 
+        public static bool IsEqual<T>(this T[] a, T[] b) where T : struct
+        {
+            if (a.Length != b.Length)
+                return false;
+            for(int i=0;i<a.Length;i++)
+                if ((object)a[i] != (object)b[i])
+                    return false;
+            return true;
+        }
         public static bool IsEqual(this byte[] f, byte[] s)
         {
             if (f.Length != s.Length)
@@ -110,7 +120,11 @@ namespace DimaDevi.Libs
      
         public static bool IsPossibleIP(this string ip)
         {
-            var arrChar = ip.ToCharArray();
+            if (string.IsNullOrEmpty(ip))
+                return false;
+            var reg = new Regex(@"^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$");
+            return reg.IsMatch(ip);
+            /*var arrChar = ip.ToCharArray();
             int cntPoint = 0;
             for (int i = 0; i < arrChar.Length; i++)
             {
@@ -119,7 +133,7 @@ namespace DimaDevi.Libs
                 if (!(char.IsDigit(arrChar[i]) || arrChar[i] == '.'))
                     return false;
             }
-            return cntPoint == 3;
+            return cntPoint == 3;*/
         }
         public static void CopyTo(Stream src, Stream dest)
         {

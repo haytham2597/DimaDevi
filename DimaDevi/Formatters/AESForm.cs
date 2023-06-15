@@ -74,7 +74,8 @@ namespace DimaDevi.Formatters
             Managed.Padding = this.Padding;
             Managed.Mode = cipher;
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Attrs.MethodName("Encrypt")]
         public string Encrypt(byte[] content)
         {
             if (Managed == null)
@@ -86,7 +87,8 @@ namespace DimaDevi.Formatters
                 return Convert.ToBase64String(ms.ToArray());
             }
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Attrs.MethodName("Decrypt")]
         public string Decrypt(string content)
         {
             var cont = Convert.FromBase64String(content);
@@ -99,7 +101,8 @@ namespace DimaDevi.Formatters
             {
                 using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write))
                     cs.Write(cont, 0, cont.Length);
-                return Encoding.UTF8.GetString(ms.ToArray());
+                
+                return General.GetInstance().Encoding.GetString(ms.ToArray());
             }
         }
         public void SetIV(byte[] iv)
@@ -118,13 +121,13 @@ namespace DimaDevi.Formatters
 
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            var bytes = Encoding.UTF8.GetBytes(components.Joined(PreventComponentDuplication));
+            var bytes = General.GetInstance().Encoding.GetBytes(components.Joined(PreventComponentDuplication));
             return Encrypt(bytes);
         }
         
         public string GetDevi(string componentsResult, string separator)
         {
-            return Encrypt(Encoding.UTF8.GetBytes(componentsResult));
+            return Encrypt(General.GetInstance().Encoding.GetBytes(componentsResult));
         }
         /// <summary>
         /// Export all configuration of this

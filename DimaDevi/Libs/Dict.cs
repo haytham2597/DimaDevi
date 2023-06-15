@@ -2,7 +2,7 @@
 
 namespace DimaDevi.Libs
 {
-    public static class Dict
+    internal static class Dict
     {
         public static Dictionary<string, string> DictOfEnum = new Dictionary<string, string>()
         {

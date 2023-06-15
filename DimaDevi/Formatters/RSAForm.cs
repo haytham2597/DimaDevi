@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -21,22 +22,25 @@ namespace DimaDevi.Formatters
             if (KeySize % 2 != 0)
                 throw new Exception("Not valid keySize");
 
-            var RSA_CSP = new RSACryptoServiceProvider(KeySize);
-            var privateKey = RSA_CSP.ExportParameters(true);
-            var publicKey = RSA_CSP.ExportParameters(false);
-
-            string publicKeyString;
+            using (var RSA_CSP = new RSACryptoServiceProvider(KeySize))
             {
-                var sw = new StringWriter();
-                var xs = new XmlSerializer(typeof(RSAParameters));
-                xs.Serialize(sw, publicKey);
-                publicKeyString = sw.ToString();
+                /*var privateKey = RSA_CSP.ExportParameters(true);
+                var publicKey = RSA_CSP.ExportParameters(false);*/
+                PrivateKey = RSA_CSP.ToXmlString(true);
+                PublicKey = RSA_CSP.ToXmlString(false);
+                /*string publicKeyString;
+                {
+                    var sw = new StringWriter();
+                    var xs = new XmlSerializer(typeof(RSAParameters));
+                    xs.Serialize(sw, publicKey);
+                    publicKeyString = sw.ToString();
+                }
+                publicKeyString = publicKeyString.RemoveDeclarationXml();
+                RSA_CSP = new RSACryptoServiceProvider();
+                RSA_CSP.ImportParameters(privateKey);
+                PrivateKey = RSA_CSP.ToXmlString(true);
+                PublicKey = publicKeyString;*/
             }
-            publicKeyString = publicKeyString.RemoveDeclarationXml();
-            RSA_CSP = new RSACryptoServiceProvider();
-            RSA_CSP.ImportParameters(privateKey);
-            PrivateKey = RSA_CSP.ToXmlString(true);
-            PublicKey = publicKeyString;
         }
 
         public RSAForm(JObject import)
@@ -68,37 +72,41 @@ namespace DimaDevi.Formatters
         public static string Encrypt(string content, string publicKey)
         {
             string CipherContent = string.Empty;
-            var RSA_Csp = new RSACryptoServiceProvider();
-            RSA_Csp.FromXmlString(publicKey);
-            int Formula = ((RSA_Csp.KeySize - 384) / 8) + 37;
-            byte[] ReCompute = new byte[] { };
-            var bytesContent = Encoding.Unicode.GetBytes(content);
-
-            int cont = Convert.ToInt32(bytesContent.Length / Formula) + 1;
-            int IndexFormula = 0;
-            Array.Resize(ref ReCompute, Formula - 1);
-            for (int i = 0; i < cont; i++)
+            using (var RSA_Csp = new RSACryptoServiceProvider())
             {
-                if (bytesContent.Length < Formula)
+                RSA_Csp.FromXmlString(publicKey);
+                int Formula = ((RSA_Csp.KeySize - 384) / 8) + 37;
+                byte[] ReCompute = new byte[] { };
+                var bytesContent = General.GetInstance().Encoding.GetBytes(content);
+
+                int cont = Convert.ToInt32(bytesContent.Length / Formula) + 1;
+                int IndexFormula = 0;
+                Array.Resize(ref ReCompute, Formula - 1);
+                for (int i = 0; i < cont; i++)
                 {
-                    var bytesContentCip = RSA_Csp.Encrypt(bytesContent, false);
-                    CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(bytesContentCip);
-                    break;
+                    if (bytesContent.Length < Formula)
+                    {
+                        var bytesContentCip = RSA_Csp.Encrypt(bytesContent, false);
+                        CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(bytesContentCip);
+                        break;
+                    }
+
+                    Array.Copy(bytesContent, (IndexFormula == 0) ? 0 : IndexFormula, ReCompute, 0, (IndexFormula == 0) ? Formula - 1 : (i == cont - 1) ? bytesContent.Length - IndexFormula : ReCompute.Length);
+                    if (i == cont - 1)
+                        Array.Resize(ref ReCompute, Array.FindLastIndex(ReCompute, item => item > 0) + 2);
+                    var byteRecompute = RSA_Csp.Encrypt(ReCompute, false);
+                    CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(byteRecompute);
+                    IndexFormula += Formula - 1;
+                    Array.Clear(ReCompute, 0, ReCompute.Length);
                 }
-                Array.Copy(bytesContent, (IndexFormula == 0) ? 0 : IndexFormula, ReCompute, 0, (IndexFormula == 0) ? Formula - 1 : (i == cont - 1) ? bytesContent.Length - IndexFormula : ReCompute.Length);
-                if (i == cont - 1)
-                    Array.Resize(ref ReCompute, Array.FindLastIndex(ReCompute, item => item > 0) + 2);
-                var byteRecompute = RSA_Csp.Encrypt(ReCompute, false);
-                CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(byteRecompute);
-                IndexFormula += Formula - 1;
-                Array.Clear(ReCompute, 0, ReCompute.Length);
             }
+
             return CipherContent;
         }
 
         public string Encrypt(byte[] content)
         {
-            return Encrypt(Encoding.Unicode.GetString(content), this.PublicKey);
+            return Encrypt(General.GetInstance().Encoding.GetString(content), this.PublicKey);
         }
 
         public string Decrypt(string content)
@@ -110,7 +118,7 @@ namespace DimaDevi.Formatters
             foreach (var dd in ler)
             {
                 byte[] bytesCypherText = Convert.FromBase64String(dd);
-                Result += Encoding.Unicode.GetString(csp.Decrypt(bytesCypherText, false));
+                Result += General.GetInstance().Encoding.GetString(csp.Decrypt(bytesCypherText, false));
             }
             return Result;
         }
@@ -123,6 +131,28 @@ namespace DimaDevi.Formatters
         public string GetDevi(string componentsResult, string separator)
         {
             return Encrypt(componentsResult, PublicKey);
+        }
+
+        public byte[] GetSign(string content)
+        {
+            using (var RSA_Csp = new RSACryptoServiceProvider())
+            {
+                RSA_Csp.FromXmlString(this.PrivateKey);
+                return RSA_Csp.SignData(General.GetInstance().Encoding.GetBytes(content), CryptoConfig.MapNameToOID("SHA512"));
+            }
+        }
+
+        public bool VerifyData(string original, string signed)
+        {
+            using (var rsa = new RSACryptoServiceProvider())
+            {
+                rsa.FromXmlString(this.PrivateKey);
+                using (SHA512Managed sha512 = new SHA512Managed())
+                {
+                    //byte[] hashed = sha512.ComputeHash(Encoding.Unicode.GetBytes(signed));
+                    return rsa.VerifyData(General.GetInstance().Encoding.GetBytes(original), CryptoConfig.MapNameToOID("SHA512"), General.GetInstance().Encoding.GetBytes(signed));
+                }
+            }
         }
 
         public void Dispose()

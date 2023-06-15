@@ -47,7 +47,7 @@ namespace DimaDevi.Formatters
 
         public string Hash(string res)
         {
-            var bytes = Encoding.UTF8.GetBytes(res);
+            var bytes = General.GetInstance().Encoding.GetBytes(res);
             var algorithm = _hashAlgorithm.Invoke();
             var hash = algorithm.ComputeHash(bytes);
             return Convert.ToBase64String(hash);

@@ -23,13 +23,18 @@ namespace DimaDeviTest
     {
         static void Main(string[] args)
         {
+            var h = HardwareComponents.GetInstance();
+            
+            //h.AddComponent(typeof(Enumerations.CPU), "L3CacheSize");
+            h.AddComponent(typeof(Enumerations.CPU), "L3CacheSize").AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
             DimaDevi.DeviBuild devi = new DeviBuild();
             var start = Stopwatch.GetTimestamp();
             var devicont = devi
                 .AddCPU(Enumerations.CPU.Name)
                 .AddMachineName()
                 .AddMacAddress()
-                .AddMotherboard();
+                .AddMotherboard()
+                .AddGPU(Enumerations.GPU.All);
             string content = devi.ToString("<separ>");
             Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-start).ToString());
             /*var bob = new ElipticCurveDiffieHellman();
