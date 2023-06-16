@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace DimaDevi.Libs
 {
@@ -74,6 +73,9 @@ namespace DimaDevi.Libs
             Physical = 1,
             Up = Physical << 1, 
             All = Up << 1,
+            /// <summary>
+            /// If want Hash MacAddress is hashed with md5 and convert to Base64
+            /// </summary>
             Hash = All << 1,
         }
 
@@ -101,7 +103,8 @@ namespace DimaDevi.Libs
         [Flags]
         public enum Disk
         {
-            BytesPerSector = 1,
+            DeviceID = 1,
+            BytesPerSector = DeviceID << 1,
             Caption = BytesPerSector << 1,
             FirmwareRevision = Caption << 1,
             SerialNumber = FirmwareRevision << 1,
@@ -112,7 +115,7 @@ namespace DimaDevi.Libs
             TotalSectors = TotalHeads << 1,
             TotalTracks = TotalSectors << 1,
             /// <summary>
-            /// This mean that Only process previously with the Disk of SO not all disk
+            /// This mean that Only process with the Main Disk of SO not all disk Example have 3 disk; C, D, F and C is from SO. So only get information of C
             /// </summary>
             Main = TotalTracks << 1,
             All = ~0

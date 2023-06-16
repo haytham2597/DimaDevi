@@ -4,6 +4,7 @@ namespace DimaDevi.Hardware
 {
     public sealed class Disk
     {
+        public List<string> DeviceID { set; get; }
         public List<int> BytesPerSector { set; get; }
         public List<string> Caption { set; get; }
         public List<string> FirmwareRevision { set; get; }

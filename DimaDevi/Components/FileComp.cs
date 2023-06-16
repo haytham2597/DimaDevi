@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace DimaDevi.Components
 {
-    public sealed class FileComp : IDeviComponent
+    public sealed class FileComp : IDeviComponent, IDisposable
     {
         private readonly HashAlgorithm hash = MD5.Create(); //Md5 because is more faster than Sha256 and security is not needed, so just use MD5 For only HASH file
         public string BaseHardware { set; get; } = nameof(FileComp);
@@ -19,6 +19,8 @@ namespace DimaDevi.Components
 
         public FileComp(string path, HashAlgorithm hashAlg) : this(path)
         {
+            if (hashAlg == null)
+                return;
             hash = hashAlg;
         }
         public string GetValue()
@@ -32,6 +34,11 @@ namespace DimaDevi.Components
             using (FileStream fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) //FileShare ReadAndWrite for prevent exception of locked file
                 fs.Read(buffer, 0, buffer.Length);
             return Convert.ToBase64String(hash.ComputeHash(buffer));
+        }
+
+        public void Dispose()
+        {
+            this.hash.Dispose();
         }
     }
 }

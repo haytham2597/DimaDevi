@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace DimaDevi.Libs
 {
@@ -10,12 +6,8 @@ namespace DimaDevi.Libs
     public class General
     {
         private static General instance;
-        private Encoding encoding = null;
-        public Encoding Encoding
-        {
-            set => encoding = value;
-            get => encoding ?? (encoding = Encoding.UTF8);
-        }
+        public Property.RemoteWMICredential RemoteWmi;
+        public Encoding Encoding { set; get; } = Encoding.UTF8;
 
         internal bool IsObfuscated;
         private General()

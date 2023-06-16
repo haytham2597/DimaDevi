@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Win32;
 
 namespace DimaDevi.Components
@@ -17,10 +12,10 @@ namespace DimaDevi.Components
         private RegistryKey RegKey;
         private readonly string BaseKey;
         private readonly string NameKey;
-        private RegistryHive RegHive;
+        private readonly RegistryHive RegHive;
         private RegistryView RegView = RegistryView.Registry32;
         /// <summary>
-        /// No reg key is LocalMachine
+        /// RegKey is LocalMachine
         /// </summary>
         /// <param name="base_key"></param>
         /// <param name="name_key"></param>

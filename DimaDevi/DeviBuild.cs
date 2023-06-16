@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using DimaDevi.Components;
 using DimaDevi.Formatters;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
-using DimaDevi.Modules;
-using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 
 namespace DimaDevi
 {
@@ -22,42 +19,29 @@ namespace DimaDevi
     {
         public ISet<IDeviComponent> Components { set; get; }
         public IDeviFormatter Formatter { set; get; }
-        private Property.RemoteWMICredential wmiCredential;
         public Property.RemoteWMICredential WmiCredential
         {
-            set
-            {
-                wmiCredential = value;
-                using (var enumer = Components.GetEnumerator())
-                {
-                    while (enumer.MoveNext())
-                    {
-                        if (enumer.Current is WMIComp wmiComp)
-                            wmiComp.WmiCredential = wmiCredential;
-                    }
-                }
-            }
-            get => wmiCredential;
+            set => General.GetInstance().RemoteWmi = value;
         }
 
-        public bool ClearAfterProcess { set; get; }
+        /// <summary>
+        /// Clear components after call ToString
+        /// </summary>
+        public bool ClearAfterProcess;
 
-        private bool preventComponentDuplication;
-
+        /// <summary>
+        /// Make all Distinct components
+        /// </summary>
         public bool PreventComponentDuplication
         {
-            set
-            {
-                preventComponentDuplication = value;
-                this.Formatter.PreventComponentDuplication = value;
-            }
-            get => preventComponentDuplication;
+            set => this.Formatter.PreventComponentDuplication = value;
         }
 
         public DeviBuild()
         {
             Components = new HashSet<IDeviComponent>();
 
+            //Load user-defined components
             var hard = HardwareComponents.GetInstance().GetHardware();
             for (int i = 0; i < hard.Count; i++)
             {
@@ -88,9 +72,9 @@ namespace DimaDevi
         /// <summary>
         /// Save all information on the disk with formatter
         /// </summary>
-        /// <param name="pathToSave"></param>
-        /// <param name="formatter"></param>
-        /// <param name="separator"></param>
+        /// <param name="pathToSave">Path where save this file</param>
+        /// <param name="formatter">A custom formatter instaed of formater created in class</param>
+        /// <param name="separator">Separator symbols</param>
         public void Save(string pathToSave, IDeviFormatter formatter, string separator = null)
         {
             File.WriteAllText(Path.Combine(pathToSave), ToString(formatter, separator));
@@ -101,10 +85,10 @@ namespace DimaDevi
             return Decryption(result) == Decryption(ToString(separator));
         }
 
-        ///
+        
         public virtual double Validate(Hardwares hardwares)
         {
-            //WARNING: Bad validation if user-defined new components with HardwareComponents
+            //WARNING: Bad validation if user-defined new components with HardwareComponents i mean, this validation don't depend on user-defined new component and should...
             var this_hard = this.GetHardwares();
             var props_hard = this_hard.GetType().GetProperties();
             var props_hardwares = hardwares.GetType().GetProperties();
@@ -122,6 +106,8 @@ namespace DimaDevi
                 }
                 cnt_match++;
             }
+
+            //Enumerations.ToleranceLevel tolerance;
 
             double percentage = (double)(cnt_match * 100) / props_hard.Length;
             return percentage;
@@ -171,7 +157,7 @@ namespace DimaDevi
                 {
                     if (string.IsNullOrEmpty(d.Key))
                         continue;
-                    if (props[i].Name.ToLower() != d.Key.ToLower()) //ToLower for prevent possible error human about uppercase, capitalize, etc.
+                    if (props[i].Name.ToLower() != d.Key.ToLower()) //ToLower for prevent possible human error about uppercase, capitalize, etc.
                         continue;
                     var objInstance = Activator.CreateInstance(props[i].PropertyType); //Because all propertiies of Hardware is a class
                     var propsInstance = objInstance.GetType().GetProperties();
@@ -208,7 +194,7 @@ namespace DimaDevi
 
         public override string ToString()
         {
-            string result = Formatter != null ? Formatter.GetDevi(Components) : Components.Joined(this.PreventComponentDuplication);
+            string result = Formatter != null ? Formatter.GetDevi(Components) : Components.Joined(this.Formatter.PreventComponentDuplication);
             if (ClearAfterProcess)
                 ClearComponents();
             return result;
@@ -221,7 +207,7 @@ namespace DimaDevi
             string str = string.Empty;
 
             IEnumerator<IDeviComponent> enumer = Components.GetEnumerator();
-            if (PreventComponentDuplication)
+            if (this.Formatter.PreventComponentDuplication)
                 enumer = Components.DistinctBy(x => x.BaseHardware).GetEnumerator();
             while (enumer.MoveNext())
                 str += enumer.Current?.Name + "=" + enumer.Current?.GetValue() + separator;
@@ -288,7 +274,7 @@ namespace DimaDevi
         /// <returns></returns>
         public byte[] Compression(string str)
         {
-            var bytes = Encoding.UTF8.GetBytes(str);
+            var bytes = General.GetInstance().Encoding.GetBytes(str);
             using (var msi = new MemoryStream(bytes))
             using (var mso = new MemoryStream())
             {
@@ -309,7 +295,7 @@ namespace DimaDevi
             {
                 using (var gs = new GZipStream(msi, CompressionMode.Decompress))
                     gs.CopyTo(mso);
-                return Encoding.UTF8.GetString(mso.ToArray());
+                return General.GetInstance().Encoding.GetString(mso.ToArray());
             }
         }
 
@@ -317,7 +303,6 @@ namespace DimaDevi
         {
             Formatter.Dispose();
             Components.Clear();
-            this.WmiCredential.Dispose();
         }
     }
 }

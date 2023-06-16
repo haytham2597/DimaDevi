@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Authentication;
 using System.Security.Cryptography;
-using System.Text;
 using DimaDevi.Components;
 using DimaDevi.Libs;
 using Microsoft.Win32;
 
 namespace DimaDevi
 {
+    /// <summary>
+    /// Fluent DeviBuild
+    /// </summary>
     public static class DeviBuildExt
     {
         public static DeviBuild AddComponents(this DeviBuild devi, IDeviComponent deviComponent)
@@ -36,7 +34,7 @@ namespace DimaDevi
                     var last = enumer.Current?.GetType().Name;
                     if (string.IsNullOrEmpty(last) || !Dict.DictOfEnum.ContainsKey(last))
                         continue;
-                    devi.AddComponents(new WMIComp(enumer.Current?.ToString(), Dict.DictOfEnum[last], enumer.Current?.ToString(), devi.WmiCredential){BaseHardware = last });
+                    devi.AddComponents(new WMIComp(enumer.Current?.ToString(), Dict.DictOfEnum[last], enumer.Current?.ToString()){BaseHardware = last });
                 }
             }
             return devi;
@@ -57,6 +55,10 @@ namespace DimaDevi
         public static DeviBuild AddCustom(this DeviBuild devi, string name, Func<string> func_)
         {
             return devi.AddComponents(new DeviComp(name, func_) { BaseHardware = "Custom" });
+        }
+        public static DeviBuild AddCustom(this DeviBuild devi, string name, Func<string> func_, string baseHardwareName)
+        {
+            return devi.AddComponents(new DeviComp(name, func_) { BaseHardware = baseHardwareName });
         }
         public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All)
         {
@@ -90,11 +92,7 @@ namespace DimaDevi
         {
             return devi.AddByFlags(mothers.GetFlags());
         }
-        public static DeviBuild AddFile(this DeviBuild devi, string path)
-        {
-            return devi.AddComponents(new FileComp(path));
-        }
-        public static DeviBuild AddFile(this DeviBuild devi, string path, HashAlgorithm hash)
+        public static DeviBuild AddFile(this DeviBuild devi, string path, HashAlgorithm hash = null)
         {
             return devi.AddComponents(new FileComp(path, hash));
         }
@@ -125,9 +123,11 @@ namespace DimaDevi
                         if ((Enumerations.Disk)enumer.Current == Enumerations.Disk.Main)
                             continue;
                         var te = enumer.Current?.GetType().Name;
+                        if (te == null)
+                            continue;
                         if (!Dict.DictOfEnum.ContainsKey(te))
                             continue;
-                        devi.AddComponents(new WMIComp(enumer.Current.ToString(),  Dict.DictOfEnum[te], "*", enumer.Current.ToString(), $"DeviceID={Ext.GetMainPhysicalDriveOS()}", devi.WmiCredential));
+                        devi.AddComponents(new WMIComp(enumer.Current?.ToString(),  Dict.DictOfEnum[te], "*", enumer.Current?.ToString(), $"DeviceID={Ext.GetMainPhysicalDriveOS()}"));
                     }
                 }
                 return devi;
@@ -135,10 +135,10 @@ namespace DimaDevi
             return devi.AddByFlags(disk.GetFlags());
         }
 
-        /*public static DeviBuild AddRegistry(this DeviBuild devi, string base_key, string name_key)
+        public static DeviBuild AddRegistry(this DeviBuild devi, string base_key, string name_key)
         {
             return devi.AddComponents(new RegistryComp(base_key, name_key));
-        }*/
+        }
 
         public static DeviBuild AddRegistry(this DeviBuild devi, RegistryKey reg_key, string base_key, string name_key)
         {

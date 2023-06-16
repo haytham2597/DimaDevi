@@ -23,10 +23,8 @@ namespace DimaDeviTest
     {
         static void Main(string[] args)
         {
-            var h = HardwareComponents.GetInstance();
-            
-            //h.AddComponent(typeof(Enumerations.CPU), "L3CacheSize");
-            h.AddComponent(typeof(Enumerations.CPU), "L3CacheSize").AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
+            /*var h = HardwareComponents.GetInstance();
+            h.AddComponent(typeof(Enumerations.CPU), "L3CacheSize").AddComponent(typeof(Enumerations.CPU), "L2CacheSize");*/
             DimaDevi.DeviBuild devi = new DeviBuild();
             var start = Stopwatch.GetTimestamp();
             var devicont = devi
@@ -34,7 +32,8 @@ namespace DimaDeviTest
                 .AddMachineName()
                 .AddMacAddress()
                 .AddMotherboard()
-                .AddGPU(Enumerations.GPU.All);
+                .AddFile(@"K:\LicService.dll", new SHA512Managed())
+                .AddRam(Enumerations.RAM.All);
             string content = devi.ToString("<separ>");
             Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-start).ToString());
             /*var bob = new ElipticCurveDiffieHellman();

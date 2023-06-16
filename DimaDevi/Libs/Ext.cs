@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Linq;
 using DimaDevi.Modules;
 using Newtonsoft.Json.Linq;
 
@@ -172,7 +170,7 @@ namespace DimaDevi.Libs
 
         public static byte[] ToMD5(this string str)
         {
-            return MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(str));
+            return MD5.Create().ComputeHash(General.GetInstance().Encoding.GetBytes(str));
         }
         public static string ToMD5Base64(this string str)
         {
@@ -187,7 +185,7 @@ namespace DimaDevi.Libs
         public static string GetMainPhysicalDriveOS()
         {
             ManagementScope scope = new ManagementScope(@"root\cimv2");
-            SelectQuery query = new SelectQuery($"SELECT * FROM Win32_LogicalDiskToPartition");
+            SelectQuery query = new SelectQuery($"SELECT Antecedent,Dependent FROM Win32_LogicalDiskToPartition");
             string cap = string.Empty;
             var letter = new DriveInfo(Environment.SystemDirectory).RootDirectory.FullName.Substring(0, 2);
             string diskPart = string.Empty;
@@ -208,7 +206,7 @@ namespace DimaDevi.Libs
 
             if (string.IsNullOrEmpty(diskPart))
                 return null;
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, new SelectQuery("SELECT * FROM Win32_DiskDriveToDiskPartition")))
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, new SelectQuery("SELECT Antecedent,Dependent FROM Win32_DiskDriveToDiskPartition")))
             using (ManagementObjectCollection collection = searcher.Get())
             {
                 foreach (var mo in collection)

@@ -24,7 +24,7 @@ namespace DimaDevi.Components
 
         private readonly string _wmiName;
         private readonly string _wmiWhere;
-        public Property.RemoteWMICredential WmiCredential;
+        //public Property.RemoteWMICredential WmiCredential;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WMIComp"/> class.
@@ -34,15 +34,15 @@ namespace DimaDevi.Components
         /// <param name="wmiClass">The WMI class name.</param>
         /// <param name="wmiProperty">The WMI property name.</param>
         /// <param name="wmiCredential"></param>
-        public WMIComp(string name, string wmiClass, string wmiProperty, Property.RemoteWMICredential wmiCredential = null)
+        public WMIComp(string name, string wmiClass, string wmiProperty)
         {
             Name = name;
             _wmiClass = wmiClass;
             _wmiProperty = wmiProperty;
-            if (wmiCredential != null)
-                WmiCredential = wmiCredential;
+            /*if (wmiCredential != null)
+                WmiCredential = wmiCredential;*/
         }
-        public WMIComp(string name, string wmiClass, string wmiProperty, string wmiName, Property.RemoteWMICredential wmiCredential = null) : this(name, wmiClass, wmiProperty, wmiCredential)
+        public WMIComp(string name, string wmiClass, string wmiProperty, string wmiName) : this(name, wmiClass, wmiProperty)
         {
             _wmiName = wmiName;
         }
@@ -56,7 +56,7 @@ namespace DimaDevi.Components
         /// <param name="wmiName"></param>
         /// <param name="wmiWhere">Example: DeviceID=value, will find in DeviceID that contains this vlaue</param>
         /// <param name="wmiCredential"></param>
-        public WMIComp(string name, string wmiClass, string wmiProperty, string wmiName, string wmiWhere, Property.RemoteWMICredential wmiCredential = null) : this(name, wmiClass, wmiProperty,wmiName, wmiCredential)
+        public WMIComp(string name, string wmiClass, string wmiProperty, string wmiName, string wmiWhere) : this(name, wmiClass, wmiProperty,wmiName)
         {
             _wmiWhere = wmiWhere;
         }
@@ -75,11 +75,12 @@ namespace DimaDevi.Components
             {
                 ConnectionOptions connectOptions = new ConnectionOptions();
                 ManagementScope scope = new ManagementScope(@"root\cimv2");
-                if (WmiCredential != null && !WmiCredential.IsEmpty())
+                
+                if (General.GetInstance().RemoteWmi != null && !General.GetInstance().RemoteWmi.IsEmpty())
                 {
-                    connectOptions.Username = WmiCredential.Username;
-                    connectOptions.Password = WmiCredential.Password;
-                    scope.Path = new ManagementPath(WmiCredential.Domain.AddTwoBackSlashIfIsPossible() + @"\root\cimv2");
+                    connectOptions.Username = General.GetInstance().RemoteWmi.Username;
+                    connectOptions.Password = General.GetInstance().RemoteWmi.Password;
+                    scope.Path = new ManagementPath(General.GetInstance().RemoteWmi.Domain.AddTwoBackSlashIfIsPossible() + @"\root\cimv2");
                     scope.Options = connectOptions;
                 }
                 SelectQuery query = new SelectQuery($"SELECT {_wmiProperty} FROM {_wmiClass}");

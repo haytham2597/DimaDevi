@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DimaDevi.Hardware
+﻿namespace DimaDevi.Hardware
 {
     public sealed class CPU
     {

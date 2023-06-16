@@ -17,15 +17,14 @@ namespace DimaDevi.Components
         private readonly Func<string> _valueFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceIdComponent"/> class.
+        /// Initializes a new instance
         /// </summary>
         /// <param name="name">The name of the component.</param>
         /// <param name="value">The component value.</param>
-        public DeviComp(string name, string value)
-            : this(name, () => value) { }
+        public DeviComp(string name, string value) : this(name, () => value) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceIdComponent"/> class.
+        /// Initializes a new instance
         /// </summary>
         /// <param name="name">The name of the component.</param>
         /// <param name="valueFactory">A function that returns the component value.</param>
