@@ -21,7 +21,6 @@ namespace DimaDevi.Components
         /// The WMI property name.
         /// </summary>
         private readonly string _wmiProperty;
-
         private readonly string _wmiName;
         private readonly string _wmiWhere;
         //public Property.RemoteWMICredential WmiCredential;
@@ -76,11 +75,11 @@ namespace DimaDevi.Components
                 ConnectionOptions connectOptions = new ConnectionOptions();
                 ManagementScope scope = new ManagementScope(@"root\cimv2");
                 
-                if (General.GetInstance().RemoteWmi != null && !General.GetInstance().RemoteWmi.IsEmpty())
+                if (GeneralConfigs.GetInstance().RemoteWmi != null && !GeneralConfigs.GetInstance().RemoteWmi.IsEmpty())
                 {
-                    connectOptions.Username = General.GetInstance().RemoteWmi.Username;
-                    connectOptions.Password = General.GetInstance().RemoteWmi.Password;
-                    scope.Path = new ManagementPath(General.GetInstance().RemoteWmi.Domain.AddTwoBackSlashIfIsPossible() + @"\root\cimv2");
+                    connectOptions.Username = GeneralConfigs.GetInstance().RemoteWmi.Username;
+                    connectOptions.Password = GeneralConfigs.GetInstance().RemoteWmi.Password;
+                    scope.Path = new ManagementPath(GeneralConfigs.GetInstance().RemoteWmi.Domain.AddTwoBackSlashIfIsPossible() + @"\root\cimv2");
                     scope.Options = connectOptions;
                 }
                 SelectQuery query = new SelectQuery($"SELECT {_wmiProperty} FROM {_wmiClass}");

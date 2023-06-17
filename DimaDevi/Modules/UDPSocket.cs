@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using DimaDevi.Libs;
 
 namespace DimaDevi.Modules
@@ -45,7 +46,7 @@ namespace DimaDevi.Modules
 
         public void Send(string text)
         {
-            byte[] data = General.GetInstance().Encoding.GetBytes(text);
+            byte[] data = GeneralConfigs.GetInstance().Encoding.GetBytes(text);
             _socket.BeginSend(data, 0, data.Length, SocketFlags.None, (ar) =>
             {
                 State so = (State)ar.AsyncState;
@@ -65,9 +66,11 @@ namespace DimaDevi.Modules
                 _socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
 
                 ReceiveReachedEventArgs args = new ReceiveReachedEventArgs();
-                args.Result = General.GetInstance().Encoding.GetString(so.buffer, 0, bytes);
+                args.Result = GeneralConfigs.GetInstance().Encoding.GetString(so.buffer, 0, bytes);
                 OnReceiveChanged(args);
-                //Console.WriteLine("RECV: {0}: {1}, {2}", epFrom.ToString(), bytes, Encoding.ASCII.GetString(so.buffer, 0, bytes));
+#if DEBUG
+                Console.WriteLine("RECV: {0}: {1}, {2}", epFrom.ToString(), bytes, Encoding.ASCII.GetString(so.buffer, 0, bytes));
+#endif
             }, state);
         }
     }

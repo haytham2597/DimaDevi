@@ -7,7 +7,6 @@ namespace DimaDevi.Formatters
 {
     public class HashForm : IDeviFormatter
     {
-        public bool PreventComponentDuplication { get; set; }
         /// <summary>
         /// A function that returns the hash algorithm to use.
         /// </summary>
@@ -26,7 +25,7 @@ namespace DimaDevi.Formatters
         /// <param name="hashAlgorithm">A function that returns the hash algorithm to use.</param>
         public HashForm(Func<HashAlgorithm> hashAlgorithm)
         {
-            _hashAlgorithm = hashAlgorithm ?? throw new ArgumentNullException(nameof(hashAlgorithm));
+            _hashAlgorithm = hashAlgorithm ?? throw new ArgumentNullException(nameof(hashAlgorithm)); //Can not be null
         }
         
         /// <summary>
@@ -36,7 +35,7 @@ namespace DimaDevi.Formatters
         /// <returns>The device identifier string.</returns>
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            return Hash(components.Joined(PreventComponentDuplication));
+            return Hash(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
         }
 
         public string GetDevi(string componentsResult, string separator)
@@ -46,7 +45,7 @@ namespace DimaDevi.Formatters
 
         public string Hash(string res)
         {
-            var bytes = General.GetInstance().Encoding.GetBytes(res);
+            var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(res);
             var algorithm = _hashAlgorithm.Invoke();
             var hash = algorithm.ComputeHash(bytes);
             return Convert.ToBase64String(hash);

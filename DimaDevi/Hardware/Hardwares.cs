@@ -32,7 +32,7 @@ namespace DimaDevi.Hardware
                     throw new Exception("Not valid enumeration");
                 return;
             }
-            if(!Dict.DictOfEnum.ContainsKey(enumType.Name))
+            if(!Dict.WMIClass.ContainsKey(enumType.Name))
                 throw new Exception("This enum type do not exists");
 
             if (dicthard.ContainsKey(enumType))

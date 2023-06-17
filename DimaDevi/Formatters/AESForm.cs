@@ -12,7 +12,6 @@ namespace DimaDevi.Formatters
 {
     public sealed class AESForm : IDeviFormatter
     {
-        public bool PreventComponentDuplication { get; set; }
         private readonly string Password;
         public int Iterations { set; get; } = 50000;
         public CipherMode Cipher { set; get; }
@@ -100,7 +99,7 @@ namespace DimaDevi.Formatters
                 using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write))
                     cs.Write(cont, 0, cont.Length);
                 
-                return General.GetInstance().Encoding.GetString(ms.ToArray());
+                return GeneralConfigs.GetInstance().Encoding.GetString(ms.ToArray());
             }
         }
         public void SetIV(byte[] iv)
@@ -119,13 +118,13 @@ namespace DimaDevi.Formatters
 
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            var bytes = General.GetInstance().Encoding.GetBytes(components.Joined(PreventComponentDuplication));
+            var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
             return Encrypt(bytes);
         }
         
         public string GetDevi(string componentsResult, string separator)
         {
-            return Encrypt(General.GetInstance().Encoding.GetBytes(componentsResult));
+            return Encrypt(GeneralConfigs.GetInstance().Encoding.GetBytes(componentsResult));
         }
         /// <summary>
         /// Export all configuration of this

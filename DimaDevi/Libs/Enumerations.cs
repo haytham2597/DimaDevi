@@ -120,5 +120,25 @@ namespace DimaDevi.Libs
             Main = TotalTracks << 1,
             All = ~0
         }
+
+        [Flags]
+        public enum FileInformation
+        {
+            Content = 1,
+            Name = Content << 1,
+            CreationDate = Name << 1,
+            ModifiedDate = CreationDate << 1,
+            Attributes = ModifiedDate << 1,
+            All= ~0
+        }
+
+        [Flags]
+        public enum Sectors
+        {
+            Section1 = 1,
+            Section2 = Section1 << 1,
+            Section3 = Section2 << 1,
+            Section4 = Section3 << 1,
+        }
     }
 }

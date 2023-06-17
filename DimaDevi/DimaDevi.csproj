@@ -73,7 +73,7 @@
     <Compile Include="Libs\Dict.cs" />
     <Compile Include="Libs\Enumerations.cs" />
     <Compile Include="Libs\Ext.cs" />
-    <Compile Include="Libs\General.cs" />
+    <Compile Include="Libs\GeneralConfigs.cs" />
     <Compile Include="Libs\Property.cs" />
     <Compile Include="Modules\ChaCha20.cs" />
     <Compile Include="Modules\ElipticCurveDiffieHellman.cs" />

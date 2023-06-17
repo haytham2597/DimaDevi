@@ -170,7 +170,7 @@ namespace DimaDevi.Libs
 
         public static byte[] ToMD5(this string str)
         {
-            return MD5.Create().ComputeHash(General.GetInstance().Encoding.GetBytes(str));
+            return MD5.Create().ComputeHash(GeneralConfigs.GetInstance().Encoding.GetBytes(str));
         }
         public static string ToMD5Base64(this string str)
         {

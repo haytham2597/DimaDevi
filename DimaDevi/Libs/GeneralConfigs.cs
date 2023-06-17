@@ -3,21 +3,22 @@
 namespace DimaDevi.Libs
 {
     //Singleton
-    public class General
+    public class GeneralConfigs
     {
-        private static General instance;
+        private static GeneralConfigs instance;
         public Property.RemoteWMICredential RemoteWmi;
         public Encoding Encoding { set; get; } = Encoding.UTF8;
 
         internal bool IsObfuscated;
-        private General()
+        internal bool PreventDuplicationComponents;
+        private GeneralConfigs()
         {
             this.IsObfuscated = nameof(DeviBuild) == "DeviBuild";
         }
 
-        public static General GetInstance()
+        public static GeneralConfigs GetInstance()
         {
-            return instance ?? (instance = new General());
+            return instance ?? (instance = new GeneralConfigs());
         }
     }
 }

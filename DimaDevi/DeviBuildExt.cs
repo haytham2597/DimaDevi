@@ -32,9 +32,9 @@ namespace DimaDevi
                         continue;
 
                     var last = enumer.Current?.GetType().Name;
-                    if (string.IsNullOrEmpty(last) || !Dict.DictOfEnum.ContainsKey(last))
+                    if (string.IsNullOrEmpty(last) || !Dict.WMIClass.ContainsKey(last))
                         continue;
-                    devi.AddComponents(new WMIComp(enumer.Current?.ToString(), Dict.DictOfEnum[last], enumer.Current?.ToString()){BaseHardware = last });
+                    devi.AddComponents(new WMIComp(enumer.Current?.ToString(), Dict.WMIClass[last], enumer.Current?.ToString()){BaseHardware = last });
                 }
             }
             return devi;
@@ -96,6 +96,10 @@ namespace DimaDevi
         {
             return devi.AddComponents(new FileComp(path, hash));
         }
+        public static DeviBuild AddFile(this DeviBuild devi, string path, Enumerations.FileInformation fileInformation, HashAlgorithm hash = null)
+        {
+            return devi.AddComponents(new FileComp(path, fileInformation, hash));
+        }
         public static DeviBuild AddSelf(this DeviBuild devi, Enumerations.AssemblyEn assemblyEn = Enumerations.AssemblyEn.PublicKeyToken)
         {
             return devi.AddComponents(new AssemblyComp(Assembly.GetEntryAssembly(), assemblyEn));
@@ -125,9 +129,9 @@ namespace DimaDevi
                         var te = enumer.Current?.GetType().Name;
                         if (te == null)
                             continue;
-                        if (!Dict.DictOfEnum.ContainsKey(te))
+                        if (!Dict.WMIClass.ContainsKey(te))
                             continue;
-                        devi.AddComponents(new WMIComp(enumer.Current?.ToString(),  Dict.DictOfEnum[te], "*", enumer.Current?.ToString(), $"DeviceID={Ext.GetMainPhysicalDriveOS()}"));
+                        devi.AddComponents(new WMIComp(enumer.Current?.ToString(),  Dict.WMIClass[te], "*", enumer.Current?.ToString(), $"DeviceID={Ext.GetMainPhysicalDriveOS()}"));
                     }
                 }
                 return devi;
@@ -148,6 +152,11 @@ namespace DimaDevi
         public static DeviBuild AddRegistry(this DeviBuild devi, string base_key, string name_key, RegistryHive reg_hive = RegistryHive.LocalMachine, RegistryView reg_view = RegistryView.Registry32)
         {
             return devi.AddComponents(new RegistryComp(reg_hive, reg_view, base_key, name_key));
+        }
+
+        public static DeviBuild AddUUID(this DeviBuild devi)
+        {
+            return devi.AddComponents(new WMIComp("UUID", "Win32_ComputerSystemProduct", "UUID"));
         }
     }
 }

@@ -32,7 +32,8 @@ namespace DimaDeviTest
                 .AddMachineName()
                 .AddMacAddress()
                 .AddMotherboard()
-                .AddFile(@"K:\LicService.dll", new SHA512Managed())
+                .AddUUID()
+                .AddFile(@"K:\LicService.dll", Enumerations.FileInformation.All, new SHA512Managed())
                 .AddRam(Enumerations.RAM.All);
             string content = devi.ToString("<separ>");
             Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-start).ToString());

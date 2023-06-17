@@ -2,7 +2,7 @@
 
 namespace DimaDevi.Libs
 {
-    public class Attrs
+    internal class Attrs
     {
         public class MethodNameAttribute : Attribute
         {

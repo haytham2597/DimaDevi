@@ -4,7 +4,7 @@ namespace DimaDevi.Libs
 {
     internal static class Dict
     {
-        public static Dictionary<string, string> DictOfEnum = new Dictionary<string, string>()
+        public static Dictionary<string, string> WMIClass = new Dictionary<string, string>()
         {
             { nameof(Enumerations.RAM), "Win32_PhysicalMemory" },
             { nameof(Enumerations.CPU), "Win32_Processor" },

@@ -6,12 +6,10 @@ using System.Xml.Linq;
 namespace DimaDevi.Formatters
 {
     /// <summary>
-    /// An implementation of <see cref="IDeviceIdFormatter"/> that combines the components into an XML string.
+    /// An implementation of <see cref="IDeviFormatter"/> that combines the components into an XML string.
     /// </summary>
     public class XmlForm : IDeviFormatter
     {
-        public bool PreventComponentDuplication { get; set; }
-
         /// <summary>
         /// Returns the device identifier string created by combining the specified <see cref="IDeviComponent"/> instances.
         /// </summary>

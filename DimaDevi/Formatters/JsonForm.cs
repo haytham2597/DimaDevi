@@ -7,7 +7,6 @@ namespace DimaDevi.Formatters
 {
     public sealed class JsonForm : IDeviFormatter
     {
-        public bool PreventComponentDuplication { get; set; }
         private Newtonsoft.Json.Formatting Formatting { set; get; }
         public JsonForm(Newtonsoft.Json.Formatting formatting = Newtonsoft.Json.Formatting.None)
         {
@@ -19,11 +18,12 @@ namespace DimaDevi.Formatters
             JObject o = new JObject();
             JObject jo = new JObject();
             
-            if (PreventComponentDuplication)
+            if (GeneralConfigs.GetInstance().PreventDuplicationComponents)
                 components= components.DistinctBy(x => x.BaseHardware).Where(x => !string.IsNullOrEmpty(x.Name));
             using (var enumer = components.GetEnumerator())
                 while(enumer.MoveNext())
                     jo.Add(enumer.Current?.Name, enumer.Current?.GetValue());
+
             o["Components"] = jo;
             return o.ToString(this.Formatting);
         }

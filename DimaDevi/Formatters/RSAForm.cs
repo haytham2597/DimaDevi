@@ -9,7 +9,6 @@ namespace DimaDevi.Formatters
 {
     public class RSAForm : IDeviFormatter
     {
-        public bool PreventComponentDuplication { get; set; }
         public string PublicKey;
         public string PrivateKey;
         private void Generate(int KeySize)
@@ -72,7 +71,7 @@ namespace DimaDevi.Formatters
                 RSA_Csp.FromXmlString(publicKey);
                 int Formula = ((RSA_Csp.KeySize - 384) / 8) + 37;
                 byte[] ReCompute = new byte[] { };
-                var bytesContent = General.GetInstance().Encoding.GetBytes(content);
+                var bytesContent = GeneralConfigs.GetInstance().Encoding.GetBytes(content);
 
                 int cont = Convert.ToInt32(bytesContent.Length / Formula) + 1;
                 int IndexFormula = 0;
@@ -101,7 +100,7 @@ namespace DimaDevi.Formatters
 
         public string Encrypt(byte[] content)
         {
-            return Encrypt(General.GetInstance().Encoding.GetString(content), this.PublicKey);
+            return Encrypt(GeneralConfigs.GetInstance().Encoding.GetString(content), this.PublicKey);
         }
 
         public string Decrypt(string content)
@@ -113,7 +112,7 @@ namespace DimaDevi.Formatters
             foreach (var dd in ler)
             {
                 byte[] bytesCypherText = Convert.FromBase64String(dd);
-                Result += General.GetInstance().Encoding.GetString(csp.Decrypt(bytesCypherText, false));
+                Result += GeneralConfigs.GetInstance().Encoding.GetString(csp.Decrypt(bytesCypherText, false));
             }
             return Result;
         }
@@ -133,7 +132,7 @@ namespace DimaDevi.Formatters
             using (var RSA_Csp = new RSACryptoServiceProvider())
             {
                 RSA_Csp.FromXmlString(this.PrivateKey);
-                return RSA_Csp.SignData(General.GetInstance().Encoding.GetBytes(content), CryptoConfig.MapNameToOID("SHA512"));
+                return RSA_Csp.SignData(GeneralConfigs.GetInstance().Encoding.GetBytes(content), CryptoConfig.MapNameToOID("SHA512"));
             }
         }
 
@@ -145,7 +144,7 @@ namespace DimaDevi.Formatters
                 using (SHA512Managed sha512 = new SHA512Managed())
                 {
                     //byte[] hashed = sha512.ComputeHash(Encoding.Unicode.GetBytes(signed));
-                    return rsa.VerifyData(General.GetInstance().Encoding.GetBytes(original), CryptoConfig.MapNameToOID("SHA512"), General.GetInstance().Encoding.GetBytes(signed));
+                    return rsa.VerifyData(GeneralConfigs.GetInstance().Encoding.GetBytes(original), CryptoConfig.MapNameToOID("SHA512"), GeneralConfigs.GetInstance().Encoding.GetBytes(signed));
                 }
             }
         }

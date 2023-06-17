@@ -21,7 +21,7 @@ namespace DimaDevi
         public IDeviFormatter Formatter { set; get; }
         public Property.RemoteWMICredential WmiCredential
         {
-            set => General.GetInstance().RemoteWmi = value;
+            set => GeneralConfigs.GetInstance().RemoteWmi = value;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace DimaDevi
         /// </summary>
         public bool PreventComponentDuplication
         {
-            set => this.Formatter.PreventComponentDuplication = value;
+            set => GeneralConfigs.GetInstance().PreventDuplicationComponents = value;
         }
 
         public DeviBuild()
@@ -47,10 +47,10 @@ namespace DimaDevi
             {
                 var elem = hard.ElementAt(i);
                 var last = elem.Key.Name;
-                if (string.IsNullOrEmpty(last) || !Dict.DictOfEnum.ContainsKey(last))
+                if (string.IsNullOrEmpty(last) || !Dict.WMIClass.ContainsKey(last))
                     continue;
                 for (int j = 0; j < elem.Value.Count; j++)
-                    this.Components.Add(new WMIComp(elem.Value[j], Dict.DictOfEnum[last], elem.Value[j]) { BaseHardware = last });
+                    this.Components.Add(new WMIComp(elem.Value[j], Dict.WMIClass[last], elem.Value[j]) { BaseHardware = last });
             }
         }
 
@@ -122,7 +122,7 @@ namespace DimaDevi
         {
             if (Formatter == null)
                 return content;
-            if (General.GetInstance().IsObfuscated)
+            if (GeneralConfigs.GetInstance().IsObfuscated)
             {
                 var methods = Formatter.GetType().GetMethods(BindingFlags.Public);
                 for (int i = 0; i < methods.Length; i++)
@@ -194,7 +194,7 @@ namespace DimaDevi
 
         public override string ToString()
         {
-            string result = Formatter != null ? Formatter.GetDevi(Components) : Components.Joined(this.Formatter.PreventComponentDuplication);
+            string result = Formatter != null ? Formatter.GetDevi(Components) : Components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents);
             if (ClearAfterProcess)
                 ClearComponents();
             return result;
@@ -207,7 +207,7 @@ namespace DimaDevi
             string str = string.Empty;
 
             IEnumerator<IDeviComponent> enumer = Components.GetEnumerator();
-            if (this.Formatter.PreventComponentDuplication)
+            if (GeneralConfigs.GetInstance().PreventDuplicationComponents)
                 enumer = Components.DistinctBy(x => x.BaseHardware).GetEnumerator();
             while (enumer.MoveNext())
                 str += enumer.Current?.Name + "=" + enumer.Current?.GetValue() + separator;
@@ -229,6 +229,7 @@ namespace DimaDevi
         {
             return Components.GroupBy(x => x.BaseHardware);
         }
+        
         /// <summary>
         /// Get specific components that was added
         /// <para>Only get the string of the component that was added in <see cref="DeviBuild"/></para>
@@ -274,7 +275,7 @@ namespace DimaDevi
         /// <returns></returns>
         public byte[] Compression(string str)
         {
-            var bytes = General.GetInstance().Encoding.GetBytes(str);
+            var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(str);
             using (var msi = new MemoryStream(bytes))
             using (var mso = new MemoryStream())
             {
@@ -295,7 +296,7 @@ namespace DimaDevi
             {
                 using (var gs = new GZipStream(msi, CompressionMode.Decompress))
                     gs.CopyTo(mso);
-                return General.GetInstance().Encoding.GetString(mso.ToArray());
+                return GeneralConfigs.GetInstance().Encoding.GetString(mso.ToArray());
             }
         }
 
