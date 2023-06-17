@@ -23,6 +23,7 @@ namespace DimaDevi.Components
         {
             this.BaseKey = base_key;
             this.NameKey = name_key;
+            this.Name += name_key;
             RegKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
         }
         public RegistryComp(RegistryKey reg_key, string base_key, string name_key) : this(base_key, name_key)

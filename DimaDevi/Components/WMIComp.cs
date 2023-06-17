@@ -13,12 +13,12 @@ namespace DimaDevi.Components
         public string BaseHardware { set; get; } = null;
         public string Name { get; }
         /// <summary>
-        /// The WMI class name.
+        /// The WMI class name. Example Win32_Processor
         /// </summary>
         private readonly string _wmiClass;
 
         /// <summary>
-        /// The WMI property name.
+        /// The WMI property name. Example: Manufacturer
         /// </summary>
         private readonly string _wmiProperty;
         private readonly string _wmiName;
@@ -32,29 +32,17 @@ namespace DimaDevi.Components
         /// <param name="name">The name of the component.</param>
         /// <param name="wmiClass">The WMI class name.</param>
         /// <param name="wmiProperty">The WMI property name.</param>
-        /// <param name="wmiCredential"></param>
         public WMIComp(string name, string wmiClass, string wmiProperty)
         {
             Name = name;
             _wmiClass = wmiClass;
             _wmiProperty = wmiProperty;
-            /*if (wmiCredential != null)
-                WmiCredential = wmiCredential;*/
         }
         public WMIComp(string name, string wmiClass, string wmiProperty, string wmiName) : this(name, wmiClass, wmiProperty)
         {
             _wmiName = wmiName;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="wmiClass"></param>
-        /// <param name="wmiProperty"></param>
-        /// <param name="wmiName"></param>
-        /// <param name="wmiWhere">Example: DeviceID=value, will find in DeviceID that contains this vlaue</param>
-        /// <param name="wmiCredential"></param>
         public WMIComp(string name, string wmiClass, string wmiProperty, string wmiName, string wmiWhere) : this(name, wmiClass, wmiProperty,wmiName)
         {
             _wmiWhere = wmiWhere;
@@ -74,7 +62,6 @@ namespace DimaDevi.Components
             {
                 ConnectionOptions connectOptions = new ConnectionOptions();
                 ManagementScope scope = new ManagementScope(@"root\cimv2");
-                
                 if (GeneralConfigs.GetInstance().RemoteWmi != null && !GeneralConfigs.GetInstance().RemoteWmi.IsEmpty())
                 {
                     connectOptions.Username = GeneralConfigs.GetInstance().RemoteWmi.Username;
@@ -93,12 +80,12 @@ namespace DimaDevi.Components
                             var spl = _wmiWhere.Split('=');
                             if (mo[spl[0]].ToString().Contains(spl[1]))
                             {
-                                values.Add(mo[_wmiProperty == "*" ? _wmiName : _wmiProperty].ToString());
+                                values.Add(mo[_wmiProperty == "*" ? _wmiName : _wmiProperty].ToString().Trim());
                                 break;
                             }
                             continue;
                         }
-                        values.Add(mo[_wmiProperty == "*" ? _wmiName : _wmiProperty].ToString());
+                        values.Add(mo[_wmiProperty == "*" ? _wmiName : _wmiProperty].ToString().Trim());
                     }
                 }
             }

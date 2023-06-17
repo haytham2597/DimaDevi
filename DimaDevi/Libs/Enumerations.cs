@@ -36,6 +36,9 @@ namespace DimaDevi.Libs
             FullName = 1,
             Version = FullName << 1,
             Culture = Version << 1,
+            /// <summary>
+            /// If exist
+            /// </summary>
             PublicKeyToken = Culture << 1,
             CreationDate = PublicKeyToken << 1,
             /// <summary>

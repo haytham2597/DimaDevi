@@ -28,13 +28,14 @@ namespace DimaDeviTest
             DimaDevi.DeviBuild devi = new DeviBuild();
             var start = Stopwatch.GetTimestamp();
             var devicont = devi
-                .AddCPU(Enumerations.CPU.Name)
+                .AddCPU(Enumerations.CPU.All)
                 .AddMachineName()
                 .AddMacAddress()
                 .AddMotherboard()
                 .AddUUID()
                 .AddFile(@"K:\LicService.dll", Enumerations.FileInformation.All, new SHA512Managed())
-                .AddRam(Enumerations.RAM.All);
+                .AddRam(Enumerations.RAM.All)
+                .AddRegistry(@"SOFTWARE\\DefaultUserEnvironment", "Path");
             string content = devi.ToString("<separ>");
             Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-start).ToString());
             /*var bob = new ElipticCurveDiffieHellman();
