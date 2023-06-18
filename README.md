@@ -80,9 +80,7 @@ Console.WriteLine($"Decrypt data: {decrypt}");
 HardwareComponents.GetInstance()
     .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
     .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
-DimaDevi.DeviBuild devi = new DeviBuild();
-var start = Stopwatch.GetTimestamp();
-var devicont = devi
+DeviBuild devi = new DeviBuild()
     .AddCPU(Enumerations.CPU.Description | Enumerations.CPU.Name)
     .AddMotherboard(Enumerations.Motherboard.Name | Enumerations.Motherboard.Manufacturer)
     .AddMachineName()
@@ -90,4 +88,5 @@ var devicont = devi
     .AddRam(Enumerations.RAM.All)
     .AddRegistry(@"SOFTWARE\\DefaultUserEnvironment", "Path");
 string content = devi.ToString("<separ>"); //Print Description, Name CPU and L3CacheSize, L2CacheSize of CPU and other components
+Console.WriteLine(content);
 ```
