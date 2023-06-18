@@ -13,29 +13,14 @@ If you dont defined this the WMI is Local Computer by default
 </p>
 </details>
 
-1. Hardwares (all enum admit flags):
-   - CPU
-   - RAM
-   - Disk
-   - Motherboard
-   - MacAddress
-
-2. Components (some enum admit flags):
-   - Assembly
-   - File
-   - Devi
-   - Network
-   - Registry
-   - WMI
-
-3. Formatters:
-   - AES
-   - RSA 
-   - ChaCha20
-   - JSON
-   - XML
-   - HASH
-   - Support ECDH (Eliptic Curve Diffie-Helman)
+| Hardwares (all enum admit flags) | Components (some enum admit flags) | Formatters |
+| :---      | :---       | :---       |
+| CPU       | Assembly   | AES        |
+| RAM       | File       | RSA        |
+| Disk | Devi | ChaCha20 |
+| Motherboard | Network | JSON |
+| MacAddress | WMI | Hash |
+| | | Support ECDH (Eliptic Curve Diffie-Helman) |
 
 ### Create Hardware 'Outside'
 
