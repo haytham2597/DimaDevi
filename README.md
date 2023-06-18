@@ -13,7 +13,7 @@ If you dont defined this the WMI is Local Computer by default
 </p>
 </details>
 
-| Hardwares (all enum admit flags) | Components | Formatters |
+| Hardwares (all enum admit flags) | Components (support disposed) | Formatters |
 | :---      | :---       | :---       |
 | CPU       | Assembly   | AES        |
 | RAM       | File       | RSA        |
