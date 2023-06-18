@@ -31,9 +31,9 @@ If you dont defined this the WMI is Local Computer by default
 ### Create Hardware 'Outside'
 
 ```csharp
-   HardwareComponents.GetInstance()
-      .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
-      .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
+HardwareComponents.GetInstance()
+    .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
+    .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
 ```
 # How to use ECDH with AES
 ```cs
@@ -94,3 +94,10 @@ devi.Formatter = new XmlForm();
 Console.WriteLine($"Xml: {devi.ToString("#")}");
 devi.Dispose();
 ```
+
+# TODO
+- [ ] Fix `Import` DeviBuild
+- [ ] Add `BaseXFormatter`
+- [ ] Add more examples
+- [ ] Allow add more hardware (like "Win32_CacheMemory" for example) in `HardwaresComponents`
+- [ ] Fix, Add & Improvement Validation DeviBuild
