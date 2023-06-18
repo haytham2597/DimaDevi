@@ -60,7 +60,7 @@ var decrypt = devi.Decryption(content, aesBob);
 Console.WriteLine($"Decrypt data: {decrypt}");
 ```
 
-# Hardware Outside
+# Hardware "Outside"
 ```cs
 HardwareComponents.GetInstance()
     .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
@@ -74,4 +74,17 @@ DeviBuild devi = new DeviBuild()
     .AddRegistry(@"SOFTWARE\\DefaultUserEnvironment", "Path");
 string content = devi.ToString("<separ>"); //Print Description, Name CPU and L3CacheSize, L2CacheSize of CPU and other components
 Console.WriteLine(content);
+```
+
+# Common Formatters
+```cs
+DeviBuild devi = new DeviBuild();
+devi.AddGPU(Enumerations.GPU.All).AddMacAddress().AddMotherboard(Enumerations.Motherboard.All);
+devi.Formatter = new HashForm();
+Console.WriteLine($"Hash: {devi.ToString("#")}");
+devi.Formatter = new JsonForm();
+Console.WriteLine($"Json: {devi.ToString("#")}");
+devi.Formatter = new XmlForm();
+Console.WriteLine($"Xml: {devi.ToString("#")}");
+devi.Dispose();
 ```
