@@ -67,9 +67,9 @@ namespace DimaDevi.Formatters
             Managed = new RijndaelManaged { KeySize = 256, BlockSize = 128 };
             Managed.GenerateIV();
             Managed.Key = ecdh.GetDerivate();
-            Managed.IV = Managed.IV;
             Managed.Padding = this.Padding;
             Managed.Mode = cipher;
+            this.Salt = Ext.GenerateRandomSalt();
         }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Attrs.MethodName("Encrypt")]

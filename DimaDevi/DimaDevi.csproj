@@ -56,6 +56,7 @@
     <Compile Include="DeviBuild.cs" />
     <Compile Include="DeviBuildExt.cs" />
     <Compile Include="Formatters\AESForm.cs" />
+    <Compile Include="Formatters\BaseXForm.cs" />
     <Compile Include="Formatters\ChaCha20Form.cs" />
     <Compile Include="Formatters\HashForm.cs" />
     <Compile Include="Formatters\JsonForm.cs" />

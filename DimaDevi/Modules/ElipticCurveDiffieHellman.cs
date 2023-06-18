@@ -79,7 +79,7 @@ namespace DimaDevi.Modules
 
         /// <summary>
         /// Is Private of this ECDH, is should be used for save in disk
-        /// NEVER PUBLIC THIS KEY
+        /// NEVER PUBLISH THIS KEY
         /// </summary>
         /// <returns></returns>
         public byte[] GetPrivateKey()

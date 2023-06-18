@@ -9,19 +9,26 @@ namespace DimaDevi.Formatters
 {
     public class RSAForm : IDeviFormatter
     {
+        /// <summary>
+        /// XML Public Key
+        /// </summary>
         public string PublicKey;
+        /// <summary>
+        /// XML Private Key
+        /// </summary>
         public string PrivateKey;
+        public bool usefOAEP = false;
         private void Generate(int KeySize)
         {
             if (KeySize % 2 != 0)
                 throw new Exception("Not valid keySize");
 
-            using (var RSA_CSP = new RSACryptoServiceProvider(KeySize))
+            using (var rsa = new RSACryptoServiceProvider(KeySize))
             {
                 /*var privateKey = RSA_CSP.ExportParameters(true);
                 var publicKey = RSA_CSP.ExportParameters(false);*/
-                PrivateKey = RSA_CSP.ToXmlString(true);
-                PublicKey = RSA_CSP.ToXmlString(false);
+                PrivateKey = rsa.ToXmlString(true);
+                PublicKey = rsa.ToXmlString(false);
                 /*string publicKeyString;
                 {
                     var sw = new StringWriter();
@@ -45,7 +52,7 @@ namespace DimaDevi.Formatters
         }
         public RSAForm(int keysize = 2048)
         {
-            if (keysize >= 4096)
+            if (keysize >= 4096 && GeneralConfigs.GetInstance().WarningBigKeySizeRSA)
             {
                 const string question = "The key is so big, are you sure want continue?";
                 if (Environment.UserInteractive)
@@ -63,13 +70,15 @@ namespace DimaDevi.Formatters
             Generate(keysize);
         }
 
-        public static string Encrypt(string content, string publicKey)
+        public string Encrypt(string content, string publicKey)
         {
+            const int rest = 11;
             string CipherContent = string.Empty;
-            using (var RSA_Csp = new RSACryptoServiceProvider())
+            using (var rsa = new RSACryptoServiceProvider())
             {
-                RSA_Csp.FromXmlString(publicKey);
-                int Formula = ((RSA_Csp.KeySize - 384) / 8) + 37;
+                rsa.FromXmlString(publicKey);
+                int Formula = ((rsa.KeySize - 384) / 8) + 37;
+                int completeSize = Formula + rest; //TODO: Implement Cipher Decipher by block of completeSize instaed of '\n'
                 byte[] ReCompute = new byte[] { };
                 var bytesContent = GeneralConfigs.GetInstance().Encoding.GetBytes(content);
 
@@ -80,7 +89,7 @@ namespace DimaDevi.Formatters
                 {
                     if (bytesContent.Length < Formula)
                     {
-                        var bytesContentCip = RSA_Csp.Encrypt(bytesContent, false);
+                        var bytesContentCip = rsa.Encrypt(bytesContent, usefOAEP);
                         CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(bytesContentCip);
                         break;
                     }
@@ -88,13 +97,12 @@ namespace DimaDevi.Formatters
                     Array.Copy(bytesContent, (IndexFormula == 0) ? 0 : IndexFormula, ReCompute, 0, (IndexFormula == 0) ? Formula - 1 : (i == cont - 1) ? bytesContent.Length - IndexFormula : ReCompute.Length);
                     if (i == cont - 1)
                         Array.Resize(ref ReCompute, Array.FindLastIndex(ReCompute, item => item > 0) + 2);
-                    var byteRecompute = RSA_Csp.Encrypt(ReCompute, false);
+                    var byteRecompute = rsa.Encrypt(ReCompute, usefOAEP);
                     CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(byteRecompute);
                     IndexFormula += Formula - 1;
                     Array.Clear(ReCompute, 0, ReCompute.Length);
                 }
             }
-
             return CipherContent;
         }
 
@@ -105,16 +113,18 @@ namespace DimaDevi.Formatters
 
         public string Decrypt(string content)
         {
-            var csp = new RSACryptoServiceProvider();
-            csp.FromXmlString(this.PrivateKey);
-            string[] ler = content.Split('\n');
-            string Result = string.Empty;
-            foreach (var dd in ler)
+            string result = string.Empty;
+            using (var rsa = new RSACryptoServiceProvider())
             {
-                byte[] bytesCypherText = Convert.FromBase64String(dd);
-                Result += GeneralConfigs.GetInstance().Encoding.GetString(csp.Decrypt(bytesCypherText, false));
+                rsa.FromXmlString(this.PrivateKey);
+                string[] ler = content.Split('\n');
+                foreach (var dd in ler)
+                {
+                    byte[] bytesCypherText = Convert.FromBase64String(dd);
+                    result += GeneralConfigs.GetInstance().Encoding.GetString(rsa.Decrypt(bytesCypherText, false));
+                }
             }
-            return Result;
+            return result;
         }
         
         public string GetDevi(IEnumerable<IDeviComponent> components)

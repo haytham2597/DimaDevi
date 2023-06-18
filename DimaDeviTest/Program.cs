@@ -23,8 +23,11 @@ namespace DimaDeviTest
     {
         static void Main(string[] args)
         {
-            /*var h = HardwareComponents.GetInstance();
-            h.AddComponent(typeof(Enumerations.CPU), "L3CacheSize").AddComponent(typeof(Enumerations.CPU), "L2CacheSize");*/
+            new Examples.CommonFormatter();
+            GeneralConfigs.GetInstance().ProcessComponentsWhileAdd = false;
+            HardwareComponents.GetInstance()
+                .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
+                .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
             DimaDevi.DeviBuild devi = new DeviBuild();
             var start = Stopwatch.GetTimestamp();
             var devicont = devi
@@ -38,23 +41,7 @@ namespace DimaDeviTest
                 .AddRegistry(@"SOFTWARE\\DefaultUserEnvironment", "Path");
             string content = devi.ToString("<separ>");
             Console.WriteLine(new TimeSpan(Stopwatch.GetTimestamp()-start).ToString());
-            /*var bob = new ElipticCurveDiffieHellman();
-            var alice = new ElipticCurveDiffieHellman(bob.GetPublicKey());
-            bob.AddPublic(alice);
-            
-            var aes = new AESForm(alice);
-            DimaDevi.DeviBuild devi = new DeviBuild();
-            var devicont = devi
-                    .AddCPU(Enumerations.CPU.All)
-                    .AddDisk(Enumerations.Disk.Caption | Enumerations.Disk.Main | Enumerations.Disk.FirmwareRevision)
-                    .AddGPU(Enumerations.GPU.All)
-                    .AddDisk(Enumerations.Disk.FirmwareRevision | Enumerations.Disk.SerialNumber | Enumerations.Disk.Size | Enumerations.Disk.Model)
-                    .AddUserName()
-                    .AddMachineName()
-                    .AddMacAddress();
-            string content = devi.ToString( "#\n");
-            var aes1 = new AESForm(bob.AddPublic(alice));*/
-
+          
             Console.WriteLine(content);
             Console.WriteLine("-----------");
             DeviBuild devi1 = new DeviBuild().AddCPU().AddMacAddress();

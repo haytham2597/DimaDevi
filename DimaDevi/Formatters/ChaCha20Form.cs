@@ -10,7 +10,6 @@ namespace DimaDevi.Formatters
 {
     public sealed class ChaCha20Form : IDeviFormatter
     {
-        public bool PreventComponentDuplication { get; set; }
         private ChaCha20 chacha20;
         public byte[] Key;
         public byte[] Nonce;
@@ -81,7 +80,7 @@ namespace DimaDevi.Formatters
         
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            return Encrypt(components.Joined(PreventComponentDuplication));
+            return Encrypt(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
         }
 
         public string GetDevi(string componentsResult, string separator)

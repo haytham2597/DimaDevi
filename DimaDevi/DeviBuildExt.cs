@@ -18,6 +18,9 @@ namespace DimaDevi
         public static DeviBuild AddComponents(this DeviBuild devi, IDeviComponent deviComponent)
         {
             devi.Components.Add(deviComponent);
+            if (GeneralConfigs.GetInstance().ProcessComponentsWhileAdd)
+                GeneralConfigs.GetInstance().result.Add(deviComponent.Name + "="+deviComponent.GetValue());
+
             return devi;
         }
 
@@ -60,6 +63,11 @@ namespace DimaDevi
         {
             return devi.AddComponents(new DeviComp(name, func_) { BaseHardware = baseHardwareName });
         }
+
+        public static DeviBuild AddCustom(this DeviBuild devi, IDeviComponent deviComp)
+        {
+            return devi.AddComponents(deviComp);
+        }
         public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All)
         {
             return devi.AddComponents(new NetworkComp(macAddress));
@@ -100,10 +108,23 @@ namespace DimaDevi
         {
             return devi.AddComponents(new FileComp(path, fileInformation, hash));
         }
+        /// <summary>
+        /// Add itself assembly
+        /// </summary>
+        /// <param name="devi"></param>
+        /// <param name="assemblyEn"></param>
+        /// <returns></returns>
         public static DeviBuild AddSelf(this DeviBuild devi, Enumerations.AssemblyEn assemblyEn = Enumerations.AssemblyEn.PublicKeyToken)
         {
             return devi.AddComponents(new AssemblyComp(Assembly.GetEntryAssembly(), assemblyEn));
         }
+        /// <summary>
+        /// Add Assembly
+        /// </summary>
+        /// <param name="devi"></param>
+        /// <param name="assembly"></param>
+        /// <param name="assemblyEn"></param>
+        /// <returns></returns>
         public static DeviBuild AddAssembly(this DeviBuild devi, Assembly assembly, Enumerations.AssemblyEn assemblyEn = Enumerations.AssemblyEn.PublicKeyToken)
         {
             return devi.AddComponents(new AssemblyComp(assembly, assemblyEn));

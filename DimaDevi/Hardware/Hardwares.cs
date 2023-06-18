@@ -9,9 +9,9 @@ namespace DimaDevi.Hardware
         private static HardwareComponents instance;
         private readonly Dictionary<Type, IList<string>> dicthard = new Dictionary<Type, IList<string>>();
         /// <summary>
-        /// Throw exception if put bad Type
+        /// Throw exception if put bad Type enum
         /// </summary>
-        public bool AllowException = false;
+        public bool AllowException;
         private HardwareComponents(){}
 
         public Dictionary<Type, IList<string>> GetHardware()
@@ -41,6 +41,15 @@ namespace DimaDevi.Hardware
                 return;
             }
             dicthard.Add(enumType, new List<string>(){field});
+        }
+
+        /// <summary>
+        /// Clear all hardwares and Reset configuration to default
+        /// </summary>
+        public void Reset()
+        {
+            this.dicthard.Clear();
+            this.AllowException = false;
         }
 
         public static HardwareComponents GetInstance()

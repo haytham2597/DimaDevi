@@ -19,7 +19,7 @@ namespace DimaDevi
     {
         public ISet<IDeviComponent> Components { set; get; }
         public IDeviFormatter Formatter { set; get; }
-        public Property.RemoteWMICredential WmiCredential
+        public RemoteWMICredential WmiCredential
         {
             set => GeneralConfigs.GetInstance().RemoteWmi = value;
         }
@@ -84,7 +84,6 @@ namespace DimaDevi
         {
             return Decryption(result) == Decryption(ToString(separator));
         }
-
         
         public virtual double Validate(Hardwares hardwares)
         {
@@ -207,16 +206,26 @@ namespace DimaDevi
             string str = string.Empty;
 
             IEnumerator<IDeviComponent> enumer = Components.GetEnumerator();
-            if (GeneralConfigs.GetInstance().PreventDuplicationComponents)
-                enumer = Components.DistinctBy(x => x.BaseHardware).GetEnumerator();
-            while (enumer.MoveNext())
-                str += enumer.Current?.Name + "=" + enumer.Current?.GetValue() + separator;
+            if (!GeneralConfigs.GetInstance().ProcessComponentsWhileAdd)
+            {
+                if (GeneralConfigs.GetInstance().PreventDuplicationComponents)
+                    enumer = Components.DistinctBy(x => x.BaseHardware).GetEnumerator();
+                while (enumer.MoveNext())
+                    str += enumer.Current?.Name + "=" + enumer.Current?.GetValue() + separator;
+            }
+            else
+            {
+                var res = GeneralConfigs.GetInstance().result;
+                for (int i = 0; i < res.Count; i++)
+                    str += res[i] + separator;
+            }
 
             enumer.Dispose();
 
             if (ClearAfterProcess)
                 ClearComponents();
-            return Formatter != null ? Formatter.GetDevi(str, separator) : str.TrimEnd(separator.ToCharArray());
+            str = str.TrimEnd(separator.ToCharArray());
+            return Formatter != null ? Formatter.GetDevi(str, separator) : str;
         }
 
         public string ToString(IDeviFormatter formatter, string separator =null)
@@ -303,7 +312,11 @@ namespace DimaDevi
         public void Dispose()
         {
             Formatter.Dispose();
+            using (var enumer = Components.GetEnumerator())
+                while (enumer.MoveNext())
+                    enumer.Current?.CallDisposed();
             Components.Clear();
+
         }
     }
 }

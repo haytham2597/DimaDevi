@@ -16,7 +16,6 @@ namespace DimaDevi.Libs
 {
     public static class Ext
     {
-        
         public static Random rnd = new Random();
         //[Obfuscation(ApplyToMembers = true, Feature = "all")]
         public static IEnumerable<Enum> GetFlags(this Enum e)
@@ -271,6 +270,18 @@ namespace DimaDevi.Libs
                 if (props[i].PropertyType == typeof(byte[]))
                     props[i].SetValue(obj, GenerateRandomSalt());
             }
+        }
+
+        /// <summary>
+        /// Call disposed method if exists
+        /// </summary>
+        /// <param name="obj"></param>
+        public static void CallDisposed(this object obj)
+        {
+            //Check if obj is a generic list or set
+            var dispose = obj.GetType().GetMethod("Dispose");
+            if (dispose != null)
+                dispose.Invoke(obj, null); //The normal pattern Dispose not have parameter
         }
 
         /// <summary>

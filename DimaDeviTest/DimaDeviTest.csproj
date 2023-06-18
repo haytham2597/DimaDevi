@@ -47,6 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\CommonFormatter.cs" />
+    <Compile Include="Examples\CreateHardwareOutside.cs" />
+    <Compile Include="Examples\ECDHAES.cs" />
+    <Compile Include="Examples\UseRSA.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -59,5 +63,6 @@
       <Name>DimaDevi</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

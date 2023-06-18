@@ -11,6 +11,5 @@
         /// </summary>
         string Name { get; }
         string GetValue();
-
     }
 }
