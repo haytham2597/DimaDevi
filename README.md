@@ -13,6 +13,12 @@ If you dont defined this the WMI is Local Computer by default
 </p>
 </details>
 
+#### In Global General Configuration exists these features:
+`RemoteWmi` for Remote WMI property see "Remote WMI"<br>
+`Encoding` Global encoding. If set UTF8 all device process as UTF8<br>
+`ProcessComponentsWhileAdd` this process the components that you add in runtime after call ToString() only return result of component runtime added not re-process<br>
+`WarningBigKeySizeRSA` is for RSAForm `Formatter` if `KeySize` is greather or equal than 4096 throw warning message box or Console  (if use Console)
+
 | Hardwares (all enum admit flags) | Components (support disposed) | Formatters |
 | :---      | :---       | :---       |
 | CPU       | Assembly   | AES        |
