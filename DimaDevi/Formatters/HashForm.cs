@@ -5,7 +5,7 @@ using DimaDevi.Libs;
 
 namespace DimaDevi.Formatters
 {
-    public class HashForm : IDeviFormatter
+    public sealed class HashForm : IDeviFormatter
     {
         /// <summary>
         /// A function that returns the hash algorithm to use.
@@ -53,6 +53,7 @@ namespace DimaDevi.Formatters
 
         public void Dispose()
         {
+
         }
     }
 }

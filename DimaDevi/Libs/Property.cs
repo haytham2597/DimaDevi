@@ -38,7 +38,6 @@ namespace DimaDevi.Libs
             var props = this.GetType().GetProperties();
             for (int i = 0; i < props.Length; i++)
                 props[i].SetValue(this, string.Empty);
-            //this.RandomizedStringDispose();
         }
     }
 }

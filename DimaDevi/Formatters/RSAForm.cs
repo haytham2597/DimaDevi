@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using DimaDevi.Libs;
+using DimaDevi.Modules;
 using Newtonsoft.Json.Linq;
 
 namespace DimaDevi.Formatters
@@ -44,13 +45,17 @@ namespace DimaDevi.Formatters
             }
         }
 
-        public RSAForm(JObject import)
+        private RSAForm()
+        {
+            DefaultSet.GetInstance().AddThis(this);
+        }
+        public RSAForm(JObject import) : this()
         {
             var fields = this.GetType().GetFields();
             for (int i = 0; i < fields.Length; i++)
                 fields[i].SetValue(this, Convert.ChangeType(import[fields[i].Name], fields[i].FieldType));
         }
-        public RSAForm(int keysize = 2048)
+        public RSAForm(int keysize = 2048) : this()
         {
             if (keysize >= 4096 && GeneralConfigs.GetInstance().WarningBigKeySizeRSA)
             {
@@ -161,7 +166,8 @@ namespace DimaDevi.Formatters
 
         public void Dispose()
         {
-            this.RandomizedStringDispose();
+            DefaultSet.GetInstance().SetThis(this);
+            //this.RandomizedStringDispose();
         }
     }
 }

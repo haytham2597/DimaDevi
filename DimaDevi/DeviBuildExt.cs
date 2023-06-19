@@ -179,5 +179,10 @@ namespace DimaDevi
         {
             return devi.AddComponents(new WMIComp("UUID", "Win32_ComputerSystemProduct", "UUID"));
         }
+
+        public static DeviBuild AddMachineUUID(this DeviBuild devi)
+        {
+            return devi.AddRegistry(@"SOFTWARE\\Microsoft\\Cryptography", "MachineGuid");
+        }
     }
 }

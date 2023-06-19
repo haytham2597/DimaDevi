@@ -23,7 +23,6 @@ namespace DimaDevi.Components
         private readonly string _wmiProperty;
         private readonly string _wmiName;
         private readonly string _wmiWhere;
-        //public Property.RemoteWMICredential WmiCredential;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WMIComp"/> class.

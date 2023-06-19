@@ -17,6 +17,8 @@ namespace DimaDevi
 {
     public class DeviBuild : IDisposable
     {
+        //TODO: Automatically detect and support Linux
+
         public ISet<IDeviComponent> Components { set; get; }
         public IDeviFormatter Formatter { set; get; }
         public RemoteWMICredential WmiCredential
@@ -117,6 +119,11 @@ namespace DimaDevi
             this.Components.Clear();
         }
 
+        /// <summary>
+        /// Decrypt or Decode
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
         public string Decryption(string content)
         {
             if (Formatter == null)
@@ -132,6 +139,15 @@ namespace DimaDevi
                             return methods[i].Invoke(Formatter, new object[] { content }).ToString();
                 }
             }
+
+            var decode = Formatter.GetType().GetMethod("Decode");
+            if (decode != null) //Is decoded method not decrypt
+            {
+                var result =  decode.Invoke(Formatter, new object[] { content });
+                if (result is byte[] b)
+                    return GeneralConfigs.GetInstance().Encoding.GetString(b);
+            }
+
             var decrypt = Formatter.GetType().GetMethod("Decrypt");
             return decrypt != null ? decrypt.Invoke(Formatter, new object[] { content }).ToString() : content;
         }

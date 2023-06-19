@@ -29,7 +29,11 @@ namespace DimaDevi.Formatters
             return AES;
         }
 
-        public AESForm(JObject import)
+        private AESForm()
+        {
+            DefaultSet.GetInstance().AddThis(this);
+        }
+        public AESForm(JObject import) : this()
         {
             var props = this.GetType().GetProperties();
             for (int i = 0; i < props.Length; i++)
@@ -51,7 +55,7 @@ namespace DimaDevi.Formatters
         /// <param name="size">128,196,256</param>
         /// <param name="cipher"></param>
         /// <param name="padding"></param>
-        public AESForm(string password, int size = 256, CipherMode cipher = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7)
+        public AESForm(string password, int size = 256, CipherMode cipher = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7) : this()
         {
             Password = password;
             Cipher = cipher;
@@ -60,7 +64,7 @@ namespace DimaDevi.Formatters
             Managed = InitManaged(DeriveSecure == Enumerations.DeriveSecure.PasswordDeriveBytes ? (DeriveBytes)new PasswordDeriveBytes(Password, Salt, "SHA1", Iterations) : new Rfc2898DeriveBytes(Password, Salt, Iterations), Cipher, Padding);
         }
 
-        public AESForm(ElipticCurveDiffieHellman ecdh, CipherMode cipher = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7)
+        public AESForm(ElipticCurveDiffieHellman ecdh, CipherMode cipher = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7) : this()
         {
             Cipher = cipher;
             Padding = padding;
@@ -130,7 +134,6 @@ namespace DimaDevi.Formatters
         /// Export all configuration of this
         /// </summary>
         /// <returns></returns>
-        [Obfuscation(Feature ="all")]
         public string Export()
         {
             return JsonConvert.SerializeObject(this);
@@ -140,7 +143,6 @@ namespace DimaDevi.Formatters
         /// Import configuration 
         /// </summary>
         /// <param name="content">Json value</param>
-        [Obfuscation(Feature ="all")]
         public void Import(string content)
         {
             var parse = JObject.Parse(content);
@@ -162,9 +164,16 @@ namespace DimaDevi.Formatters
                 }
             }
         }
+
+        public void Clear()
+        {
+            DefaultSet.GetInstance().SetThis(this);
+        }
         public void Dispose()
         {
-            this.RandomizedStringDispose();
+            Clear();
+            Console.WriteLine($"After disposed the value of password is: {this.Password}");
+            //this.RandomizedStringDispose();
         }
     }
 }

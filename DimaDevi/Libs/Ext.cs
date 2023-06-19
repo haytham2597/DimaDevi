@@ -22,6 +22,28 @@ namespace DimaDevi.Libs
         {
             return Enum.GetValues(e.GetType()).Cast<Enum>().Where(e.HasFlag);
         }
+
+        /// <summary>
+        /// Get all Properties and Fields
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="binding"></param>
+        /// <returns></returns>
+        public static IEnumerable<MemberInfo> GetMembers(this object obj, BindingFlags binding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+        {
+            var type = obj.GetType();
+            return type.GetFields(binding).Cast<MemberInfo>().Concat(type.GetProperties(binding)).Cast<MemberInfo>();
+        }
+
+        public static void SetMembers(this MemberInfo member, object obj, object value)
+        {
+            if (member == null)
+                return;
+            if(member is FieldInfo fi)
+                fi.SetValue(obj, value);
+            if (member is PropertyInfo pi)
+                pi.SetValue(obj, value);
+        }
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             HashSet<TKey> seenKeys = new HashSet<TKey>();
@@ -45,7 +67,31 @@ namespace DimaDevi.Libs
         {
             return AddPublic(ecdh, ecdh1.GetPublicKey());
         }
-
+        public static bool IsBase64(this string s)
+        {
+            s = s.Trim();
+            return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+        }
+        public static bool IsBase32(this string s)
+        {
+            s = s.Trim();
+            return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[A-Z2-7\+/]*={0,3}$", RegexOptions.None);
+        }
+        public static bool IsHexadecimal(this string test)
+        {
+            // For C-style hex notation (0xFF) you can use @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"
+            return System.Text.RegularExpressions.Regex.IsMatch(test, @"\A\b[0-9a-fA-F]+\b\Z");
+        }
+        public static byte[] DecodeHexadecimal(this string hex)
+        {
+            hex = hex.Replace("-", "");
+            byte[] raw = new byte[hex.Length / 2];
+            for (int i = 0; i < raw.Length; i++)
+            {
+                raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+            }
+            return raw;
+        }
         public static bool IsEqual<T>(this T[] a, T[] b) where T : struct
         {
             if (a.Length != b.Length)
@@ -175,6 +221,7 @@ namespace DimaDevi.Libs
         {
             return Convert.ToBase64String(str.ToMD5());
         }
+        
         public static string RandomString(int length)
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -279,6 +326,7 @@ namespace DimaDevi.Libs
         public static void CallDisposed(this object obj)
         {
             //Check if obj is a generic list or set
+            DefaultSet.GetInstance().SetThis(obj);
             var dispose = obj.GetType().GetMethod("Dispose");
             if (dispose != null)
                 dispose.Invoke(obj, null); //The normal pattern Dispose not have parameter

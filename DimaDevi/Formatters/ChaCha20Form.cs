@@ -13,10 +13,14 @@ namespace DimaDevi.Formatters
         private ChaCha20 chacha20;
         public byte[] Key;
         public byte[] Nonce;
-        public uint Counter = 1;
-        private bool PasswordGenerator;
+        public readonly uint Counter = 1;
+        private readonly bool PasswordGenerator;
+        
         //TODO: Save Nonce, Key and Counter... Because in decryption need them.
+        private ChaCha20Form()
+        {
 
+        }
         public ChaCha20Form(JObject import)
         {
             var fields = this.GetType().GetFields();
@@ -62,8 +66,8 @@ namespace DimaDevi.Formatters
         private string Encrypt(string content)
         {
             var cont = GeneralConfigs.GetInstance().Encoding.GetBytes(content);
-            /*if(PasswordGenerator)
-                cont = this.Key.Combine(cont);*/
+            if(PasswordGenerator)
+                cont = this.Key.Combine(cont);
             byte[] encryptedContent = new byte[cont.Length];
             chacha20.EncryptBytes(encryptedContent, cont);
             return Convert.ToBase64String(encryptedContent);
