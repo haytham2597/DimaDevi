@@ -22,10 +22,7 @@ namespace DimaDevi.Formatters
         {
             this.BaseType = baseType;
         }
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public string Encode(byte[] bytesToEncode)
         {
@@ -43,8 +40,6 @@ namespace DimaDevi.Formatters
                  return Convert.FromBase64String(stringToDecode);
              return null;
         }
-        //Encode, Decode
-
         private string ConvertTo(byte[] bytes)
         {
             if (BaseType == Base.Base32)
@@ -63,10 +58,13 @@ namespace DimaDevi.Formatters
             var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
             return Encode(bytes);
         }
-
         public string GetDevi(string componentsResult, string separator)
         {
             return Encode(GeneralConfigs.GetInstance().Encoding.GetBytes(componentsResult));
+        }
+        public void Dispose()
+        {
+
         }
     }
 }

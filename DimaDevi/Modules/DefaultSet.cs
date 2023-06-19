@@ -14,7 +14,7 @@ namespace DimaDevi.Modules
     /// A module that after disposed class set all props/fields to default value
     /// Why this module? I can create new Instance... Well this is for NOT Create new instance of class or for Clear() method for example
     /// </summary>
-    public class DefaultSet : IDisposable
+    internal class DefaultSet : IDisposable
     {
         private static DefaultSet instance;
 
@@ -75,5 +75,4 @@ namespace DimaDevi.Modules
             this.ClassMemberValue.Clear();
         }
     }
-
 }

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Examples\BaseX.cs" />
     <Compile Include="Examples\CommonFormatter.cs" />
     <Compile Include="Examples\CreateHardwareOutside.cs" />
     <Compile Include="Examples\ECDHAES.cs" />

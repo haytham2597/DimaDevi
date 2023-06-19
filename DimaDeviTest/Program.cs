@@ -23,11 +23,11 @@ namespace DimaDeviTest
     {
         static void Main(string[] args)
         {
-            /*new Examples.CommonFormatter();
-            GeneralConfigs.GetInstance().ProcessComponentsWhileAdd = false;
             HardwareComponents.GetInstance()
                 .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
-                .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");*/
+                .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
+            new Examples.CommonFormatter();
+            
             DimaDevi.DeviBuild devi = new DeviBuild();
             var start = Stopwatch.GetTimestamp();
             var devicont = devi
@@ -46,7 +46,7 @@ namespace DimaDeviTest
           
             Console.WriteLine(content);
             Console.WriteLine("-----------");
-            Console.WriteLine(devi.Decryption(content));
+            Console.WriteLine(devi.DecryptionDecode(content));
             DeviBuild devi1 = new DeviBuild().AddCPU().AddMacAddress();
             Console.WriteLine("Validation Percentage: "+devi.Validate(devi1.GetHardwares()));
             /*var decr = devi.Decryption(content, aes1);

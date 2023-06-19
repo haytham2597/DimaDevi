@@ -84,7 +84,7 @@ namespace DimaDevi
 
         public virtual bool Validate(string result, string separator = null)
         {
-            return Decryption(result) == Decryption(ToString(separator));
+            return DecryptionDecode(result) == DecryptionDecode(ToString(separator));
         }
         
         public virtual double Validate(Hardwares hardwares)
@@ -124,7 +124,7 @@ namespace DimaDevi
         /// </summary>
         /// <param name="content"></param>
         /// <returns></returns>
-        public string Decryption(string content)
+        public string DecryptionDecode(string content)
         {
             if (Formatter == null)
                 return content;
@@ -155,7 +155,7 @@ namespace DimaDevi
         public string Decryption(string content, IDeviFormatter formatter)
         {
             this.Formatter = formatter;
-            return Decryption(content);
+            return DecryptionDecode(content);
         }
 
         [Obfuscation(Feature = "all")]

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using DimaDevi.Modules;
 
 namespace DimaDevi.Libs
 {
@@ -26,6 +27,7 @@ namespace DimaDevi.Libs
         private GeneralConfigs()
         {
             this.IsObfuscated = nameof(DeviBuild) == "DeviBuild";
+            DefaultSet.GetInstance().AddThis(this);
         }
 
         /// <summary>
@@ -33,22 +35,7 @@ namespace DimaDevi.Libs
         /// </summary>
         public void Reset()
         {
-            /*var fields = this.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
-            for (int i = 0; i < fields.Length; i++)
-            {
-                if (fields[i].IsPrivate)
-                    continue;
-                if(fields[i].FieldType == typeof(bool))
-                    fields[i].SetValue(this, false);
-                //TODO: Check if field is class
-                //TODO: Check if field is list generic
-            }*/
-            WarningBigKeySizeRSA = false;
-            ProcessComponentsWhileAdd = false;
-            Encoding = Encoding.UTF8;
-            RemoteWmi.Dispose();
-            result.Clear();
-            PreventDuplicationComponents = false;
+            DefaultSet.GetInstance().SetThis(this);
         }
         public static GeneralConfigs GetInstance()
         {
