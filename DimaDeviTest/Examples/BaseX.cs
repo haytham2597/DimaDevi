@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DimaDevi;
 using DimaDevi.Formatters;
-using DimaDevi.Libs;
 
 namespace DimaDeviTest.Examples
 {

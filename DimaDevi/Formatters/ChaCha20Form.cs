@@ -23,7 +23,7 @@ namespace DimaDevi.Formatters
         }
         public ChaCha20Form(JObject import)
         {
-            var fields = this.GetType().GetFields();
+            var fields = GetType().GetFields();
             for (int i = 0; i < fields.Length; i++)
                 fields[i].SetValue(this, Convert.ChangeType(import[fields[i].Name], fields[i].FieldType));
         }
@@ -67,7 +67,7 @@ namespace DimaDevi.Formatters
         {
             var cont = GeneralConfigs.GetInstance().Encoding.GetBytes(content);
             if(PasswordGenerator)
-                cont = this.Key.Combine(cont);
+                cont = Key.Combine(cont);
             byte[] encryptedContent = new byte[cont.Length];
             chacha20.EncryptBytes(encryptedContent, cont);
             return Convert.ToBase64String(encryptedContent);
@@ -75,7 +75,7 @@ namespace DimaDevi.Formatters
 
         public string Decrypt(string content)
         {
-            this.chacha20 = new ChaCha20(this.Key, this.Nonce, 1); // In decryption the ChaCha20 flush Key and Nonce bytes after decryption. So Reload if the user call this method again
+            chacha20 = new ChaCha20(Key, Nonce, 1); // In decryption the ChaCha20 flush Key and Nonce bytes after decryption. So Reload if the user call this method again
             var cont = Convert.FromBase64String(content);
             byte[] decryptContent = new byte[cont.Length];
             chacha20.DecryptBytes(decryptContent, cont);
@@ -100,7 +100,7 @@ namespace DimaDevi.Formatters
         public void Import(string str)
         {
             var parse = JObject.Parse(str);
-            var prop = this.GetType().GetProperties();
+            var prop = GetType().GetProperties();
             foreach (var c in parse)
             {
                 for (int i = 0; i < prop.Length; i++)
@@ -116,8 +116,8 @@ namespace DimaDevi.Formatters
 
         public void Dispose()
         {
-            this.chacha20.Dispose();
-            this.RandomizedStringDispose();
+            chacha20.Dispose();
+            //this.RandomizedStringDispose();
         }
     }
 }

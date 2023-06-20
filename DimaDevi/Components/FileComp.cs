@@ -30,7 +30,7 @@ namespace DimaDevi.Components
 
         public FileComp(string path, Enumerations.FileInformation fileInformation, HashAlgorithm hashAlg) : this(path, hashAlg)
         {
-            this.FileInfomation = fileInformation;
+            FileInfomation = fileInformation;
         }
         public string GetValue()
         {
@@ -61,7 +61,7 @@ namespace DimaDevi.Components
 
         public void Dispose()
         {
-            this.hash.Dispose();
+            hash.Dispose();
         }
     }
 }

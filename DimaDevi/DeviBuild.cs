@@ -52,7 +52,7 @@ namespace DimaDevi
                 if (string.IsNullOrEmpty(last) || !Dict.WMIClass.ContainsKey(last))
                     continue;
                 for (int j = 0; j < elem.Value.Count; j++)
-                    this.Components.Add(new WMIComp(elem.Value[j], Dict.WMIClass[last], elem.Value[j]) { BaseHardware = last });
+                    Components.Add(new WMIComp(elem.Value[j], Dict.WMIClass[last], elem.Value[j]) { BaseHardware = last });
             }
         }
 
@@ -90,7 +90,7 @@ namespace DimaDevi
         public virtual double Validate(Hardwares hardwares)
         {
             //WARNING: Bad validation if user-defined new components with HardwareComponents i mean, this validation don't depend on user-defined new component and should...
-            var this_hard = this.GetHardwares();
+            var this_hard = GetHardwares();
             var props_hard = this_hard.GetType().GetProperties();
             var props_hardwares = hardwares.GetType().GetProperties();
             if (props_hard.Length != props_hardwares.Length)
@@ -116,7 +116,7 @@ namespace DimaDevi
 
         public void ClearComponents()
         {
-            this.Components.Clear();
+            Components.Clear();
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace DimaDevi
 
         public string Decryption(string content, IDeviFormatter formatter)
         {
-            this.Formatter = formatter;
+            Formatter = formatter;
             return DecryptionDecode(content);
         }
 
@@ -246,7 +246,7 @@ namespace DimaDevi
 
         public string ToString(IDeviFormatter formatter, string separator =null)
         {
-            this.Formatter = formatter;
+            Formatter = formatter;
             return ToString(separator);
         }
 
@@ -289,7 +289,7 @@ namespace DimaDevi
                 if (ctor == null)
                     continue;
                 if(jo.IsEqualPropertyOrFields(typelist[i]))
-                    this.Formatter = (IDeviFormatter)ctor.Invoke(new object[] { jo });
+                    Formatter = (IDeviFormatter)ctor.Invoke(new object[] { jo });
             }
         }
 

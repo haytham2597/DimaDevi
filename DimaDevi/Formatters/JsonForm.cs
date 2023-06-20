@@ -10,7 +10,7 @@ namespace DimaDevi.Formatters
         private Newtonsoft.Json.Formatting Formatting { set; get; }
         public JsonForm(Newtonsoft.Json.Formatting formatting = Newtonsoft.Json.Formatting.None)
         {
-            this.Formatting = formatting;
+            Formatting = formatting;
         }
 
         public string GetDevi(IEnumerable<IDeviComponent> components)
@@ -25,7 +25,7 @@ namespace DimaDevi.Formatters
                     jo.Add(enumer.Current?.Name, enumer.Current?.GetValue());
 
             o["Components"] = jo;
-            return o.ToString(this.Formatting);
+            return o.ToString(Formatting);
         }
 
         public string GetDevi(string componentsResult, string separator)
@@ -53,7 +53,7 @@ namespace DimaDevi.Formatters
                 
             }
             o["Components"] = jo;
-            return o.ToString(this.Formatting);
+            return o.ToString(Formatting);
         }
         public void Dispose()
         {

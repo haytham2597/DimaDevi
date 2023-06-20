@@ -21,7 +21,7 @@ namespace DimaDevi.Hardware
 
         public HardwareComponents AddComponent(Type enumType, string field)
         {
-            HardwareComponents.GetInstance().AddComp(enumType, field);
+            GetInstance().AddComp(enumType, field);
             return GetInstance();
         }
         private void AddComp(Type enumType, string field)
@@ -48,8 +48,8 @@ namespace DimaDevi.Hardware
         /// </summary>
         public void Reset()
         {
-            this.dicthard.Clear();
-            this.AllowException = false;
+            dicthard.Clear();
+            AllowException = false;
         }
 
         public static HardwareComponents GetInstance()

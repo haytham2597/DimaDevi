@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Management;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using DimaDevi;
 using DimaDevi.Formatters;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
-using DimaDevi.Modules;
-using Microsoft.Win32;
 
 namespace DimaDeviTest
 {
@@ -26,9 +15,9 @@ namespace DimaDeviTest
             HardwareComponents.GetInstance()
                 .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
                 .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
-            new Examples.CommonFormatter();
+            new Examples.UseAES();
             
-            DimaDevi.DeviBuild devi = new DeviBuild();
+            DeviBuild devi = new DeviBuild();
             var start = Stopwatch.GetTimestamp();
             var devicont = devi
                 .AddCPU(Enumerations.CPU.Description)

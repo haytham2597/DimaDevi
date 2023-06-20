@@ -9,7 +9,7 @@ namespace DimaDevi.Libs
             public string MethodName;
             public MethodNameAttribute(string method_name)
             {
-                this.MethodName = method_name;
+                MethodName = method_name;
             }
         }
     }

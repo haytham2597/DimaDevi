@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Security.Cryptography;
 using DimaDevi.Libs;
 using DimaDevi.Modules;
@@ -35,7 +34,7 @@ namespace DimaDevi.Formatters
         }
         public AESForm(JObject import) : this()
         {
-            var props = this.GetType().GetProperties();
+            var props = GetType().GetProperties();
             for (int i = 0; i < props.Length; i++)
             {
                 if (props[i].PropertyType == typeof(RijndaelManaged))
@@ -60,7 +59,7 @@ namespace DimaDevi.Formatters
             Password = password;
             Cipher = cipher;
             Padding = padding;
-            this.Salt = Ext.GenerateRandomSalt();
+            Salt = Ext.GenerateRandomSalt();
             Managed = InitManaged(DeriveSecure == Enumerations.DeriveSecure.PasswordDeriveBytes ? (DeriveBytes)new PasswordDeriveBytes(Password, Salt, "SHA1", Iterations) : new Rfc2898DeriveBytes(Password, Salt, Iterations), Cipher, Padding);
         }
 
@@ -71,9 +70,9 @@ namespace DimaDevi.Formatters
             Managed = new RijndaelManaged { KeySize = 256, BlockSize = 128 };
             Managed.GenerateIV();
             Managed.Key = ecdh.GetDerivate();
-            Managed.Padding = this.Padding;
+            Managed.Padding = Padding;
             Managed.Mode = cipher;
-            this.Salt = Ext.GenerateRandomSalt();
+            Salt = Ext.GenerateRandomSalt();
         }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Attrs.MethodName("Encrypt")]
@@ -96,7 +95,7 @@ namespace DimaDevi.Formatters
             if(Managed == null)
                 Managed = InitManaged(DeriveSecure == Enumerations.DeriveSecure.PasswordDeriveBytes ? (DeriveBytes)new PasswordDeriveBytes(Password, Salt, "SHA1", Iterations) : new Rfc2898DeriveBytes(Password, Salt, Iterations), Cipher, Padding);
             var decryptor = Managed.CreateEncryptor(Managed.Key, Managed.IV); //El modo CFB y otros usa encryptor
-            if (this.Cipher == CipherMode.CBC ^ this.Cipher == CipherMode.ECB) //Los unicos modos que usan Descryptor
+            if (Cipher == CipherMode.CBC ^ Cipher == CipherMode.ECB) //Los unicos modos que usan Descryptor
                 decryptor = Managed.CreateDecryptor(Managed.Key, Managed.IV);
             using (MemoryStream ms = new MemoryStream())
             {
@@ -117,7 +116,7 @@ namespace DimaDevi.Formatters
         }
         public byte[] GetSalt()
         {
-            return this.Salt;
+            return Salt;
         }
 
         public string GetDevi(IEnumerable<IDeviComponent> components)
@@ -146,7 +145,7 @@ namespace DimaDevi.Formatters
         public void Import(string content)
         {
             var parse = JObject.Parse(content);
-            var prop = this.GetType().GetProperties();
+            var prop = GetType().GetProperties();
             foreach (var c in parse)
             {
                 for (int i = 0; i < prop.Length; i++)
@@ -172,7 +171,6 @@ namespace DimaDevi.Formatters
         public void Dispose()
         {
             Clear();
-            Console.WriteLine($"After disposed the value of password is: {this.Password}");
             //this.RandomizedStringDispose();
         }
     }

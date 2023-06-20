@@ -30,12 +30,12 @@ namespace DimaDevi.Libs
         //[Obfuscation(Feature = "all")]
         public bool IsEmpty()
         {
-            return this.GetType().GetProperties().Where(x => x.GetValue(this) != null).All(x => string.IsNullOrEmpty(x.GetValue(this).ToString()));
+            return GetType().GetProperties().Where(x => x.GetValue(this) != null).All(x => string.IsNullOrEmpty(x.GetValue(this).ToString()));
         }
 
         public void Dispose()
         {
-            var props = this.GetType().GetProperties();
+            var props = GetType().GetProperties();
             for (int i = 0; i < props.Length; i++)
                 props[i].SetValue(this, string.Empty);
         }

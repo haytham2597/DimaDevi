@@ -10,7 +10,7 @@ namespace DimaDevi.Modules
         private byte[] privateKey;
         public ElipticCurveDiffieHellman(int key_size = 256)
         {
-            this.CngKey = InitCngKey(key_size);
+            CngKey = InitCngKey(key_size);
             ecdh = new ECDiffieHellmanCng
             {
                 KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash,
@@ -31,7 +31,7 @@ namespace DimaDevi.Modules
         /// <param name="key_size"></param>
         public ElipticCurveDiffieHellman(ECDiffieHellmanPublicKey publicKey, int key_size = 256)
         {
-            this.CngKey = InitCngKey(key_size);
+            CngKey = InitCngKey(key_size);
             ecdh = new ECDiffieHellmanCng
             {
                 KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash,
@@ -43,13 +43,13 @@ namespace DimaDevi.Modules
 
         public ElipticCurveDiffieHellman(ECDiffieHellmanCng ecdhCng, int key_size = 256)
         {
-            this.CngKey = InitCngKey(key_size);
-            this.ecdh = ecdhCng;
+            CngKey = InitCngKey(key_size);
+            ecdh = ecdhCng;
         }
         public ElipticCurveDiffieHellman(ECDiffieHellmanCng ecdhCng, ECDiffieHellmanPublicKey publicKey, int key_size = 256) : this(publicKey, key_size)
         {
-            this.CngKey = InitCngKey(key_size);
-            this.ecdh = ecdhCng;
+            CngKey = InitCngKey(key_size);
+            ecdh = ecdhCng;
         }
 
         private CngKey InitCngKey(int key_size)
@@ -73,7 +73,7 @@ namespace DimaDevi.Modules
         /// <returns></returns>
         public ECDiffieHellmanPublicKey GetPublicKey()
         {
-            return this.ecdh.PublicKey;
+            return ecdh.PublicKey;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace DimaDevi.Modules
 
         public void Dispose()
         {
-            this.ecdh.Dispose();
+            ecdh.Dispose();
         }
     }
 }

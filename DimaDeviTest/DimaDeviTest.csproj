@@ -51,6 +51,7 @@
     <Compile Include="Examples\CommonFormatter.cs" />
     <Compile Include="Examples\CreateHardwareOutside.cs" />
     <Compile Include="Examples\ECDHAES.cs" />
+    <Compile Include="Examples\UseAES.cs" />
     <Compile Include="Examples\UseRSA.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

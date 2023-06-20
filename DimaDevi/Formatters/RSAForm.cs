@@ -51,7 +51,7 @@ namespace DimaDevi.Formatters
         }
         public RSAForm(JObject import) : this()
         {
-            var fields = this.GetType().GetFields();
+            var fields = GetType().GetFields();
             for (int i = 0; i < fields.Length; i++)
                 fields[i].SetValue(this, Convert.ChangeType(import[fields[i].Name], fields[i].FieldType));
         }
@@ -113,7 +113,7 @@ namespace DimaDevi.Formatters
 
         public string Encrypt(byte[] content)
         {
-            return Encrypt(GeneralConfigs.GetInstance().Encoding.GetString(content), this.PublicKey);
+            return Encrypt(GeneralConfigs.GetInstance().Encoding.GetString(content), PublicKey);
         }
 
         public string Decrypt(string content)
@@ -121,7 +121,7 @@ namespace DimaDevi.Formatters
             string result = string.Empty;
             using (var rsa = new RSACryptoServiceProvider())
             {
-                rsa.FromXmlString(this.PrivateKey);
+                rsa.FromXmlString(PrivateKey);
                 string[] ler = content.Split('\n');
                 foreach (var dd in ler)
                 {
@@ -146,7 +146,7 @@ namespace DimaDevi.Formatters
         {
             using (var RSA_Csp = new RSACryptoServiceProvider())
             {
-                RSA_Csp.FromXmlString(this.PrivateKey);
+                RSA_Csp.FromXmlString(PrivateKey);
                 return RSA_Csp.SignData(GeneralConfigs.GetInstance().Encoding.GetBytes(content), CryptoConfig.MapNameToOID("SHA512"));
             }
         }
@@ -155,7 +155,7 @@ namespace DimaDevi.Formatters
         {
             using (var rsa = new RSACryptoServiceProvider())
             {
-                rsa.FromXmlString(this.PrivateKey);
+                rsa.FromXmlString(PrivateKey);
                 using (SHA512Managed sha512 = new SHA512Managed())
                 {
                     //byte[] hashed = sha512.ComputeHash(Encoding.Unicode.GetBytes(signed));

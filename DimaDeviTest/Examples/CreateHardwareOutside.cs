@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using DimaDevi;
+﻿using DimaDevi;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
 
@@ -17,7 +10,7 @@ namespace DimaDeviTest.Examples
         {
             HardwareComponents.GetInstance()
                 .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
-                .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
+                .AddComponent(typeof(Enumerations.CPU), "L2CacheSize"); 
             DeviBuild devi = new DeviBuild()
                 .AddCPU(Enumerations.CPU.Description | Enumerations.CPU.Name)
                 .AddMotherboard(Enumerations.Motherboard.Name | Enumerations.Motherboard.Manufacturer)

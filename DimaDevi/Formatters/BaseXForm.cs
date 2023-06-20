@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using DimaDevi.Libs;
 using DimaDevi.Modules;
 
@@ -20,7 +18,7 @@ namespace DimaDevi.Formatters
         private readonly Base BaseType;
         public BaseXForm(Base baseType = Base.Base64)
         {
-            this.BaseType = baseType;
+            BaseType = baseType;
         }
         
 

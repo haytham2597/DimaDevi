@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using DimaDevi.Modules;
 
@@ -26,7 +25,7 @@ namespace DimaDevi.Libs
         internal bool PreventDuplicationComponents;
         private GeneralConfigs()
         {
-            this.IsObfuscated = nameof(DeviBuild) == "DeviBuild";
+            IsObfuscated = nameof(DeviBuild) == "DeviBuild";
             DefaultSet.GetInstance().AddThis(this);
         }
 

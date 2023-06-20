@@ -27,7 +27,7 @@ namespace DimaDevi.Components
         /// <param name="macAddress"></param>
         public NetworkComp(string ip, Enumerations.MacAddress macAddress)
         {
-            this.IP = ip;
+            IP = ip;
         }
 
         public NetworkComp(IPAddress ip, Enumerations.MacAddress macAddress) : this(ip.ToString(), macAddress) { }
@@ -38,20 +38,20 @@ namespace DimaDevi.Components
         }
         public NetworkComp(Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> netInterfaces) : this(macAddress)
         {
-            this.NetworkInterfaceList = netInterfaces;
+            NetworkInterfaceList = netInterfaces;
         }
         public NetworkComp(Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> netInterfaces, IList<OperationalStatus> opStatus) : this(macAddress, netInterfaces)
         {
-            this.OperationalStatusList = opStatus;
+            OperationalStatusList = opStatus;
         }
 
         public string GetValue()
         {
-            if (!string.IsNullOrEmpty(this.IP))
+            if (!string.IsNullOrEmpty(IP))
             {
                 using (var ipmac = new IPMacMapper())
                 {
-                    var mac = ipmac.FindMacFromIPAddress(this.IP);
+                    var mac = ipmac.FindMacFromIPAddress(IP);
                     return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? mac.ToMD5Base64() : mac;
                 }
             }

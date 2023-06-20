@@ -79,8 +79,7 @@ namespace DimaDevi.Libs
         }
         public static bool IsHexadecimal(this string test)
         {
-            // For C-style hex notation (0xFF) you can use @"\A\b(0[xX])?[0-9a-fA-F]+\b\Z"
-            return System.Text.RegularExpressions.Regex.IsMatch(test, @"\A\b[0-9a-fA-F]+\b\Z");
+            return Regex.IsMatch(test, @"\A\b[0-9a-fA-F]+\b\Z");
         }
         public static byte[] DecodeHexadecimal(this string hex)
         {
@@ -167,16 +166,6 @@ namespace DimaDevi.Libs
                 return false;
             var reg = new Regex(@"^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$");
             return reg.IsMatch(ip);
-            /*var arrChar = ip.ToCharArray();
-            int cntPoint = 0;
-            for (int i = 0; i < arrChar.Length; i++)
-            {
-                if (arrChar[i] == '.')
-                    cntPoint++;
-                if (!(char.IsDigit(arrChar[i]) || arrChar[i] == '.'))
-                    return false;
-            }
-            return cntPoint == 3;*/
         }
         public static void CopyTo(Stream src, Stream dest)
         {
@@ -409,10 +398,10 @@ namespace DimaDevi.Libs
             Dictionary<string, string> dictFullName = new Dictionary<string, string>();
             var spl =assembly.FullName.Split(',');
             var spl1 = spl[0].Split(':');
-            dictFullName.Add("FullName", spl1.LastOrDefault()?.Replace(" ", ""));
-            dictFullName.Add("Version", spl[1].Split('=').LastOrDefault()?.Replace(" ", ""));
-            dictFullName.Add("Culture", spl[2].Split('=').LastOrDefault()?.Replace(" ", ""));
-            dictFullName.Add("PublicKeyToken", spl[3].Split('=').LastOrDefault()?.Replace(" ", ""));
+            dictFullName.Add("FullName", spl1.LastOrDefault()?.Trim());
+            dictFullName.Add("Version", spl[1].Split('=').LastOrDefault()?.Trim());
+            dictFullName.Add("Culture", spl[2].Split('=').LastOrDefault()?.Trim());
+            dictFullName.Add("PublicKeyToken", spl[3].Split('=').LastOrDefault()?.Trim());
             return dictFullName;
         }
     }
