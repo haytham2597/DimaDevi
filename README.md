@@ -97,7 +97,7 @@ devi.Dispose();
 
 # TODO
 - [ ] Fix `Import` DeviBuild
-- [ ] Add `BaseXFormatter`
-- [ ] Add more examples
+- [x] Add `BaseXFormatter`
+- [x] Add more examples
 - [ ] Allow add more hardware (like "Win32_CacheMemory" for example) in `HardwaresComponents`
 - [ ] Fix, Add & Improvement Validation DeviBuild
