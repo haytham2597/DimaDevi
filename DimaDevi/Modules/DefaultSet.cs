@@ -24,6 +24,10 @@ namespace DimaDevi.Modules
 
         }
 
+        /// <summary>
+        /// Add this Object and remember defaults values
+        /// </summary>
+        /// <param name="obj"></param>
         public void AddThis(object obj)
         {
             var members = obj.GetMembers();
@@ -46,6 +50,10 @@ namespace DimaDevi.Modules
             ClassMemberValue[obj] = dict;
         }
 
+        /// <summary>
+        /// Set by default all values of this object
+        /// </summary>
+        /// <param name="obj"></param>
         public void SetThis(object obj)
         {
             if (!ClassMemberValue.ContainsKey(obj))
@@ -59,6 +67,8 @@ namespace DimaDevi.Modules
                 var elem = dict.ElementAt(i);
                 if (members[i] != elem.Key) //WTF
                     continue;
+                //TODO: If is Collection,List,Observable, Dictionary, etc. Clear the list
+                
                 members[i].SetMembers(obj, elem.Value);
             }
         }

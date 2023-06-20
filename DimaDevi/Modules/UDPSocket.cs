@@ -20,6 +20,7 @@ namespace DimaDevi.Modules
             handler?.Invoke(this, e);
         }
 
+        private bool isClient;
         private Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
         private const int bufSize = 8 * 1024;
         private State state = new State();
@@ -41,6 +42,7 @@ namespace DimaDevi.Modules
         public void Client(string address, int port)
         {
             _socket.Connect(IPAddress.Parse(address), port);
+            isClient = true;
             Receive();
         }
 
@@ -65,8 +67,11 @@ namespace DimaDevi.Modules
                 int bytes = _socket.EndReceiveFrom(ar, ref epFrom);
                 _socket.BeginReceiveFrom(so.buffer, 0, bufSize, SocketFlags.None, ref epFrom, recv, so);
 
-                ReceiveReachedEventArgs args = new ReceiveReachedEventArgs();
-                args.Result = GeneralConfigs.GetInstance().Encoding.GetString(so.buffer, 0, bytes);
+                ReceiveReachedEventArgs args = new ReceiveReachedEventArgs
+                {
+                    Result = GeneralConfigs.GetInstance().Encoding.GetString(so.buffer, 0, bytes),
+                    IsClient = isClient
+                };
                 OnReceiveChanged(args);
 #if DEBUG
                 Console.WriteLine("RECV: {0}: {1}, {2}", epFrom.ToString(), bytes, Encoding.ASCII.GetString(so.buffer, 0, bytes));

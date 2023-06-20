@@ -21,7 +21,6 @@ namespace DimaDevi.Formatters
             BaseType = baseType;
         }
         
-
         public string Encode(byte[] bytesToEncode)
         {
             return ConvertTo(bytesToEncode);
@@ -29,7 +28,6 @@ namespace DimaDevi.Formatters
 
         public byte[] Decode(string stringToDecode)
         {
-             //Check if string is Base64, 32 (with regex) and Hexadecimal
              if (stringToDecode.IsBase32())
                  return Base32.FromBase32String(stringToDecode);
              if(stringToDecode.IsHexadecimal())

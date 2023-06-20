@@ -14,10 +14,12 @@ namespace DimaDevi.Formatters
         /// XML Public Key
         /// </summary>
         public string PublicKey;
+
         /// <summary>
         /// XML Private Key
         /// </summary>
         public string PrivateKey;
+
         public bool usefOAEP = false;
         private void Generate(int KeySize)
         {
@@ -26,22 +28,8 @@ namespace DimaDevi.Formatters
 
             using (var rsa = new RSACryptoServiceProvider(KeySize))
             {
-                /*var privateKey = RSA_CSP.ExportParameters(true);
-                var publicKey = RSA_CSP.ExportParameters(false);*/
                 PrivateKey = rsa.ToXmlString(true);
                 PublicKey = rsa.ToXmlString(false);
-                /*string publicKeyString;
-                {
-                    var sw = new StringWriter();
-                    var xs = new XmlSerializer(typeof(RSAParameters));
-                    xs.Serialize(sw, publicKey);
-                    publicKeyString = sw.ToString();
-                }
-                publicKeyString = publicKeyString.RemoveDeclarationXml();
-                RSA_CSP = new RSACryptoServiceProvider();
-                RSA_CSP.ImportParameters(privateKey);
-                PrivateKey = RSA_CSP.ToXmlString(true);
-                PublicKey = publicKeyString;*/
             }
         }
 
@@ -167,7 +155,6 @@ namespace DimaDevi.Formatters
         public void Dispose()
         {
             DefaultSet.GetInstance().SetThis(this);
-            //this.RandomizedStringDispose();
         }
     }
 }

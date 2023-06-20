@@ -53,7 +53,6 @@ namespace DimaDevi.Formatters
 
         public void Dispose()
         {
-
         }
     }
 }

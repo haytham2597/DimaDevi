@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DimaDevi.Libs;
+using DimaDevi.Modules;
 
 namespace DimaDevi.Hardware
 {
@@ -12,7 +13,11 @@ namespace DimaDevi.Hardware
         /// Throw exception if put bad Type enum
         /// </summary>
         public bool AllowException;
-        private HardwareComponents(){}
+
+        private HardwareComponents()
+        {
+            DefaultSet.GetInstance().AddThis(this);
+        }
 
         public Dictionary<Type, IList<string>> GetHardware()
         {
@@ -24,6 +29,18 @@ namespace DimaDevi.Hardware
             GetInstance().AddComp(enumType, field);
             return GetInstance();
         }
+
+        /*public HardwareComponents AddComponent(string hardware, string field)
+        {
+        }
+
+        public void AddHardware(string hardware, string wmiclass)
+        {
+            if (Libs.Dict.WMIClass.ContainsKey(hardware))
+                return;
+
+            Libs.Dict.WMIClass.Add(hardware, wmiclass);
+        }*/
         private void AddComp(Type enumType, string field)
         {
             if (!enumType.IsEnum)
@@ -49,7 +66,8 @@ namespace DimaDevi.Hardware
         public void Reset()
         {
             dicthard.Clear();
-            AllowException = false;
+            DefaultSet.GetInstance().SetThis(this);
+            //AllowException = false;
         }
 
         public static HardwareComponents GetInstance()

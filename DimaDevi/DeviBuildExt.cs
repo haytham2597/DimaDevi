@@ -20,7 +20,6 @@ namespace DimaDevi
             devi.Components.Add(deviComponent);
             if (GeneralConfigs.GetInstance().ProcessComponentsWhileAdd)
                 GeneralConfigs.GetInstance().result.Add(deviComponent.Name + "="+deviComponent.GetValue());
-
             return devi;
         }
 

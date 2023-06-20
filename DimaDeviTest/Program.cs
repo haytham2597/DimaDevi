@@ -15,7 +15,10 @@ namespace DimaDeviTest
             HardwareComponents.GetInstance()
                 .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
                 .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");
-            new Examples.UseAES();
+            HardwareComponents.GetInstance().AllowException = true;
+            HardwareComponents.GetInstance().Reset();
+            Console.WriteLine(HardwareComponents.GetInstance().AllowException);
+            /*new Examples.UseRSA();
             
             DeviBuild devi = new DeviBuild();
             var start = Stopwatch.GetTimestamp();
@@ -37,7 +40,7 @@ namespace DimaDeviTest
             Console.WriteLine("-----------");
             Console.WriteLine(devi.DecryptionDecode(content));
             DeviBuild devi1 = new DeviBuild().AddCPU().AddMacAddress();
-            Console.WriteLine("Validation Percentage: "+devi.Validate(devi1.GetHardwares()));
+            Console.WriteLine("Validation Percentage: "+devi.Validate(devi1.GetHardwares()));*/
             /*var decr = devi.Decryption(content, aes1);
             Console.WriteLine(decr);*/
             /*var f = devi.GetInfoFormatter();

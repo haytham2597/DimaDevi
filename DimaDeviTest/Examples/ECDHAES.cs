@@ -6,6 +6,9 @@ using DimaDevi.Modules;
 
 namespace DimaDeviTest.Examples
 {
+    /// <summary>
+    /// ECDH with AES
+    /// </summary>
     public class ECDHAES
     {
         public ECDHAES()
@@ -19,8 +22,8 @@ namespace DimaDeviTest.Examples
                 .AddRam(Enumerations.RAM.All)
                 .AddRegistry(@"SOFTWARE\\DefaultUserEnvironment", "Path");
 
-            var bob = new ElipticCurveDiffieHellman(); //Instance ECDH Bob
-            var alice = new ElipticCurveDiffieHellman(bob.GetPublicKey()); //Instance ECDH alice with public key of Bob. Alice have public key too.
+            var bob = new ElipticCurveDiffieHellman(); //Instance ECDH [Bob]
+            var alice = new ElipticCurveDiffieHellman(bob.GetPublicKey()); //Instance ECDH [Alice] with public key of Bob. Alice have public key too.
 
             Func<string> deviString = () => devi.ToString("<MyCoolCustomSeparator>");
 
@@ -29,30 +32,15 @@ namespace DimaDeviTest.Examples
             Console.WriteLine("-----------");
             devi.Formatter = aesAlice; //Set AES Formatter
 
-            var IVAlice = aesAlice.GetIV(); //Get IV Vector Alice
+            var IVAlice = aesAlice.GetIV(); //Get IV Vector [Alice]
             string content = deviString(); //
-            var aesBob = new AESForm(bob.AddPublic(alice)); //in ECDH of BOB add Public key of Alice
+            var aesBob = new AESForm(bob.AddPublic(alice)); //in ECDH of [Bob] add Public key of [Alice]
             
-            aesBob.SetIV(IVAlice); //Set IV vector of Alice in AES Bob
+            aesBob.SetIV(IVAlice); //Set IV vector of [Alice] in AES [Bob]
             Console.WriteLine($"Cipher Data: {content}");
             Console.WriteLine("-----------");
             var decrypt = devi.Decryption(content, aesBob);
             Console.WriteLine($"Decrypt data: {decrypt}");
-            var f = devi.GetInfoFormatter();
-            /*Console.WriteLine("Prev form :"+devi.Formatter.GetType().FullName);
-            devi.Formatter = aes;
-            Console.WriteLine("After set manually form :" + devi.Formatter.GetType().FullName);
-            devi.ImportFormatter(f);
-
-            Console.WriteLine("Actual form: "+devi.Formatter.GetType().FullName);
-            Console.WriteLine("Encrypt: " + content);*/
-            /*Console.WriteLine("-----");
-            var aesB = new AESForm(bob.AddPublic(alice.GetPublicKey()));
-            aesB.SetIV(aes.GetIV());
-            devi = new DeviBuild(aesB);
-            Console.WriteLine("Decryption: " + devi.Decryption(content));*/
-            //Console.WriteLine("Decryption: "+devi.Decryption("qOnSVHUs1iNZeebI1kMtlf6Au04N4V53A5O0LQNmzJodMh2mzs/hkcxBpupze5qGkrK5NNH7V0W29GYZ+sUqT0a5r4ug8ccq9hUlsaJZYik="));
-            //Console.WriteLine(devi.ToString("#\n"));
         }
     }
 }

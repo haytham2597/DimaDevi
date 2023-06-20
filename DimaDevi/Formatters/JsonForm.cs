@@ -7,7 +7,7 @@ namespace DimaDevi.Formatters
 {
     public sealed class JsonForm : IDeviFormatter
     {
-        private Newtonsoft.Json.Formatting Formatting { set; get; }
+        private readonly Newtonsoft.Json.Formatting Formatting;
         public JsonForm(Newtonsoft.Json.Formatting formatting = Newtonsoft.Json.Formatting.None)
         {
             Formatting = formatting;
@@ -48,9 +48,7 @@ namespace DimaDevi.Formatters
                         splElem[0] += n.ToString();
                     } while (jo.ContainsKey(splElem[0]));
                 }
-
                 jo.Add(splElem[0], splElem[1]); //Cause exception if the name is same
-                
             }
             o["Components"] = jo;
             return o.ToString(Formatting);

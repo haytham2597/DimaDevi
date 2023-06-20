@@ -11,6 +11,17 @@ namespace DimaDevi.Formatters
     public class XmlForm : IDeviFormatter
     {
         /// <summary>
+        /// TODO: Create combination Cryptography on this values elements components All result is XML but every value of elements can be encrypt with AES, RSA, etc.
+        /// </summary>
+        private readonly string NameElement = "DimaDevi";
+        public XmlForm() { }
+        public XmlForm(string nameElement)
+        {
+            if (string.IsNullOrEmpty(nameElement))
+                return;
+            this.NameElement = nameElement;
+        }
+        /// <summary>
         /// Returns the device identifier string created by combining the specified <see cref="IDeviComponent"/> instances.
         /// </summary>
         /// <param name="components">A sequence containing the <see cref="IDeviComponent"/> instances to combine into the device identifier string.</param>
@@ -40,7 +51,7 @@ namespace DimaDevi.Formatters
                     )
                 );
             }
-            XElement main = new XElement("DimaDevi", elements);
+            XElement main = new XElement(NameElement, elements);
             var document = new XDocument(main);
             return document.ToString(SaveOptions.DisableFormatting);
         }
@@ -56,7 +67,7 @@ namespace DimaDevi.Formatters
                 .OrderBy(x => x.Name)
                 .Select(GetElement);
 
-            return new XElement("DimaDevi", elements);
+            return new XElement(NameElement, elements);
         }
 
         /// <summary>

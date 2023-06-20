@@ -10,7 +10,7 @@ namespace DimaDeviTest.Examples
         
         public UseRSA()
         {
-            RSAForm rsa = new RSAForm(3072); //Generate RSA 4096
+            RSAForm rsa = new RSAForm(4096); //Generate RSA 4096
             using (DeviBuild devi = new DeviBuild(rsa).AddDisk().AddGPU(Enumerations.GPU.All))
             {
                 var encrypted = devi.ToString("#");
