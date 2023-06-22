@@ -12,6 +12,7 @@ namespace DimaDeviTest
     {
         static void Main(string[] args)
         {
+            new Examples.UseAES();
             HardwareComponents.GetInstance()
                 .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")
                 .AddComponent(typeof(Enumerations.CPU), "L2CacheSize");

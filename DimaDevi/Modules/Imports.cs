@@ -10,7 +10,7 @@ namespace DimaDevi.Modules
     /// <summary>
     /// A module for determine type of string and try import all configuration on this object
     /// </summary>
-    internal class Imports
+    public class Imports
     {
 
     }

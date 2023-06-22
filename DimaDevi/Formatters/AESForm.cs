@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DimaDevi.Formatters
 {
-    public sealed class AESForm : IDeviFormatter
+    public sealed class AESForm : Imports, IDeviFormatter
     {
         private readonly string Password;
         public int Iterations { set; get; } = 50000;
@@ -94,9 +94,7 @@ namespace DimaDevi.Formatters
             var cont = Convert.FromBase64String(content);
             if(Managed == null)
                 Managed = InitManaged(DeriveSecure == Enumerations.DeriveSecure.PasswordDeriveBytes ? (DeriveBytes)new PasswordDeriveBytes(Password, Salt, "SHA1", Iterations) : new Rfc2898DeriveBytes(Password, Salt, Iterations), Cipher, Padding);
-            var decryptor = Managed.CreateEncryptor(Managed.Key, Managed.IV); //El modo CFB y otros usa encryptor
-            if (Cipher == CipherMode.CBC ^ Cipher == CipherMode.ECB) //Los unicos modos que usan Descryptor
-                decryptor = Managed.CreateDecryptor(Managed.Key, Managed.IV);
+            var decryptor = Managed.CreateDecryptor(Managed.Key, Managed.IV);
             using (MemoryStream ms = new MemoryStream())
             {
                 using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write))
