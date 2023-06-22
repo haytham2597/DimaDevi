@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using DimaDevi.Modules;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace DimaDevi.Libs
@@ -77,18 +78,43 @@ namespace DimaDevi.Libs
             s = s.Trim();
             return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[A-Z2-7\+/]*={0,3}$", RegexOptions.None);
         }
-        public static bool IsHexadecimal(this string test)
+        public static bool IsHexadecimal(this string text)
         {
-            return Regex.IsMatch(test, @"\A\b[0-9a-fA-F]+\b\Z");
+            return Regex.IsMatch(text, @"\A\b[0-9a-fA-F]+\b\Z");
+        }
+
+        public static bool IsJson(string strInput)
+        {
+            if (string.IsNullOrWhiteSpace(strInput)) { return false; }
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
+                (strInput.StartsWith("[") && strInput.EndsWith("]"))) //For array
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch (JsonReaderException jex)
+                {
+                    //Exception in parsing json
+                    Console.WriteLine(jex.Message);
+                    return false;
+                }
+                catch (Exception ex) //some other exception
+                {
+                    Console.WriteLine(ex.ToString());
+                    return false;
+                }
+            }
+            return false;
         }
         public static byte[] DecodeHexadecimal(this string hex)
         {
             hex = hex.Replace("-", "");
             byte[] raw = new byte[hex.Length / 2];
             for (int i = 0; i < raw.Length; i++)
-            {
                 raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
-            }
             return raw;
         }
         public static bool IsEqual<T>(this T[] a, T[] b) where T : struct

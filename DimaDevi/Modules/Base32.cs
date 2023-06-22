@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DimaDevi.Modules
 {
-    public static class Base32
+    internal static class Base32
     {
         private static readonly char[] _digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567".ToCharArray();
         private const int _mask = 31;

@@ -25,7 +25,7 @@ namespace DimaDevi.Libs
         internal bool PreventDuplicationComponents;
         private GeneralConfigs()
         {
-            IsObfuscated = nameof(DeviBuild) == "DeviBuild";
+            IsObfuscated = nameof(Base32) == "Base32";
             DefaultSet.GetInstance().AddThis(this);
         }
 

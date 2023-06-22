@@ -19,8 +19,8 @@ namespace DimaDevi
     {
         //TODO: Automatically detect and support Linux
 
-        public ISet<IDeviComponent> Components { set; get; }
-        public IDeviFormatter Formatter { set; get; }
+        public ISet<IDeviComponent> Components;
+        public IDeviFormatter Formatter;
         public RemoteWMICredential WmiCredential
         {
             set => GeneralConfigs.GetInstance().RemoteWmi = value;

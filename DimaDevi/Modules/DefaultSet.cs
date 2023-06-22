@@ -67,6 +67,7 @@ namespace DimaDevi.Modules
                 var elem = dict.ElementAt(i);
                 if (members[i] != elem.Key) //WTF
                     continue;
+
                 //TODO: If is Collection,List,Observable, Dictionary, etc. Clear the list
                 
                 members[i].SetMembers(obj, elem.Value);
