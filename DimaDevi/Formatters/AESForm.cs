@@ -12,9 +12,23 @@ namespace DimaDevi.Formatters
     public sealed class AESForm : Imports, IDeviFormatter
     {
         private readonly string Password;
-        public int Iterations { set; get; } = 50000;
-        public CipherMode Cipher { set; get; }
-        public PaddingMode Padding { set; get; }
+        private int iterations = 50000;
+        public int Iterations
+        {
+            set
+            {
+                if (value < 1000)
+                {
+                    iterations = 1000;
+                    return;
+                }
+                iterations = value;
+            }
+            get => iterations;
+        }
+
+        public CipherMode Cipher;
+        public PaddingMode Padding;
         public Enumerations.DeriveSecure DeriveSecure { set; get; } = Enumerations.DeriveSecure.Rfc2898DeriveBytes;
         public RijndaelManaged Managed { set; get; }
         public byte[] Salt { set; get; }
@@ -99,7 +113,6 @@ namespace DimaDevi.Formatters
             {
                 using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write))
                     cs.Write(cont, 0, cont.Length);
-                
                 return GeneralConfigs.GetInstance().Encoding.GetString(ms.ToArray());
             }
         }

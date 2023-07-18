@@ -11,7 +11,7 @@ namespace DimaDeviTest.Examples
         {
             using (var devi = new DeviBuild().AddMotherboard().AddMachineUUID())
             {
-                devi.Formatter = new AESForm("TheCoolPassword"){Cipher = CipherMode.CFB};
+                devi.Formatter = new AESForm("TheCoolPassword"){Cipher = CipherMode.OFB};
                 /*var salt = (devi.Formatter as AESForm).GetSalt(); //This is just show how get salt
                 (devi.Formatter as AESForm).Salt = salt; //This is just for show you how SET salt or modified*/
                 string content = devi.ToString();
