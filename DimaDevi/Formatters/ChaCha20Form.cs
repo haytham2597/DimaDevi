@@ -65,7 +65,7 @@ namespace DimaDevi.Formatters
         }
         private string Encrypt(string content)
         {
-            var cont = GeneralConfigs.GetInstance().Encoding.GetBytes(content);
+            var cont = DeviGeneralConfig.GetInstance().Encoding.GetBytes(content);
             if(PasswordGenerator)
                 cont = Key.Combine(cont);
             byte[] encryptedContent = new byte[cont.Length];
@@ -79,12 +79,12 @@ namespace DimaDevi.Formatters
             var cont = Convert.FromBase64String(content);
             byte[] decryptContent = new byte[cont.Length];
             chacha20.DecryptBytes(decryptContent, cont);
-            return GeneralConfigs.GetInstance().Encoding.GetString(decryptContent);
+            return DeviGeneralConfig.GetInstance().Encoding.GetString(decryptContent);
         }
         
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            return Encrypt(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
+            return Encrypt(components.Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents));
         }
 
         public string GetDevi(string componentsResult, string separator)

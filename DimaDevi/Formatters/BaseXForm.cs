@@ -51,12 +51,12 @@ namespace DimaDevi.Formatters
         }
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
+            var bytes = DeviGeneralConfig.GetInstance().Encoding.GetBytes(components.Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents));
             return Encode(bytes);
         }
         public string GetDevi(string componentsResult, string separator)
         {
-            return Encode(GeneralConfigs.GetInstance().Encoding.GetBytes(componentsResult));
+            return Encode(DeviGeneralConfig.GetInstance().Encoding.GetBytes(componentsResult));
         }
         public void Dispose()
         {

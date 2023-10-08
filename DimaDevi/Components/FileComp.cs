@@ -10,6 +10,7 @@ namespace DimaDevi.Components
     public sealed class FileComp : IDeviComponent, IDisposable
     {
         private readonly HashAlgorithm hash = MD5.Create(); //Md5 because is more faster than Sha256 and security is not needed, so just use MD5 For only HASH file
+        public Func<string, string> Replacement { get; set; }
         public string BaseHardware { set; get; } = nameof(FileComp);
         public string Name { get; } = "FileHash";
         public Enumerations.FileInformation FileInfomation = Enumerations.FileInformation.Name;
@@ -39,13 +40,13 @@ namespace DimaDevi.Components
             FileInfo file = new FileInfo(FilePath);
             List<byte[]> bytes = new List<byte[]>();
             if (FileInfomation.HasFlag(Enumerations.FileInformation.Attributes))
-                bytes.Add(GeneralConfigs.GetInstance().Encoding.GetBytes(file.Attributes.ToString()));
+                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.Attributes.ToString()));
             if(FileInfomation.HasFlag(Enumerations.FileInformation.Name))
-                bytes.Add(GeneralConfigs.GetInstance().Encoding.GetBytes(file.Name));
+                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.Name));
             if (FileInfomation.HasFlag(Enumerations.FileInformation.CreationDate))
-                bytes.Add(GeneralConfigs.GetInstance().Encoding.GetBytes(file.CreationTime.ToString("s")));
+                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.CreationTime.ToString("s")));
             if (FileInfomation.HasFlag(Enumerations.FileInformation.ModifiedDate))
-                bytes.Add(GeneralConfigs.GetInstance().Encoding.GetBytes(file.LastWriteTime.ToString("s")));
+                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.LastWriteTime.ToString("s")));
 
             if (FileInfomation.HasFlag(Enumerations.FileInformation.Content))
             {
@@ -56,7 +57,11 @@ namespace DimaDevi.Components
                     fs.Read(buffer, 0, buffer.Length);
                 bytes.Add(buffer);
             }
-            return Convert.ToBase64String(hash.ComputeHash(bytes.SelectMany(x => x).ToArray()));
+
+            string result = Convert.ToBase64String(hash.ComputeHash(bytes.SelectMany(x => x).ToArray()));
+            if (Replacement != null)
+                return Replacement(result);
+            return result;
         }
 
         public void Dispose()

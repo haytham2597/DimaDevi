@@ -10,6 +10,7 @@ namespace DimaDevi.Components
 {
     public class AssemblyComp : IDeviComponent
     {
+        public Func<string, string> Replacement { get; set; }
         public string BaseHardware { get; set; } = nameof(AssemblyComp);
         public string Name { get; } = "Assembly";
         private Assembly _Assembly { set; get; }
@@ -47,7 +48,10 @@ namespace DimaDevi.Components
                 allInfoResultAssembly.Add(File.GetCreationTime(entry.Location).ToString(CultureInfo.InvariantCulture));
             if (AssemblyEn.HasFlag(Enumerations.AssemblyEn.Hash) && !string.IsNullOrEmpty(entry?.Location) && File.Exists(entry.Location))
                 allInfoResultAssembly.Add(new FileComp(entry.Location).GetValue());
-            return (allInfoResultAssembly.Count > 0) ? string.Join(",", allInfoResultAssembly) : null;
+            string result = string.Join(",", allInfoResultAssembly);
+            if (Replacement != null)
+                result = Replacement(result);
+            return (allInfoResultAssembly.Count > 0) ? result : null;
         }
     }
 }

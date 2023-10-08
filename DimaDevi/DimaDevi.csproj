@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>DimaDevi.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -50,6 +56,7 @@
     <Compile Include="Components\AssemblyComp.cs" />
     <Compile Include="Components\DeviComp.cs" />
     <Compile Include="Components\FileComp.cs" />
+    <Compile Include="Components\HashComp.cs" />
     <Compile Include="Components\NetworkComp.cs" />
     <Compile Include="Components\RegistryComp.cs" />
     <Compile Include="Components\WMIComp.cs" />
@@ -74,7 +81,7 @@
     <Compile Include="Libs\Dict.cs" />
     <Compile Include="Libs\Enumerations.cs" />
     <Compile Include="Libs\Ext.cs" />
-    <Compile Include="Libs\GeneralConfigs.cs" />
+    <Compile Include="Libs\DeviGeneralConfig.cs" />
     <Compile Include="Libs\Property.cs" />
     <Compile Include="Modules\Base32.cs" />
     <Compile Include="Modules\BitParity.cs" />
@@ -86,6 +93,8 @@
     <Compile Include="Modules\UDPSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="DimaDevi.pfx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -113,7 +113,7 @@ namespace DimaDevi.Formatters
             {
                 using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write))
                     cs.Write(cont, 0, cont.Length);
-                return GeneralConfigs.GetInstance().Encoding.GetString(ms.ToArray());
+                return DeviGeneralConfig.GetInstance().Encoding.GetString(ms.ToArray());
             }
         }
         public void SetIV(byte[] iv)
@@ -132,13 +132,13 @@ namespace DimaDevi.Formatters
 
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
+            var bytes = DeviGeneralConfig.GetInstance().Encoding.GetBytes(components.Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents));
             return Encrypt(bytes);
         }
         
         public string GetDevi(string componentsResult, string separator)
         {
-            return Encrypt(GeneralConfigs.GetInstance().Encoding.GetBytes(componentsResult));
+            return Encrypt(DeviGeneralConfig.GetInstance().Encoding.GetBytes(componentsResult));
         }
         /// <summary>
         /// Export all configuration of this

@@ -10,6 +10,12 @@ namespace DimaDevi.Components
     /// </summary>
     public sealed class WMIComp : IDeviComponent
     {
+        /// <summary>
+        /// For fast response
+        /// </summary>
+        private string Result = string.Empty;
+
+        public Func<string, string> Replacement { get; set; }
         public string BaseHardware { set; get; } = null;
         public string Name { get; }
         /// <summary>
@@ -53,6 +59,9 @@ namespace DimaDevi.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
+            if (!string.IsNullOrEmpty(Result))
+                return Result;
+            //TODO: Prevent or include 2 CPU
             if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(_wmiClass) || string.IsNullOrEmpty(_wmiProperty))
                 return null;
 
@@ -61,11 +70,11 @@ namespace DimaDevi.Components
             {
                 ConnectionOptions connectOptions = new ConnectionOptions();
                 ManagementScope scope = new ManagementScope(@"root\cimv2");
-                if (GeneralConfigs.GetInstance().RemoteWmi != null && !GeneralConfigs.GetInstance().RemoteWmi.IsEmpty())
+                if (DeviGeneralConfig.GetInstance().RemoteWmi != null && !DeviGeneralConfig.GetInstance().RemoteWmi.IsEmpty())
                 {
-                    connectOptions.Username = GeneralConfigs.GetInstance().RemoteWmi.Username;
-                    connectOptions.Password = GeneralConfigs.GetInstance().RemoteWmi.Password;
-                    scope.Path = new ManagementPath(GeneralConfigs.GetInstance().RemoteWmi.Domain.AddTwoBackSlashIfIsPossible() + @"\root\cimv2");
+                    connectOptions.Username = DeviGeneralConfig.GetInstance().RemoteWmi.Username;
+                    connectOptions.Password = DeviGeneralConfig.GetInstance().RemoteWmi.Password;
+                    scope.Path = new ManagementPath(DeviGeneralConfig.GetInstance().RemoteWmi.Domain.AddTwoBackSlashIfIsPossible() + @"\root\cimv2");
                     scope.Options = connectOptions;
                 }
                 SelectQuery query = new SelectQuery($"SELECT {_wmiProperty} FROM {_wmiClass}");
@@ -93,7 +102,13 @@ namespace DimaDevi.Components
                 Console.WriteLine(ex.Message);
             }
             values.Sort();
-            return (values.Count > 0) ? string.Join(",", values) : null;
+            if (Replacement != null)
+            {
+                Result = Replacement((values.Count > 0) ? string.Join(",", values) : null);
+                return Result;
+            }
+            Result = (values.Count > 0) ? string.Join(",", values) : null;
+            return Result;
         }
     }
 }

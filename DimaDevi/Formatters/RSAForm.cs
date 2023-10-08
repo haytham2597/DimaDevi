@@ -45,7 +45,7 @@ namespace DimaDevi.Formatters
         }
         public RSAForm(int keysize = 2048) : this()
         {
-            if (keysize >= 4096 && GeneralConfigs.GetInstance().WarningBigKeySizeRSA)
+            if (keysize >= 4096 && DeviGeneralConfig.GetInstance().WarningBigKeySizeRSA)
             {
                 const string question = "The key is so big, are you sure want continue?";
                 if (Environment.UserInteractive)
@@ -73,7 +73,7 @@ namespace DimaDevi.Formatters
                 int Formula = ((rsa.KeySize - 384) / 8) + 37;
                 int completeSize = Formula + rest; //TODO: Implement Cipher Decipher by block of completeSize instaed of '\n'
                 byte[] ReCompute = new byte[] { };
-                var bytesContent = GeneralConfigs.GetInstance().Encoding.GetBytes(content);
+                var bytesContent = DeviGeneralConfig.GetInstance().Encoding.GetBytes(content);
 
                 int cont = Convert.ToInt32(bytesContent.Length / Formula) + 1;
                 int IndexFormula = 0;
@@ -101,7 +101,7 @@ namespace DimaDevi.Formatters
 
         public string Encrypt(byte[] content)
         {
-            return Encrypt(GeneralConfigs.GetInstance().Encoding.GetString(content), PublicKey);
+            return Encrypt(DeviGeneralConfig.GetInstance().Encoding.GetString(content), PublicKey);
         }
 
         public string Decrypt(string content)
@@ -114,7 +114,7 @@ namespace DimaDevi.Formatters
                 foreach (var dd in ler)
                 {
                     byte[] bytesCypherText = Convert.FromBase64String(dd);
-                    result += GeneralConfigs.GetInstance().Encoding.GetString(rsa.Decrypt(bytesCypherText, false));
+                    result += DeviGeneralConfig.GetInstance().Encoding.GetString(rsa.Decrypt(bytesCypherText, false));
                 }
             }
             return result;
@@ -135,7 +135,7 @@ namespace DimaDevi.Formatters
             using (var RSA_Csp = new RSACryptoServiceProvider())
             {
                 RSA_Csp.FromXmlString(PrivateKey);
-                return RSA_Csp.SignData(GeneralConfigs.GetInstance().Encoding.GetBytes(content), CryptoConfig.MapNameToOID("SHA512"));
+                return RSA_Csp.SignData(DeviGeneralConfig.GetInstance().Encoding.GetBytes(content), CryptoConfig.MapNameToOID("SHA512"));
             }
         }
 
@@ -147,7 +147,7 @@ namespace DimaDevi.Formatters
                 using (SHA512Managed sha512 = new SHA512Managed())
                 {
                     //byte[] hashed = sha512.ComputeHash(Encoding.Unicode.GetBytes(signed));
-                    return rsa.VerifyData(GeneralConfigs.GetInstance().Encoding.GetBytes(original), CryptoConfig.MapNameToOID("SHA512"), GeneralConfigs.GetInstance().Encoding.GetBytes(signed));
+                    return rsa.VerifyData(DeviGeneralConfig.GetInstance().Encoding.GetBytes(original), CryptoConfig.MapNameToOID("SHA512"), DeviGeneralConfig.GetInstance().Encoding.GetBytes(signed));
                 }
             }
         }

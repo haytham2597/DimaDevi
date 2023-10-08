@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -9,6 +10,7 @@ namespace DimaDevi.Components
 {
     public sealed class NetworkComp : IDeviComponent
     {
+        public Func<string, string> Replacement { get; set; }
         public string BaseHardware { set; get; } = nameof(Hardware.MacAddress);
         public string Name => "MacAddress";
         private Enumerations.MacAddress MacAddresses { set; get; }
@@ -65,9 +67,13 @@ namespace DimaDevi.Components
                 
                 var interStr = inter.Select(x => x.GetPhysicalAddress().ToString()).Where(x => x != "000000000000" && x != "00000000000000E0").Select(x => x.FormatMacAddress()).ToList();
                 var result = interStr.Count > 0 ? string.Join(",", interStr) : null;
+                if (Replacement != null)
+                    return Replacement(MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? result.ToMD5Base64() : result);
                 return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? result.ToMD5Base64() : result;
             }
             var macAddr = inter.Select(x => x.GetPhysicalAddress().ToString()).FirstOrDefault();
+            if (Replacement != null)
+                return Replacement(MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? macAddr.ToMD5Base64() : macAddr);
             return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? macAddr.ToMD5Base64() : macAddr;
         }
     }

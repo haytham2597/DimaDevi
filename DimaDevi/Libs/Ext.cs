@@ -230,7 +230,7 @@ namespace DimaDevi.Libs
 
         public static byte[] ToMD5(this string str)
         {
-            return MD5.Create().ComputeHash(GeneralConfigs.GetInstance().Encoding.GetBytes(str));
+            return MD5.Create().ComputeHash(DeviGeneralConfig.GetInstance().Encoding.GetBytes(str));
         }
         public static string ToMD5Base64(this string str)
         {
@@ -380,6 +380,18 @@ namespace DimaDevi.Libs
             return doc.OuterXml;
         }
 
+        public static byte[] ToByte(this string text)
+        {
+            return DeviGeneralConfig.GetInstance().Encoding.GetBytes(text);
+        }
+
+        public static object[] ToBytesArrayEncode(this string[] text)
+        {
+            var obj =new object[text.Length];
+            for (int i = 0; i < text.Length; i++)
+                obj[i] = DeviGeneralConfig.GetInstance().Encoding.GetBytes(text[i]);
+            return obj;
+        }
         public static byte[] EncodeToByte(string text)
         {
             var bytes = new byte[Encoding.UTF8.GetByteCount(text) + 1];

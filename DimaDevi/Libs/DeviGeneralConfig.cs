@@ -5,9 +5,9 @@ using DimaDevi.Modules;
 namespace DimaDevi.Libs
 {
     //Singleton
-    public class GeneralConfigs
+    public class DeviGeneralConfig
     {
-        private static GeneralConfigs instance;
+        private static DeviGeneralConfig instance;
 
         public RemoteWMICredential RemoteWmi;
         public Encoding Encoding = Encoding.UTF8;
@@ -19,11 +19,14 @@ namespace DimaDevi.Libs
         /// Process Components in Runtime While added components from DeviBuild
         /// </summary>
         public bool ProcessComponentsWhileAdd;
-
+        /// <summary>
+        /// Exclude "Name=" "ProccessorID=" etc in ToString() 
+        /// </summary>
+        public bool ExcludeNameComponentString;
         internal List<string> result = new List<string>();
         internal bool IsObfuscated;
         internal bool PreventDuplicationComponents;
-        private GeneralConfigs()
+        private DeviGeneralConfig()    
         {
             IsObfuscated = nameof(Base32) == "Base32";
             DefaultSet.GetInstance().AddThis(this);
@@ -36,9 +39,9 @@ namespace DimaDevi.Libs
         {
             DefaultSet.GetInstance().SetThis(this);
         }
-        public static GeneralConfigs GetInstance()
+        public static DeviGeneralConfig GetInstance()
         {
-            return instance ?? (instance = new GeneralConfigs());
+            return instance ?? (instance = new DeviGeneralConfig());
         }
     }
 }

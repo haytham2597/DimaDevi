@@ -1,7 +1,10 @@
-﻿namespace DimaDevi
+﻿using System;
+
+namespace DimaDevi
 {
     public interface IDeviComponent
     {
+        Func<string, string> Replacement { set;get; }
         /// <summary>
         /// What TYPE of hardware is. Example: "CPU", "Ram", etc.
         /// </summary>
@@ -11,5 +14,6 @@
         /// </summary>
         string Name { get; }
         string GetValue();
+
     }
 }

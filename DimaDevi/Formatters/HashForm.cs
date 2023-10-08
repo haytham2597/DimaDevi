@@ -35,7 +35,7 @@ namespace DimaDevi.Formatters
         /// <returns>The device identifier string.</returns>
         public string GetDevi(IEnumerable<IDeviComponent> components)
         {
-            return Hash(components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents));
+            return Hash(components.Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents));
         }
 
         public string GetDevi(string componentsResult, string separator)
@@ -45,7 +45,7 @@ namespace DimaDevi.Formatters
 
         public string Hash(string res)
         {
-            var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(res);
+            var bytes = DeviGeneralConfig.GetInstance().Encoding.GetBytes(res);
             var algorithm = _hashAlgorithm.Invoke();
             var hash = algorithm.ComputeHash(bytes);
             return Convert.ToBase64String(hash);

@@ -48,7 +48,7 @@ namespace DimaDevi.Modules
 
         public void Send(string text)
         {
-            byte[] data = GeneralConfigs.GetInstance().Encoding.GetBytes(text);
+            byte[] data = DeviGeneralConfig.GetInstance().Encoding.GetBytes(text);
             _socket.BeginSend(data, 0, data.Length, SocketFlags.None, (ar) =>
             {
                 State so = (State)ar.AsyncState;
@@ -69,7 +69,7 @@ namespace DimaDevi.Modules
 
                 ReceiveReachedEventArgs args = new ReceiveReachedEventArgs
                 {
-                    Result = GeneralConfigs.GetInstance().Encoding.GetString(so.buffer, 0, bytes),
+                    Result = DeviGeneralConfig.GetInstance().Encoding.GetString(so.buffer, 0, bytes),
                     IsClient = isClient
                 };
                 OnReceiveChanged(args);

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography;
 using DimaDevi;
 using DimaDevi.Formatters;
@@ -12,6 +14,11 @@ namespace DimaDeviTest
     {
         static void Main(string[] args)
         {
+            DeviBuild devi = new DeviBuild();
+            devi.AddCPU(Enumerations.CPU.Name);
+            devi.AddMotherboard();
+            devi.AddHash(MD5.Create(), new List<IDeviComponent>() { devi["CPU"], devi["Motherboard"] });
+            var sl = devi.Components.Select(x => x.GetValue()).ToArray();
             new Examples.UseAES();
             HardwareComponents.GetInstance()
                 .AddComponent(typeof(Enumerations.CPU), "L3CacheSize")

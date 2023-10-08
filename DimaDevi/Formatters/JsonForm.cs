@@ -18,7 +18,7 @@ namespace DimaDevi.Formatters
             JObject o = new JObject();
             JObject jo = new JObject();
             
-            if (GeneralConfigs.GetInstance().PreventDuplicationComponents)
+            if (DeviGeneralConfig.GetInstance().PreventDuplicationComponents)
                 components= components.DistinctBy(x => x.BaseHardware).Where(x => !string.IsNullOrEmpty(x.Name));
             using (var enumer = components.GetEnumerator())
                 while(enumer.MoveNext())

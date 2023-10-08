@@ -4,6 +4,8 @@ namespace DimaDevi.Components
 {
     public sealed class DeviComp : IDeviComponent
     {
+        private string Result = string.Empty;
+        public Func<string, string> Replacement { get; set; }
         public string BaseHardware { set;get; } = null;
 
         /// <summary>
@@ -40,6 +42,8 @@ namespace DimaDevi.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
+            if (Replacement != null)
+                return Replacement(_valueFactory.Invoke());
             return _valueFactory.Invoke();
         }
     }

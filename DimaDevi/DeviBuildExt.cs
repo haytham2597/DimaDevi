@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using DimaDevi.Components;
 using DimaDevi.Libs;
@@ -18,8 +19,8 @@ namespace DimaDevi
         public static DeviBuild AddComponents(this DeviBuild devi, IDeviComponent deviComponent)
         {
             devi.Components.Add(deviComponent);
-            if (GeneralConfigs.GetInstance().ProcessComponentsWhileAdd)
-                GeneralConfigs.GetInstance().result.Add(deviComponent.Name + "="+deviComponent.GetValue());
+            if (DeviGeneralConfig.GetInstance().ProcessComponentsWhileAdd)
+                DeviGeneralConfig.GetInstance().result.Add(deviComponent.Name + "="+deviComponent.GetValue());
             return devi;
         }
 
@@ -42,6 +43,11 @@ namespace DimaDevi
             return devi;
         }
 
+        public static DeviBuild AddPrevOperation(this DeviBuild devi, Func<string,string> func)
+        {
+            devi.Components[devi.Components.Count - 1].Replacement = func;
+            return devi;
+        }
         public static DeviBuild AddMachineName(this DeviBuild devi)
         {
             return devi.AddComponents(new DeviComp("MachineName", Environment.MachineName){BaseHardware = "Environment"});
@@ -182,6 +188,16 @@ namespace DimaDevi
         public static DeviBuild AddMachineUUID(this DeviBuild devi)
         {
             return devi.AddRegistry(@"SOFTWARE\\Microsoft\\Cryptography", "MachineGuid");
+        }
+
+        public static DeviBuild AddHash(this DeviBuild devi, HashAlgorithm hash, IList<IDeviComponent> components)
+        {
+            return devi.AddComponents(new HashComp(hash, components));
+        }
+
+        public static DeviBuild AddHash(this DeviBuild devi, HashAlgorithm hash, string content)
+        {
+            return devi.AddComponents(new HashComp(hash, content));
         }
     }
 }

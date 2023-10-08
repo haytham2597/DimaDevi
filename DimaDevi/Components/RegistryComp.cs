@@ -6,6 +6,7 @@ namespace DimaDevi.Components
 {
     public class RegistryComp : IDeviComponent
     {
+        public Func<string, string> Replacement { get; set; }
         public string BaseHardware { get; set; } = "Registry";
         public string Name { get; } = "Registry";
 
@@ -53,6 +54,8 @@ namespace DimaDevi.Components
                     RegKey = RegistryKey.OpenBaseKey(RegHive, Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
                 RegistryKey key = RegKey.OpenSubKey(BaseKey);
                 object o = key?.GetValue(NameKey, "default");
+                if (Replacement != null)
+                    return Replacement(o?.ToString());
                 return o?.ToString();
             }
             catch (Exception ex)

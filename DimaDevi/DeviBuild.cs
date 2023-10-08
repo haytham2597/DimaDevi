@@ -19,11 +19,11 @@ namespace DimaDevi
     {
         //TODO: Automatically detect and support Linux
 
-        public ISet<IDeviComponent> Components;
+        public IList<IDeviComponent> Components;
         public IDeviFormatter Formatter;
         public RemoteWMICredential WmiCredential
         {
-            set => GeneralConfigs.GetInstance().RemoteWmi = value;
+            set => DeviGeneralConfig.GetInstance().RemoteWmi = value;
         }
 
         /// <summary>
@@ -36,12 +36,12 @@ namespace DimaDevi
         /// </summary>
         public bool PreventComponentDuplication
         {
-            set => GeneralConfigs.GetInstance().PreventDuplicationComponents = value;
+            set => DeviGeneralConfig.GetInstance().PreventDuplicationComponents = value;
         }
 
         public DeviBuild()
         {
-            Components = new HashSet<IDeviComponent>();
+            Components = new List<IDeviComponent>();
 
             //Load user-defined components
             var hard = HardwareComponents.GetInstance().GetHardware();
@@ -128,7 +128,7 @@ namespace DimaDevi
         {
             if (Formatter == null)
                 return content;
-            if (GeneralConfigs.GetInstance().IsObfuscated)
+            if (DeviGeneralConfig.GetInstance().IsObfuscated)
             {
                 var methods = Formatter.GetType().GetMethods(BindingFlags.Public);
                 for (int i = 0; i < methods.Length; i++)
@@ -145,7 +145,7 @@ namespace DimaDevi
             {
                 var result =  decode.Invoke(Formatter, new object[] { content });
                 if (result is byte[] b)
-                    return GeneralConfigs.GetInstance().Encoding.GetString(b);
+                    return DeviGeneralConfig.GetInstance().Encoding.GetString(b);
             }
 
             var decrypt = Formatter.GetType().GetMethod("Decrypt");
@@ -209,7 +209,7 @@ namespace DimaDevi
 
         public override string ToString()
         {
-            string result = Formatter != null ? Formatter.GetDevi(Components) : Components.Joined(GeneralConfigs.GetInstance().PreventDuplicationComponents);
+            string result = Formatter != null ? Formatter.GetDevi(Components) : Components.Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents);
             if (ClearAfterProcess)
                 ClearComponents();
             return result;
@@ -222,16 +222,25 @@ namespace DimaDevi
             string str = string.Empty;
 
             IEnumerator<IDeviComponent> enumer = Components.GetEnumerator();
-            if (!GeneralConfigs.GetInstance().ProcessComponentsWhileAdd)
+            if (!DeviGeneralConfig.GetInstance().ProcessComponentsWhileAdd)
             {
-                if (GeneralConfigs.GetInstance().PreventDuplicationComponents)
+                if (DeviGeneralConfig.GetInstance().PreventDuplicationComponents)
                     enumer = Components.DistinctBy(x => x.BaseHardware).GetEnumerator();
                 while (enumer.MoveNext())
-                    str += enumer.Current?.Name + "=" + enumer.Current?.GetValue() + separator;
+                {
+                    if (DeviGeneralConfig.GetInstance().ExcludeNameComponentString)
+                    {
+                        str += enumer.Current?.GetValue() + separator;
+                    }
+                    else
+                    {
+                        str += enumer.Current?.Name + "=" + enumer.Current?.GetValue() + separator;
+                    }
+                }
             }
             else
             {
-                var res = GeneralConfigs.GetInstance().result;
+                var res = DeviGeneralConfig.GetInstance().result;
                 for (int i = 0; i < res.Count; i++)
                     str += res[i] + separator;
             }
@@ -250,6 +259,34 @@ namespace DimaDevi
             return ToString(separator);
         }
 
+        public string[] ToArray(string separator = null)
+        {
+            List<string> obj = new List<string>();
+            using (IEnumerator<IDeviComponent> enumer = Components.GetEnumerator())
+            {
+                while (enumer.MoveNext())
+                {
+                    if (DeviGeneralConfig.GetInstance().ExcludeNameComponentString)
+                    {
+                        obj.Add(enumer.Current?.GetValue() + separator);
+                    }
+                    else
+                    {
+                        obj.Add(enumer.Current?.Name + "=" + enumer.Current?.GetValue() + separator);
+                    }
+                }
+            }
+            return obj.ToArray();
+        }
+
+        public object[] ToArray(IDeviFormatter formatter, string separator = null)
+        {
+            List<object> obj = new List<object>();
+            using (IEnumerator<IDeviComponent> enumer = Components.GetEnumerator())
+                while (enumer.MoveNext())
+                    obj.Add(DeviGeneralConfig.GetInstance().ExcludeNameComponentString ? formatter.GetDevi(enumer.Current?.GetValue(), separator) : formatter.GetDevi(enumer.Current?.Name + "=" + enumer.Current?.GetValue(), separator));
+            return obj.ToArray();
+        }
         public IEnumerable<IGrouping<string, IDeviComponent>> ToGroup()
         {
             return Components.GroupBy(x => x.BaseHardware);
@@ -300,7 +337,7 @@ namespace DimaDevi
         /// <returns></returns>
         public byte[] Compression(string str)
         {
-            var bytes = GeneralConfigs.GetInstance().Encoding.GetBytes(str);
+            var bytes = DeviGeneralConfig.GetInstance().Encoding.GetBytes(str);
             using (var msi = new MemoryStream(bytes))
             using (var mso = new MemoryStream())
             {
@@ -321,10 +358,17 @@ namespace DimaDevi
             {
                 using (var gs = new GZipStream(msi, CompressionMode.Decompress))
                     gs.CopyTo(mso);
-                return GeneralConfigs.GetInstance().Encoding.GetString(mso.ToArray());
+                return DeviGeneralConfig.GetInstance().Encoding.GetString(mso.ToArray());
             }
         }
 
+        public IDeviComponent this[string nameHardware]
+        {
+            get
+            {
+                return Components.FirstOrDefault(x => x.BaseHardware == nameHardware);
+            }
+        }
         public void Dispose()
         {
             Formatter.Dispose();
@@ -332,7 +376,6 @@ namespace DimaDevi
                 while (enumer.MoveNext())
                     enumer.Current?.CallDisposed();
             Components.Clear();
-
         }
     }
 }
