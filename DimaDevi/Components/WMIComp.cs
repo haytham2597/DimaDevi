@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Management;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 
 namespace DimaDevi.Components
 {

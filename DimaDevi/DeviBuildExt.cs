@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using DimaDevi.Components;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 using Microsoft.Win32;
 
 namespace DimaDevi
@@ -157,7 +158,7 @@ namespace DimaDevi
                             continue;
                         if (!Dict.WMIClass.ContainsKey(te))
                             continue;
-                        devi.AddComponents(new WMIComp(enumer.Current?.ToString(),  Dict.WMIClass[te], "*", enumer.Current?.ToString(), $"DeviceID={Ext.GetMainPhysicalDriveOS()}"));
+                        devi.AddComponents(new WMIComp(enumer.Current?.ToString(),  Dict.WMIClass[te], "*", enumer.Current?.ToString(), $"DeviceID={CommonExt.GetMainPhysicalDriveOS()}"));
                     }
                 }
                 return devi;

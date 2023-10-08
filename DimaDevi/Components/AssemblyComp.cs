@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 
 namespace DimaDevi.Components
 {

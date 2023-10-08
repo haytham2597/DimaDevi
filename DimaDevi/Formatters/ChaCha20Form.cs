@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 using DimaDevi.Modules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -33,7 +34,7 @@ namespace DimaDevi.Formatters
             if (p.Length > 32 || p.Length <= 0)
                 Array.Resize(ref p, 32);
             Key = p;
-            Nonce = Ext.GenerateRandomSalt(nonceSize);
+            Nonce = CommonExt.GenerateRandomSalt(nonceSize);
             Init();
         }
 
@@ -52,8 +53,8 @@ namespace DimaDevi.Formatters
 
         public ChaCha20Form(int keySize = 32, int nonceSize = 12)
         {
-            Key = Ext.GenerateRandomSalt(keySize);
-            Nonce = Ext.GenerateRandomSalt(nonceSize);
+            Key = CommonExt.GenerateRandomSalt(keySize);
+            Nonce = CommonExt.GenerateRandomSalt(nonceSize);
             PasswordGenerator = true;
             Init();
         }

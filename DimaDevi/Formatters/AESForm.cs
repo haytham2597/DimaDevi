@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 using DimaDevi.Modules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -73,7 +74,7 @@ namespace DimaDevi.Formatters
             Password = password;
             Cipher = cipher;
             Padding = padding;
-            Salt = Ext.GenerateRandomSalt();
+            Salt = CommonExt.GenerateRandomSalt();
             Managed = InitManaged(DeriveSecure == Enumerations.DeriveSecure.PasswordDeriveBytes ? (DeriveBytes)new PasswordDeriveBytes(Password, Salt, "SHA1", Iterations) : new Rfc2898DeriveBytes(Password, Salt, Iterations), Cipher, Padding);
         }
 
@@ -86,7 +87,7 @@ namespace DimaDevi.Formatters
             Managed.Key = ecdh.GetDerivate();
             Managed.Padding = Padding;
             Managed.Mode = cipher;
-            Salt = Ext.GenerateRandomSalt();
+            Salt = CommonExt.GenerateRandomSalt();
         }
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Attrs.MethodName("Encrypt")]

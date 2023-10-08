@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 using DimaDevi.Modules;
 using Newtonsoft.Json.Linq;
 

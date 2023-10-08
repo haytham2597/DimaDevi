@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 using DimaDevi.Modules;
 
 namespace DimaDevi.Formatters

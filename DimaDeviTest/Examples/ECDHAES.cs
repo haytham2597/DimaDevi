@@ -2,6 +2,7 @@
 using DimaDevi;
 using DimaDevi.Formatters;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 using DimaDevi.Modules;
 
 namespace DimaDeviTest.Examples

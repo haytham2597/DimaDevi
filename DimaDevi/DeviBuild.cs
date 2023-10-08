@@ -9,6 +9,7 @@ using DimaDevi.Components;
 using DimaDevi.Formatters;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -319,7 +320,7 @@ namespace DimaDevi
         public void ImportFormatter(string str)
         {
             JObject jo = JObject.Parse(str);
-            Type[] typelist = Ext.GetTypesInNamespace(Assembly.GetExecutingAssembly(), typeof(AESForm).Namespace);
+            Type[] typelist = ReflectionExt.GetTypesInNamespace(Assembly.GetExecutingAssembly(), typeof(AESForm).Namespace);
             for (int i = 0; i < typelist.Length; i++)
             {
                 var ctor = typelist[i].GetConstructor(new[] { typeof(JObject) });
@@ -368,6 +369,14 @@ namespace DimaDevi
             {
                 //TODO: Add pending if not exists 
                 return Components.FirstOrDefault(x => x.BaseHardware == nameHardware);
+            }
+        }
+
+        public IDeviComponent this[string name, string baseHardware]
+        {
+            get
+            {
+                return Components.FirstOrDefault(x => x.Name == name && x.BaseHardware == baseHardware);
             }
         }
 

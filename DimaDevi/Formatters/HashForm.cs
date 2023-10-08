@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 
 namespace DimaDevi.Formatters
 {
