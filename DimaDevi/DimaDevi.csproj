@@ -82,6 +82,7 @@
     <Compile Include="Libs\Enumerations.cs" />
     <Compile Include="Libs\Ext.cs" />
     <Compile Include="Libs\DeviGeneralConfig.cs" />
+    <Compile Include="Libs\Pendings.cs" />
     <Compile Include="Libs\Property.cs" />
     <Compile Include="Modules\Base32.cs" />
     <Compile Include="Modules\BitParity.cs" />

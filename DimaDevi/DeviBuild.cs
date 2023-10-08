@@ -366,8 +366,16 @@ namespace DimaDevi
         {
             get
             {
+                //TODO: Add pending if not exists 
                 return Components.FirstOrDefault(x => x.BaseHardware == nameHardware);
             }
+        }
+
+        public void Move(int oldIndex, int newIndex)
+        {
+            var cop =Components[oldIndex];
+            this.Components.Remove(cop);
+            this.Components.Insert(newIndex, cop);
         }
         public void Dispose()
         {
