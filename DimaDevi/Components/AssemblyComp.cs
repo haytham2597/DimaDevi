@@ -57,6 +57,7 @@ namespace DimaDevi.Components
 
         public bool Equals(IDeviComponent other)
         {
+
             return this.EqualsObject(other);
         }
     }

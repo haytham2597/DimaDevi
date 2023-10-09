@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,7 +46,52 @@ namespace DimaDevi.Libs.Extensions
             s = s.Trim();
             return (s.Length % 4 == 0) && Regex.IsMatch(s, @"^[A-Z2-7\+/]*={0,3}$", RegexOptions.None);
         }
+        public static Type GetObjType(object m)
+        {
+            if (!(m is MemberInfo mi)) 
+                return m.GetType();
+            
+            if (mi is FieldInfo fi)
+                return fi.FieldType;
+            else if (mi is PropertyInfo pi)
+                return pi.PropertyType;
+            else
+                return m.GetType().BaseType;
+        }
+        public static bool IsCollectionType(this Type type)
+        {
+            if (!type.GetGenericArguments().Any())
+                return false;
 
+            Type genericTypeDefinition = type.GetGenericTypeDefinition();
+            var collectionTypes = new[] { typeof(IEnumerable<>), typeof(ICollection<>), typeof(IList<>), typeof(List<>), typeof(IList) };
+            return collectionTypes.Any(x => x.IsAssignableFrom(genericTypeDefinition));
+        }
+        public static bool IsStandardType(this object obj)
+        {
+            try
+            {
+                Type t = GetObjType(obj);
+                if (t.IsGenericType)
+                {
+                    if (t.GetGenericTypeDefinition() == typeof(Func<>) || t.GetGenericTypeDefinition() == typeof(Func<,>))
+                        return false;
+                }
+
+                if (!IsCollectionType(t) || t.GetGenericArguments().Length == 0)
+                    return t.Namespace != null && t.Namespace.StartsWith("System") && t.Module.ScopeName == "CommonLanguageRuntimeLibrary";
+
+                var generic_args = t.GetGenericArguments();
+                for (int i = 0; i < generic_args.Length; i++)
+                    if (!IsStandardType(generic_args[i]))
+                        return false;
+                return t.Namespace != null && t.Namespace.StartsWith("System") && t.Module.ScopeName == "CommonLanguageRuntimeLibrary";
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public static bool IsJson(string strInput)
         {
             if (string.IsNullOrWhiteSpace(strInput)) { return false; }

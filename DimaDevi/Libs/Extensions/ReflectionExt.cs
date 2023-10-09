@@ -20,15 +20,25 @@ namespace DimaDevi.Libs.Extensions
                 pi.SetValue(obj, value);
         }
 
-        public static bool EqualsObject(this object a, object b)
+        public static bool EqualsObject(this object a, object b, IList<string> excludeName = null)
         {
-            var ma = a.GetMembers().ToList();
-            var mb = b.GetMembers().ToList();
+            var ma = a.GetMembers().Where(x=>x.IsStandardType()).ToList();
+            var mb = b.GetMembers().Where(x => x.IsStandardType()).ToList();
             if(ma.Count != mb.Count)
                 return false;
             for (int i = 0; i < ma.Count; i++)
-                if (ma[i].GetValue(a) != mb[i].GetValue(b))
+            {
+                if (excludeName != null && excludeName.Count != 0)
+                    if (excludeName.Contains(ma[i].Name))
+                        continue;
+                var va = ma[i].GetValue(a);
+                var vb = mb[i].GetValue(b);
+                if (va == null || vb==null)
+                    continue;
+                if (!va.Equals(vb))
                     return false;
+            }
+
             return true;
         }
 

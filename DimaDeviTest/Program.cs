@@ -16,17 +16,15 @@ namespace DimaDeviTest
         {
             DeviGeneralConfig.GetInstance().AllowSingletonComponents = true;
             DeviBuild devi = new DeviBuild();
-            
             devi.AddCPU(Enumerations.CPU.Name);
             devi.AddMotherboard();
             devi.AddHash(MD5.Create(), new List<IDeviComponent>() { devi["CPU"], devi["Motherboard"] });
             Console.WriteLine(devi.ToString());
             Console.WriteLine("---");
             DeviBuild devv = new DeviBuild();
-            //devv.PreventComponentDuplication = true;
             devv.AddCPU(Enumerations.CPU.Name);
             devv.AddCPU(Enumerations.CPU.ThreadCount);
-            Console.WriteLine(devv.ToString());
+            Console.WriteLine(devv.ToString("<blank>"));
             /*var sl = devi.Components.Select(x => x.GetValue()).ToArray();
             new Examples.UseAES();
             HardwareComponents.GetInstance()

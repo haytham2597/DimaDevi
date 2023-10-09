@@ -73,20 +73,12 @@ namespace DimaDevi
                 return;
             var dii = DeviInstanceInvocation.GetInstance();
             if (sender is IList<IDeviComponent> deviComp)
-            {
-                
                 for (int i = 0; i < deviComp.Count; i++)
-                {
                     if (!dii.Components.Contains(deviComp[i]))
                         dii.Components.Add(deviComp[i]);
-                }
-            }
-
             if (sender is IDeviComponent devi)
-            {
                 if(!dii.Components.Contains(devi))
                     dii.Components.Add(devi);
-            }
         }
 
         public DeviBuild(IDeviFormatter formatter) : this()
@@ -254,12 +246,13 @@ namespace DimaDevi
             if (string.IsNullOrEmpty(separator))
                 return ToString();
             string str = string.Empty;
-
-            IEnumerator<IDeviComponent> enumer = Components.GetEnumerator();
+            var dii = DeviInstanceInvocation.GetInstance();
+            var comp = DeviGeneralConfig.GetInstance().AllowSingletonComponents ? dii.Components : Components;
+            IEnumerator<IDeviComponent> enumer = comp.GetEnumerator();
             if (!DeviGeneralConfig.GetInstance().ProcessComponentsWhileAdd)
             {
                 if (DeviGeneralConfig.GetInstance().PreventDuplicationComponents)
-                    enumer = Components.DistinctBy(x => x.BaseHardware).GetEnumerator();
+                    enumer = comp.DistinctBy(x => x.BaseHardware).GetEnumerator();
                 while (enumer.MoveNext())
                 {
                     if (DeviGeneralConfig.GetInstance().ExcludeNameComponentString)
