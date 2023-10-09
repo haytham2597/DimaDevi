@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using DimaDevi.Modules;
 
@@ -8,7 +9,7 @@ namespace DimaDevi.Libs
     public class DeviGeneralConfig
     {
         private static DeviGeneralConfig instance;
-
+        
         public RemoteWMICredential RemoteWmi;
         public Encoding Encoding = Encoding.UTF8;
         /// <summary>
@@ -23,10 +24,21 @@ namespace DimaDevi.Libs
         /// Exclude "Name=" "ProccessorID=" etc in ToString() 
         /// </summary>
         public bool ExcludeNameComponentString;
+
+        private bool allowSingletonComponents = false;
         /// <summary>
         /// Make all instance of DeviBuild as unique
         /// </summary>
-        public bool AllowSingletonComponents = false;
+        public bool AllowSingletonComponents
+        {
+            get => allowSingletonComponents;
+            set
+            {
+                if (value && !allowSingletonComponents) //The private bool is for prevent multiple Debug.WriteLine()
+                    Debug.WriteLine("Warning: AllowSingletonComponents is ENABLED");
+                allowSingletonComponents = value;
+            }
+        }
         internal List<string> result = new List<string>();
         internal bool IsObfuscated;
         internal bool PreventDuplicationComponents;

@@ -51,8 +51,10 @@
     <Compile Include="Examples\CommonFormatter.cs" />
     <Compile Include="Examples\CreateHardwareOutside.cs" />
     <Compile Include="Examples\ECDHAES.cs" />
+    <Compile Include="Examples\SingletonComponent.cs" />
     <Compile Include="Examples\UseAES.cs" />
     <Compile Include="Examples\UseRSA.cs" />
+    <Compile Include="Examples\ValidationHardware.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

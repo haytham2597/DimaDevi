@@ -21,18 +21,14 @@ namespace DimaDevi
     public class DeviBuild : IDisposable
     {
         //TODO: Automatically detect and support Linux
-        /*private class ObservableComponent<IDeviComponent> : ObservableCollection<IDeviComponent>
-        {
-
-        }*/
+        private readonly Func<IList<IDeviComponent>> GetComponent;
         public ObservableCollection<IDeviComponent> Components;
-        //public IList<IDeviComponent> Components;
         public IDeviFormatter Formatter;
         public RemoteWMICredential WmiCredential
         {
             set => DeviGeneralConfig.GetInstance().RemoteWmi = value;
         }
-
+        
         /// <summary>
         /// Clear components after call ToString
         /// </summary>
@@ -48,10 +44,10 @@ namespace DimaDevi
 
         public DeviBuild()
         {
-            
+            GetComponent = () => DeviGeneralConfig.GetInstance().AllowSingletonComponents ? DeviInstanceInvocation.GetInstance().Components : this.Components;
             Components = new ObservableCollection<IDeviComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
-            //Components = new List<IDeviComponent>();
+            
             //Load user-defined components
             var hard = HardwareComponents.GetInstance().GetHardware();
             for (int i = 0; i < hard.Count; i++)
@@ -63,6 +59,7 @@ namespace DimaDevi
                 for (int j = 0; j < elem.Value.Count; j++)
                     Components.Add(new WMIComp(elem.Value[j], Dict.WMIClass[last], elem.Value[j]) { BaseHardware = last });
             }
+            
         }
 
         private void Components_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -132,7 +129,6 @@ namespace DimaDevi
                 }
                 cnt_match++;
             }
-
             //Enumerations.ToleranceLevel tolerance;
 
             double percentage = (double)(cnt_match * 100) / props_hard.Length;
@@ -235,7 +231,7 @@ namespace DimaDevi
         public override string ToString()
         {
             var dii = DeviInstanceInvocation.GetInstance();
-            string result = Formatter != null ? Formatter.GetDevi(DeviGeneralConfig.GetInstance().AllowSingletonComponents ? dii.Components : Components) : (DeviGeneralConfig.GetInstance().AllowSingletonComponents ? dii.Components : Components).Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents);
+            string result = Formatter != null ? Formatter.GetDevi(GetComponent()) : (GetComponent()).Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents);
             if (ClearAfterProcess)
                 ClearComponents();
             return result;
@@ -247,7 +243,7 @@ namespace DimaDevi
                 return ToString();
             string str = string.Empty;
             var dii = DeviInstanceInvocation.GetInstance();
-            var comp = DeviGeneralConfig.GetInstance().AllowSingletonComponents ? dii.Components : Components;
+            var comp = GetComponent();
             IEnumerator<IDeviComponent> enumer = comp.GetEnumerator();
             if (!DeviGeneralConfig.GetInstance().ProcessComponentsWhileAdd)
             {
@@ -286,10 +282,11 @@ namespace DimaDevi
             return ToString(separator);
         }
 
+
         public string[] ToArray(string separator = null)
         {
             List<string> obj = new List<string>();
-            using (IEnumerator<IDeviComponent> enumer = Components.GetEnumerator())
+            using (IEnumerator<IDeviComponent> enumer = GetComponent().GetEnumerator())
             {
                 while (enumer.MoveNext())
                 {
@@ -309,14 +306,14 @@ namespace DimaDevi
         public object[] ToArray(IDeviFormatter formatter, string separator = null)
         {
             List<object> obj = new List<object>();
-            using (IEnumerator<IDeviComponent> enumer = Components.GetEnumerator())
+            using (IEnumerator<IDeviComponent> enumer = GetComponent().GetEnumerator())
                 while (enumer.MoveNext())
                     obj.Add(DeviGeneralConfig.GetInstance().ExcludeNameComponentString ? formatter.GetDevi(enumer.Current?.GetValue(), separator) : formatter.GetDevi(enumer.Current?.Name + "=" + enumer.Current?.GetValue(), separator));
             return obj.ToArray();
         }
         public IEnumerable<IGrouping<string, IDeviComponent>> ToGroup()
         {
-            return Components.GroupBy(x => x.BaseHardware);
+            return GetComponent().GroupBy(x => x.BaseHardware);
         }
         
         /// <summary>
@@ -327,7 +324,7 @@ namespace DimaDevi
         /// <returns></returns>
         public string GetSpecificComponent(Enum enume)
         {
-            return Components.FirstOrDefault(x => x.BaseHardware.ToLower() == enume.GetType().Name.ToLower() && x.Name.ToLower() == enume.ToString().ToLower())?.GetValue();
+            return GetComponent().FirstOrDefault(x => x.BaseHardware.ToLower() == enume.GetType().Name.ToLower() && x.Name.ToLower() == enume.ToString().ToLower())?.GetValue();
         }
 
         /// <summary>
