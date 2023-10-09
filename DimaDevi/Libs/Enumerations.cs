@@ -75,6 +75,7 @@ namespace DimaDevi.Libs
         {
             Physical = 1,
             Up = Physical << 1, 
+            //VPN = Up << 1,
             All = Up << 1,
             /// <summary>
             /// If want Hash MacAddress is hashed with md5 and convert to Base64
