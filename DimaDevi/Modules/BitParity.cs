@@ -12,6 +12,6 @@ namespace DimaDevi.Modules
     /// </summary>
     public class BitParity
     {
-
+        //TODO: HammingCode correct error bits
     }
 }

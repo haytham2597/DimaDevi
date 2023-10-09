@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 
 namespace DimaDevi.Components
 {
@@ -28,6 +29,10 @@ namespace DimaDevi.Components
             if (Replacement != null)
                 return Replacement(result);
             return result;
+        }
+        public bool Equals(IDeviComponent other)
+        {
+            return this.EqualsObject(other);
         }
     }
 }

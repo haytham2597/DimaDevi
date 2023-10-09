@@ -69,7 +69,6 @@ namespace DimaDevi
         {
             return devi.AddComponents(new DeviComp(name, func_) { BaseHardware = baseHardwareName });
         }
-
         public static DeviBuild AddCustom(this DeviBuild devi, IDeviComponent deviComp)
         {
             return devi.AddComponents(deviComp);

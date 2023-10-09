@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DimaDevi.Libs.Extensions;
+using System;
 
 namespace DimaDevi.Components
 {
@@ -45,6 +46,10 @@ namespace DimaDevi.Components
             if (Replacement != null)
                 return Replacement(_valueFactory.Invoke());
             return _valueFactory.Invoke();
+        }
+        public bool Equals(IDeviComponent other)
+        {
+            return this.EqualsObject(other);
         }
     }
 }

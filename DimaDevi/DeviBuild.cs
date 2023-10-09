@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -19,8 +21,12 @@ namespace DimaDevi
     public class DeviBuild : IDisposable
     {
         //TODO: Automatically detect and support Linux
+        /*private class ObservableComponent<IDeviComponent> : ObservableCollection<IDeviComponent>
+        {
 
-        public IList<IDeviComponent> Components;
+        }*/
+        public ObservableCollection<IDeviComponent> Components;
+        //public IList<IDeviComponent> Components;
         public IDeviFormatter Formatter;
         public RemoteWMICredential WmiCredential
         {
@@ -42,8 +48,10 @@ namespace DimaDevi
 
         public DeviBuild()
         {
-            Components = new List<IDeviComponent>();
-
+            
+            Components = new ObservableCollection<IDeviComponent>();
+            Components.CollectionChanged += Components_CollectionChanged;
+            //Components = new List<IDeviComponent>();
             //Load user-defined components
             var hard = HardwareComponents.GetInstance().GetHardware();
             for (int i = 0; i < hard.Count; i++)
@@ -54,6 +62,30 @@ namespace DimaDevi
                     continue;
                 for (int j = 0; j < elem.Value.Count; j++)
                     Components.Add(new WMIComp(elem.Value[j], Dict.WMIClass[last], elem.Value[j]) { BaseHardware = last });
+            }
+        }
+
+        private void Components_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action != NotifyCollectionChangedAction.Add)
+                return;
+            if (!DeviGeneralConfig.GetInstance().AllowSingletonComponents)
+                return;
+            var dii = DeviInstanceInvocation.GetInstance();
+            if (sender is IList<IDeviComponent> deviComp)
+            {
+                
+                for (int i = 0; i < deviComp.Count; i++)
+                {
+                    if (!dii.Components.Contains(deviComp[i]))
+                        dii.Components.Add(deviComp[i]);
+                }
+            }
+
+            if (sender is IDeviComponent devi)
+            {
+                if(!dii.Components.Contains(devi))
+                    dii.Components.Add(devi);
             }
         }
 
@@ -210,7 +242,8 @@ namespace DimaDevi
 
         public override string ToString()
         {
-            string result = Formatter != null ? Formatter.GetDevi(Components) : Components.Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents);
+            var dii = DeviInstanceInvocation.GetInstance();
+            string result = Formatter != null ? Formatter.GetDevi(DeviGeneralConfig.GetInstance().AllowSingletonComponents ? dii.Components : Components) : (DeviGeneralConfig.GetInstance().AllowSingletonComponents ? dii.Components : Components).Joined(DeviGeneralConfig.GetInstance().PreventDuplicationComponents);
             if (ClearAfterProcess)
                 ClearComponents();
             return result;

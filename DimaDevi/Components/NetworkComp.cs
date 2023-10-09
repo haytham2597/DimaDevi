@@ -77,5 +77,9 @@ namespace DimaDevi.Components
                 return Replacement(MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? macAddr.ToMD5Base64() : macAddr);
             return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? macAddr.ToMD5Base64() : macAddr;
         }
+        public bool Equals(IDeviComponent other)
+        {
+            return this.EqualsObject(other);
+        }
     }
 }

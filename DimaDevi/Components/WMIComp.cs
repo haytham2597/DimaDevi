@@ -111,5 +111,11 @@ namespace DimaDevi.Components
             Result = (values.Count > 0) ? string.Join(",", values) : null;
             return Result;
         }
+
+        public bool Equals(IDeviComponent other)
+        {
+            return this.EqualsObject(other);
+        }
+
     }
 }

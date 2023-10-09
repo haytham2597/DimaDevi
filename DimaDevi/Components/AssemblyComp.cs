@@ -54,5 +54,10 @@ namespace DimaDevi.Components
                 result = Replacement(result);
             return (allInfoResultAssembly.Count > 0) ? result : null;
         }
+
+        public bool Equals(IDeviComponent other)
+        {
+            return this.EqualsObject(other);
+        }
     }
 }

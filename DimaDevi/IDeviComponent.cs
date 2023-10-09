@@ -2,7 +2,7 @@
 
 namespace DimaDevi
 {
-    public interface IDeviComponent
+    public interface IDeviComponent : IEquatable<IDeviComponent>
     {
         Func<string, string> Replacement { set;get; }
         /// <summary>

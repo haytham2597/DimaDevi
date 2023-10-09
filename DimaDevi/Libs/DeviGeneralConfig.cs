@@ -23,6 +23,10 @@ namespace DimaDevi.Libs
         /// Exclude "Name=" "ProccessorID=" etc in ToString() 
         /// </summary>
         public bool ExcludeNameComponentString;
+        /// <summary>
+        /// Make all instance of DeviBuild as unique
+        /// </summary>
+        public bool AllowSingletonComponents = false;
         internal List<string> result = new List<string>();
         internal bool IsObfuscated;
         internal bool PreventDuplicationComponents;

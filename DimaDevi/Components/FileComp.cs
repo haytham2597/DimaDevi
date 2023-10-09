@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using DimaDevi.Libs;
+using DimaDevi.Libs.Extensions;
 
 namespace DimaDevi.Components
 {
@@ -67,6 +68,10 @@ namespace DimaDevi.Components
         public void Dispose()
         {
             hash.Dispose();
+        }
+        public bool Equals(IDeviComponent other)
+        {
+            return this.EqualsObject(other);
         }
     }
 }

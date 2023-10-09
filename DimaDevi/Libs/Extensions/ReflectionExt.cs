@@ -20,6 +20,26 @@ namespace DimaDevi.Libs.Extensions
                 pi.SetValue(obj, value);
         }
 
+        public static bool EqualsObject(this object a, object b)
+        {
+            var ma = a.GetMembers().ToList();
+            var mb = b.GetMembers().ToList();
+            if(ma.Count != mb.Count)
+                return false;
+            for (int i = 0; i < ma.Count; i++)
+                if (ma[i].GetValue(a) != mb[i].GetValue(b))
+                    return false;
+            return true;
+        }
+
+        public static object GetValue(this MemberInfo mi, object obj)
+        {
+            if (mi is FieldInfo fi)
+                return fi.GetValue(obj);
+            if (mi is PropertyInfo pi)
+                return pi.GetValue(obj);
+            return null;
+        }
         /// <summary>
         /// Get all Properties and Fields
         /// </summary>

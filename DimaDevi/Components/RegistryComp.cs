@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using DimaDevi.Libs.Extensions;
 using Microsoft.Win32;
 
 namespace DimaDevi.Components
@@ -63,6 +64,10 @@ namespace DimaDevi.Components
                 Debug.WriteLine(ex.Message);
                 return null;
             }
+        }
+        public bool Equals(IDeviComponent other)
+        {
+            return this.EqualsObject(other);
         }
     }
 }
