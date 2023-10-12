@@ -26,7 +26,7 @@ If you dont defined this the WMI is Local Computer by default
 | Disk | Devi | ChaCha20 |
 | Motherboard | Network | JSON |
 | MacAddress | WMI | Hash |
-| | | Support ECDH (Eliptic Curve Diffie-Helman) |
+| BIOS | Registry | Support ECDH (Eliptic Curve Diffie-Helman) |
 
 ### Create Hardware 'Outside'
 
