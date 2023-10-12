@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DimaDevi.Modules
+﻿namespace DimaDevi.Modules
 {
     /// <summary>
     /// For secure purpose to send UDP Socket or anyway, the system take care bits parity and check error message.

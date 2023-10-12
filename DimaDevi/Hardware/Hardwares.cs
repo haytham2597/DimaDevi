@@ -18,7 +18,10 @@ namespace DimaDevi.Hardware
         {
             DefaultSet.GetInstance().AddThis(this);
         }
-
+        public static HardwareComponents GetInstance()
+        {
+            return instance ?? (instance = new HardwareComponents());
+        }
         public Dictionary<Type, IList<string>> GetHardware()
         {
             return dicthard;
@@ -26,8 +29,8 @@ namespace DimaDevi.Hardware
 
         public HardwareComponents AddComponent(Type enumType, string field)
         {
-            GetInstance().AddComp(enumType, field);
-            return GetInstance();
+            this.AddComp(enumType, field);
+            return this;
         }
 
         /*public HardwareComponents AddComponent(string hardware, string field)
@@ -52,9 +55,9 @@ namespace DimaDevi.Hardware
             if(!Dict.WMIClass.ContainsKey(enumType.Name))
                 throw new Exception("This enum type do not exists");
 
-            if (dicthard.ContainsKey(enumType))
+            if (dicthard.TryGetValue(enumType, out var value))
             {
-                dicthard[enumType].Add(field);
+                value.Add(field);
                 return;
             }
             dicthard.Add(enumType, new List<string>(){field});
@@ -67,13 +70,8 @@ namespace DimaDevi.Hardware
         {
             dicthard.Clear();
             DefaultSet.GetInstance().SetThis(this);
-            //AllowException = false;
         }
 
-        public static HardwareComponents GetInstance()
-        {
-            return instance ?? (instance = new HardwareComponents());
-        }
     }
     public sealed class Hardwares
     {

@@ -33,8 +33,10 @@ namespace DimaDevi.Formatters
         public Enumerations.DeriveSecure DeriveSecure { set; get; } = Enumerations.DeriveSecure.Rfc2898DeriveBytes;
         public RijndaelManaged Managed { set; get; }
         public byte[] Salt { set; get; }
-        private static RijndaelManaged InitManaged(DeriveBytes key, CipherMode cipher, PaddingMode padding)
+        private DeriveBytes deriveBytes = null;
+        private RijndaelManaged InitManaged(DeriveBytes key, CipherMode cipher, PaddingMode padding)
         {
+            this.deriveBytes = key;
             RijndaelManaged AES = new RijndaelManaged { KeySize = 256, BlockSize = 128 };
             AES.Key = key.GetBytes(AES.KeySize / 8);
             AES.IV = key.GetBytes(AES.BlockSize / 8);
@@ -121,6 +123,13 @@ namespace DimaDevi.Formatters
         {
             if (Managed != null)
                 Managed.IV = iv;
+        }
+
+        public void SetSaltWithDerivate(string salt)
+        {
+            var by = DeviGeneralConfig.GetInstance().Encoding.GetBytes(salt);
+            DeriveBytes deriv = DeriveSecure == Enumerations.DeriveSecure.PasswordDeriveBytes ? (DeriveBytes)new PasswordDeriveBytes(Password, by, "SHA1", Iterations) : new Rfc2898DeriveBytes(Password, by, Iterations);
+            Managed = InitManaged(deriv, Cipher, Padding);
         }
         public byte[] GetIV()
         {

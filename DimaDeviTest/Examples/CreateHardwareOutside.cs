@@ -1,4 +1,5 @@
-﻿using DimaDevi;
+﻿using System;
+using DimaDevi;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
 
@@ -19,6 +20,7 @@ namespace DimaDeviTest.Examples
                 .AddRam(Enumerations.RAM.All)
                 .AddRegistry(@"SOFTWARE\\DefaultUserEnvironment", "Path");
             string content = devi.ToString("<separ>"); //Print Description, Name CPU and L3CacheSize, L2CacheSize of CPU and other components
+            Console.WriteLine(content);
         }
     }
 }
