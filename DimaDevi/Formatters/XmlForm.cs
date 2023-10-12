@@ -37,7 +37,7 @@ namespace DimaDevi.Formatters
 
         public string GetDevi(string componentsResult, string separator)
         {
-            var spl = componentsResult.Split(separator.ToCharArray());
+            var spl = componentsResult.Split(new string[] { separator }, StringSplitOptions.None);
             List<XElement> elements = new List<XElement>();
             for (int i = 0; i < spl.Length; i++)
             {

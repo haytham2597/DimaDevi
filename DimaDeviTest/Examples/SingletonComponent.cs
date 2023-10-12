@@ -3,6 +3,7 @@ using DimaDevi;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using DimaDevi.Formatters;
 
 namespace DimaDeviTest.Examples
 {
@@ -22,7 +23,7 @@ namespace DimaDeviTest.Examples
             anotherCoolDevi.AddCPU(Enumerations.CPU.Name);
             anotherCoolDevi.AddCPU(Enumerations.CPU.ThreadCount);
             Console.WriteLine(anotherCoolDevi.ToString("<separ>")); //now will print CPU Name, Motherboard, HashMD5 and ThreadCount of CPU. See that have two different DeviBuild but have same output
-            Console.WriteLine(devi.ToString("<separ>")); //have exact same output as previous
+            Console.WriteLine(devi.ToString(new XmlForm(),"<separ>")); //have exact same output as previous; anotherCoolDevi because of AllowSingletonComponents = true
         }
     }
 }

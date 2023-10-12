@@ -24,7 +24,7 @@ namespace DimaDevi
                 DeviGeneralConfig.GetInstance().result.Add(deviComponent.Name + "="+deviComponent.GetValue());
             return devi;
         }
-
+        
         //[Obfuscation(ApplyToMembers = true, Feature = "all")]
         private static DeviBuild AddByFlags(this DeviBuild devi, IEnumerable<Enum> flags)
         {
