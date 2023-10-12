@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace DimaDevi.Libs
 {
@@ -83,6 +85,7 @@ namespace DimaDevi.Libs
             Hash = All << 1,
         }
 
+        //https://stackoverflow.com/questions/1799370/getting-attributes-of-enums-value by using attribute values
         [Flags]
         public enum Motherboard
         {
@@ -122,6 +125,22 @@ namespace DimaDevi.Libs
             /// This mean that Only process with the Main Disk of SO not all disk Example have 3 disk; C, D, F and C is from SO. So only get information of C
             /// </summary>
             Main = TotalTracks << 1,
+            All = ~0
+        }
+
+        [Flags]
+        [Attrs.WMIName("Win32_BIOS")]
+        public enum BIOS
+        {
+            Version = 1,
+            [Attrs.WMIName("SMBIOSBIOSVersion")]
+            BiosV = Version << 1,
+            [Attrs.WMIName("SMBIOSMajorVersion")]
+            MajorV = BiosV << 1,
+            [Attrs.WMIName("SMBIOSMinorVersion")]
+            MinorV = MajorV << 1,
+            Caption = MinorV << 1,
+            Description  = Caption << 1,
             All = ~0
         }
 

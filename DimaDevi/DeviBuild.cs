@@ -337,7 +337,7 @@ namespace DimaDevi
         }
 
         /// <summary>
-        /// Import formatter provider by user because if you want decrypt content, you should set settings formatter or import
+        /// Import formatter provider by user because if you want decrypt content, you should set settings formatter or import use <see cref="Save(string,string)"/> for export
         /// </summary>
         /// <param name="str"></param>
         public void ImportFormatter(string str)
@@ -411,7 +411,8 @@ namespace DimaDevi
         }
         public void Dispose()
         {
-            Formatter.Dispose();
+            if(Formatter != null)
+                Formatter.Dispose();
             using (var enumer = Components.GetEnumerator())
                 while (enumer.MoveNext())
                     enumer.Current?.CallDisposed();

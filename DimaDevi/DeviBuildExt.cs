@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -47,6 +49,28 @@ namespace DimaDevi
         public static DeviBuild AddPrevOperation(this DeviBuild devi, Func<string,string> func)
         {
             devi.Components[devi.Components.Count - 1].Replacement = func;
+            return devi;
+        }
+
+        public static DeviBuild AddBIOS(this DeviBuild devi, Enumerations.BIOS bios)
+        {
+            var enumType = bios.GetType();
+            var gca = enumType.GetCustomAttributes(typeof(Attrs.WMINameAttribute), true);
+            var flags = bios.GetFlags();
+            using (var enumer = flags.GetEnumerator())
+            {
+                while (enumer.MoveNext())
+                {
+                    if (Convert.ToInt32(enumer.Current) == -1) //is ALL
+                        continue;
+                    if (enumer.Current == null)
+                        continue;
+                    var memberInfos = enumType.GetMember(enumer.Current.ToString());
+                    var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
+                    var valueAttributes = enumValueMemberInfo?.GetCustomAttributes(typeof(Attrs.WMINameAttribute), false);
+                    devi.AddComponents(new WMIComp(enumer.Current.ToString(), (gca[0] as Attrs.WMINameAttribute)?.Name, valueAttributes?.Length == 0 ? enumer.Current.ToString() : (valueAttributes?[0] as Attrs.WMINameAttribute)?.Name) { BaseHardware = enumType.Name });
+                }
+            }
             return devi;
         }
         public static DeviBuild AddMachineName(this DeviBuild devi)

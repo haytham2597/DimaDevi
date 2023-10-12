@@ -12,5 +12,14 @@ namespace DimaDevi.Libs
                 MethodName = method_name;
             }
         }
+
+        public class WMINameAttribute : Attribute
+        {
+            public string Name;
+            public WMINameAttribute(string name)
+            {
+                this.Name = name;
+            }
+        }
     }
 }

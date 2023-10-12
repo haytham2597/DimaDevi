@@ -7,6 +7,7 @@ using DimaDevi;
 using DimaDevi.Formatters;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
+using Newtonsoft.Json;
 
 namespace DimaDeviTest
 {
@@ -14,8 +15,12 @@ namespace DimaDeviTest
     {
         static void Main(string[] args)
         {
-            new Examples.SingletonComponent();
-            new Examples.ValidationHardware();
+            /*new Examples.SingletonComponent();
+            new Examples.ValidationHardware();*/
+            //new Examples.CompressAndDescompress();
+            var devi = new DeviBuild();
+            devi.AddBIOS(Enumerations.BIOS.All);
+            Console.WriteLine(devi.ToString(new JsonForm(Formatting.Indented)));
             Console.WriteLine("Finish");
             Console.ReadKey();
         }

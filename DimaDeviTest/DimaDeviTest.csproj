@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Examples\BaseX.cs" />
     <Compile Include="Examples\CommonFormatter.cs" />
+    <Compile Include="Examples\CompressAndDescompress.cs" />
     <Compile Include="Examples\CreateHardwareOutside.cs" />
     <Compile Include="Examples\ECDHAES.cs" />
     <Compile Include="Examples\SingletonComponent.cs" />
