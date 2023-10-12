@@ -58,6 +58,7 @@
     <Compile Include="Components\FileComp.cs" />
     <Compile Include="Components\HashComp.cs" />
     <Compile Include="Components\NetworkComp.cs" />
+    <Compile Include="Components\ProcessComp.cs" />
     <Compile Include="Components\RegistryComp.cs" />
     <Compile Include="Components\WMIComp.cs" />
     <Compile Include="DeviBuild.cs" />

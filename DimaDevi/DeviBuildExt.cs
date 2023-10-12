@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -9,6 +10,7 @@ using DimaDevi.Components;
 using DimaDevi.Libs;
 using DimaDevi.Libs.Extensions;
 using Microsoft.Win32;
+using static DimaDevi.Libs.Enumerations;
 
 namespace DimaDevi
 {
@@ -220,6 +222,17 @@ namespace DimaDevi
         public static DeviBuild AddHash(this DeviBuild devi, HashAlgorithm hash, string content)
         {
             return devi.AddComponents(new HashComp(hash, content));
+        }
+
+        public static DeviBuild AddProcess(this DeviBuild devi, Process proccess)
+        {
+            devi.AddComponents(new ProcessComp(proccess){BaseHardware = proccess.ProcessName});
+            return devi;
+        }
+        public static DeviBuild AddProcess(this DeviBuild devi, Process proccess, ProcessInfo procInfo)
+        {
+            devi.AddComponents(new ProcessComp(proccess, procInfo) { BaseHardware = proccess.ProcessName });
+            return devi;
         }
     }
 }

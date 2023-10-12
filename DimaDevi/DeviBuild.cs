@@ -59,7 +59,6 @@ namespace DimaDevi
                 for (int j = 0; j < elem.Value.Count; j++)
                     Components.Add(new WMIComp(elem.Value[j], Dict.WMIClass[last], elem.Value[j]) { BaseHardware = last });
             }
-            
         }
 
         private void Components_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

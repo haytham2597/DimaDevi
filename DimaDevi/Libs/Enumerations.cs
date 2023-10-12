@@ -154,6 +154,26 @@ namespace DimaDevi.Libs
         }
 
         [Flags]
+        public enum ProcessInfo
+        {
+            Description=1,
+            [Attrs.WMIName(nameof(ReadOperation) + "Count")]
+            ReadOperation =Description << 1,
+            [Attrs.WMIName(nameof(ReadTransfer)+"Count")]
+            ReadTransfer = ReadOperation <<1,
+            [Attrs.WMIName(nameof(WriteOperation) + "Count")]
+            WriteOperation = ReadTransfer << 1,
+            [Attrs.WMIName(nameof(WriteTransfer) + "Count")]
+            WriteTransfer = WriteOperation << 1,
+            [Attrs.WMIName(nameof(Command) + "Line")]
+            Command = WriteTransfer << 1,
+            CreationDate= Command <<1,
+            [Attrs.WMIName("CSName")]
+            Domain = CreationDate << 1,
+            All =~0
+        }
+
+        [Flags]
         public enum Sectors
         {
             Section1 = 1,

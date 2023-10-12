@@ -19,8 +19,10 @@ namespace DimaDeviTest
             new Examples.ValidationHardware();*/
             //new Examples.CompressAndDescompress();
             var devi = new DeviBuild();
-            devi.AddBIOS(Enumerations.BIOS.All);
-            Console.WriteLine(devi.ToString(new JsonForm(Formatting.Indented)));
+            /*devi.AddBIOS(Enumerations.BIOS.All);
+            devi.AddCPU(Enumerations.CPU.ProcessorId | Enumerations.CPU.Name | Enumerations.CPU.Description);*/
+            devi.AddProcess(Process.GetProcessById(18132), Enumerations.ProcessInfo.All);
+            Console.WriteLine(devi.ToString());
             Console.WriteLine("Finish");
             Console.ReadKey();
         }

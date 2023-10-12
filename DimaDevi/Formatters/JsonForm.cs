@@ -19,6 +19,7 @@ namespace DimaDevi.Formatters
             JObject o = new JObject();
             JObject jo = new JObject();
             
+            //TODO: Fix this cause problem if instance already exists
             if (DeviGeneralConfig.GetInstance().PreventDuplicationComponents)
                 components= components.DistinctBy(x => x.BaseHardware).Where(x => !string.IsNullOrEmpty(x.Name));
             using (var enumer = components.GetEnumerator())

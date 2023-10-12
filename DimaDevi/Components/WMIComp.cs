@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management;
 using DimaDevi.Libs;
 using DimaDevi.Libs.Extensions;
@@ -79,6 +80,12 @@ namespace DimaDevi.Components
                     scope.Options = connectOptions;
                 }
                 SelectQuery query = new SelectQuery($"SELECT {_wmiProperty} FROM {_wmiClass}");
+                if (!string.IsNullOrEmpty(_wmiWhere))
+                    query.QueryString += $" WHERE {_wmiWhere}";
+                IList<string> splitProp = null;
+                if (_wmiProperty.Contains(","))
+                    splitProp =_wmiProperty.Split(',').Select(x => x.Replace(" ", "")).ToList();
+                
                 using (ManagementObjectSearcher searcher =new ManagementObjectSearcher(scope, query))
                 using (ManagementObjectCollection collection = searcher.Get())
                 {
@@ -86,6 +93,13 @@ namespace DimaDevi.Components
                     {
                         if (!string.IsNullOrEmpty(_wmiWhere))
                         {
+                            if (splitProp != null)
+                            {
+                                for (int i = 0; i < splitProp.Count; i++)
+                                    values.Add(mo[splitProp[i]].ToString().Trim());
+                                break;
+                            }
+
                             var spl = _wmiWhere.Split('=');
                             if (mo[spl[0]].ToString().Contains(spl[1]))
                             {
