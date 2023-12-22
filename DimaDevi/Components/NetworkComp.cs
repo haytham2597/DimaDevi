@@ -18,6 +18,7 @@ namespace DimaDevi.Components
         private IList<NetworkInterfaceType> NetworkInterfaceList { set; get; }
         private IList<OperationalStatus> OperationalStatusList { set; get; }
         private readonly string IP;
+        public bool PreventVPN = true;
         public NetworkComp()
         {
 
@@ -48,9 +49,44 @@ namespace DimaDevi.Components
             OperationalStatusList = opStatus;
         }
 
+        private IEnumerable<NetworkInterface> GetInter()
+        {
+            var inter = NetworkInterface.GetAllNetworkInterfaces().AsEnumerable();
+            if (MacAddresses.HasFlag(Enumerations.MacAddress.All) || NetworkInterfaceList != null)
+            {
+                if (NetworkInterfaceList != null && NetworkInterfaceList.Count != 0)
+                    inter = inter.Where(x => NetworkInterfaceList.Contains(x.NetworkInterfaceType));
+                if (OperationalStatusList != null && OperationalStatusList.Count != 0)
+                    inter = inter.Where(x => OperationalStatusList.Contains(x.OperationalStatus));
+            }
+            return inter;
+        }
+        private Func<string, string> ResultReplacement()
+        {
+            return s =>
+            {
+                if (Replacement != null)
+                    return Replacement(MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? s.ToMD5Base64() : s);
+                return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? s.ToMD5Base64() : s;
+            };
+        }
         public string GetValue()
         {
+            var funcReplacement = ResultReplacement();
+            var inter = GetInter();
             //TODO: Detect VPN
+            if (PreventVPN)
+            {
+                var wm = new WMIComp("NetAdapterWithoutVPN", "Win32_NetworkAdapter", "MACAddress, PNPDeviceID", "PNPDeviceID", "PNPDeviceID LIKE \"PCI%\"");
+                var vals = wm.GetValues();
+                if (vals.All(x => x.ContainsKey("MACAddress")))
+                {
+                    var macs = vals.Select(x => x["MACAddress"].ToString().Replace(":",""));
+                    var RealGetPhysicalAddress = NetworkInterface.GetAllNetworkInterfaces().AsEnumerable().Where(x => macs.Contains(x.GetPhysicalAddress().ToString())).Select(x=>x.GetPhysicalAddress().ToString());
+                    return funcReplacement(RealGetPhysicalAddress.FirstOrDefault());
+                }
+            }
+
             if (!string.IsNullOrEmpty(IP))
             {
                 using (var ipmac = new IPMacMapper())
@@ -59,24 +95,14 @@ namespace DimaDevi.Components
                     return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? mac.ToMD5Base64() : mac;
                 }
             }
-            var inter = NetworkInterface.GetAllNetworkInterfaces().AsEnumerable();
             if (MacAddresses.HasFlag(Enumerations.MacAddress.All) || NetworkInterfaceList != null)
             {
-                if (NetworkInterfaceList != null && NetworkInterfaceList.Count != 0)
-                    inter = inter.Where(x => NetworkInterfaceList.Contains(x.NetworkInterfaceType));
-                if(OperationalStatusList != null && OperationalStatusList.Count != 0)
-                    inter = inter.Where(x => OperationalStatusList.Contains(x.OperationalStatus));
-                
                 var interStr = inter.Select(x => x.GetPhysicalAddress().ToString()).Where(x => x != "000000000000" && x != "00000000000000E0").Select(x => x.FormatMacAddress()).ToList();
                 var result = interStr.Count > 0 ? string.Join(",", interStr) : null;
-                if (Replacement != null)
-                    return Replacement(MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? result.ToMD5Base64() : result);
-                return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? result.ToMD5Base64() : result;
+                funcReplacement(result);
             }
             var macAddr = inter.Select(x => x.GetPhysicalAddress().ToString()).FirstOrDefault();
-            if (Replacement != null)
-                return Replacement(MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? macAddr.ToMD5Base64() : macAddr);
-            return MacAddresses.HasFlag(Enumerations.MacAddress.Hash) ? macAddr.ToMD5Base64() : macAddr;
+            return funcReplacement(macAddr);
         }
         public bool Equals(IDeviComponent other)
         {

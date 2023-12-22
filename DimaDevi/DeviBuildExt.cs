@@ -97,25 +97,27 @@ namespace DimaDevi
         {
             return devi.AddComponents(deviComp);
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All)
+
+        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All, bool preventVPN = true)
         {
-            return devi.AddComponents(new NetworkComp(macAddress));
+            //TODO: Make automatic argument instance with reflection
+            return devi.AddComponents(new NetworkComp(macAddress) { PreventVPN = preventVPN });
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, string ip, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, string ip, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All, bool preventVPN = true)
         {
-            return devi.AddComponents(new NetworkComp(ip, macAddress));
+            return devi.AddComponents(new NetworkComp(ip, macAddress) { PreventVPN = preventVPN });
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, IPAddress ip, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, IPAddress ip, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All, bool preventVPN = true)
         {
-            return devi.AddComponents(new NetworkComp(ip, macAddress));
+            return devi.AddMacAddress(ip.ToString(), macAddress, preventVPN);
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces, bool preventVPN = true)
         {
-            return devi.AddComponents(new NetworkComp(macAddress, networkInterfaces));
+            return devi.AddComponents(new NetworkComp(macAddress, networkInterfaces) { PreventVPN = preventVPN });
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces, IList<OperationalStatus> operationalStatus)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces, IList<OperationalStatus> operationalStatus, bool preventVPN = true)
         {
-            return devi.AddComponents(new NetworkComp(macAddress, networkInterfaces, operationalStatus));
+            return devi.AddComponents(new NetworkComp(macAddress, networkInterfaces, operationalStatus) { PreventVPN = preventVPN });
         }
         public static DeviBuild AddCPU(this DeviBuild devi, Enumerations.CPU cpus = Enumerations.CPU.ProcessorId)
         {

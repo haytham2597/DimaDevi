@@ -38,7 +38,7 @@ namespace DimaDevi.Components
         /// </summary>
         /// <param name="name">The name of the component.</param>
         /// <param name="wmiClass">The WMI class name.</param>
-        /// <param name="wmiProperty">The WMI property name.</param>
+        /// <param name="wmiProperty">The WMI property name. Support comma "Caption, Description"</param>
         public WMIComp(string name, string wmiClass, string wmiProperty)
         {
             Name = name;
@@ -108,6 +108,20 @@ namespace DimaDevi.Components
                             }
                             continue;
                         }
+
+                        /*if (_wmiProperty == "*")
+                        {
+                            foreach (var prorpo in mo.Properties)
+                            {
+                                var g = mo[prorpo.Name];
+                                if (g != null)
+                                {
+                                    values.Add(g.ToString().Trim());
+                                }
+                                
+                            }
+                        }*/
+                        
                         values.Add(mo[_wmiProperty == "*" ? _wmiName : _wmiProperty].ToString().Trim());
                     }
                 }
@@ -126,6 +140,46 @@ namespace DimaDevi.Components
             return Result;
         }
 
+        public IList<Dictionary<string, object>> GetValues()
+        {
+            IList<Dictionary<string, object>> dict = new List<Dictionary<string, object>>();
+            ConnectionOptions connectOptions = new ConnectionOptions();
+            ManagementScope scope = new ManagementScope(@"root\cimv2");
+            SelectQuery query = new SelectQuery($"SELECT {_wmiProperty} FROM {_wmiClass}");
+            if (!string.IsNullOrEmpty(_wmiWhere))
+                query.QueryString += $" WHERE {_wmiWhere}";
+            IList<string> splitProp = null;
+            if (_wmiProperty.Contains(","))
+                splitProp = _wmiProperty.Split(',').Select(x => x.Replace(" ", "")).ToList();
+
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+            using (ManagementObjectCollection collection = searcher.Get())
+            {
+                using (var enumer = collection.GetEnumerator())
+                {
+                    while (enumer.MoveNext())
+                    {
+                        Dictionary<string, object> d = new Dictionary<string, object>();
+
+                        var prop = enumer.Current.Properties;
+                        foreach (var item in prop)
+                        {
+                            try
+                            {
+                                d.Add(item.Name, enumer.Current[item.Name].ToString());
+                            }
+                            catch
+                            {
+                                //
+                            }
+                        }
+                        dict.Add(d);
+                    }
+                }
+            }
+
+            return dict;
+        }
         public bool Equals(IDeviComponent other)
         {
             return this.EqualsObject(other,new List<string>() { nameof(this.Result) });
