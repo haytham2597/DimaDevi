@@ -127,7 +127,7 @@ namespace DimaDevi.Libs.Extensions
         public static void CallDisposed(this object obj)
         {
             //Check if obj is a generic list or set
-            DefaultSet.GetInstance().SetThis(obj);
+            DeviDefaultSet.GetInstance().SetThis(obj);
             var dispose = obj.GetType().GetMethod("Dispose");
             if (dispose != null)
                 dispose.Invoke(obj, null); //The normal pattern Dispose not have parameter

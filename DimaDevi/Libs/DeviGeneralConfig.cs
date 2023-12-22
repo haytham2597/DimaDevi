@@ -45,7 +45,7 @@ namespace DimaDevi.Libs
         private DeviGeneralConfig()    
         {
             IsObfuscated = nameof(Base32) == "Base32";
-            DefaultSet.GetInstance().AddThis(this);
+            DeviDefaultSet.GetInstance().AddThis(this);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DimaDevi.Libs
         /// </summary>
         public void Reset()
         {
-            DefaultSet.GetInstance().SetThis(this);
+            DeviDefaultSet.GetInstance().SetThis(this);
         }
         public static DeviGeneralConfig GetInstance()
         {

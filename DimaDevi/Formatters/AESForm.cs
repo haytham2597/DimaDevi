@@ -47,7 +47,7 @@ namespace DimaDevi.Formatters
 
         private AESForm()
         {
-            DefaultSet.GetInstance().AddThis(this);
+            DeviDefaultSet.GetInstance().AddThis(this);
         }
         public AESForm(JObject import) : this()
         {
@@ -187,7 +187,7 @@ namespace DimaDevi.Formatters
 
         public void Clear()
         {
-            DefaultSet.GetInstance().SetThis(this);
+            DeviDefaultSet.GetInstance().SetThis(this);
         }
         public void Dispose()
         {

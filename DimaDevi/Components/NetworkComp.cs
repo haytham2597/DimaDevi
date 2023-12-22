@@ -50,6 +50,7 @@ namespace DimaDevi.Components
 
         public string GetValue()
         {
+            //TODO: Detect VPN
             if (!string.IsNullOrEmpty(IP))
             {
                 using (var ipmac = new IPMacMapper())

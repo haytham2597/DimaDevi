@@ -16,7 +16,7 @@ namespace DimaDevi.Hardware
 
         private HardwareComponents()
         {
-            DefaultSet.GetInstance().AddThis(this);
+            DeviDefaultSet.GetInstance().AddThis(this);
         }
         public static HardwareComponents GetInstance()
         {
@@ -69,7 +69,7 @@ namespace DimaDevi.Hardware
         public void Reset()
         {
             dicthard.Clear();
-            DefaultSet.GetInstance().SetThis(this);
+            DeviDefaultSet.GetInstance().SetThis(this);
         }
 
     }

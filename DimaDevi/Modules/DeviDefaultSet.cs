@@ -11,15 +11,15 @@ namespace DimaDevi.Modules
     /// A module that after disposed class set all props/fields to default value
     /// Why this module? I can create new Instance... Well this is for NOT Create new instance of class or for Clear() method for example
     /// </summary>
-    internal class DefaultSet : IDisposable
+    internal class DeviDefaultSet : IDisposable
     {
-        private static DefaultSet instance;
+        private static DeviDefaultSet instance;
 
         /// <summary>
         /// [Class Object] -> [Props/Fields -> Value]
         /// </summary>
         private readonly Dictionary<object, Dictionary<MemberInfo, object>> ClassMemberValue = new Dictionary<object, Dictionary<MemberInfo, object>>();
-        private DefaultSet()
+        private DeviDefaultSet()
         {
 
         }
@@ -73,9 +73,9 @@ namespace DimaDevi.Modules
                 members[i].SetMembers(obj, elem.Value);
             }
         }
-        public static DefaultSet GetInstance()
+        public static DeviDefaultSet GetInstance()
         {
-            return instance ?? (instance = new DefaultSet());
+            return instance ?? (instance = new DeviDefaultSet());
         }
 
         public void FlushAllData()

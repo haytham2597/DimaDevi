@@ -6,7 +6,9 @@ using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+//using System.Management;
 using System.Reflection;
+using System.Windows.Forms;
 using DimaDevi.Components;
 using DimaDevi.Formatters;
 using DimaDevi.Hardware;
@@ -28,6 +30,7 @@ namespace DimaDevi
         {
             set => DeviGeneralConfig.GetInstance().RemoteWmi = value;
         }
+        
         
         /// <summary>
         /// Clear components after call ToString
@@ -410,12 +413,19 @@ namespace DimaDevi
         }
         public void Dispose()
         {
-            if(Formatter != null)
-                Formatter.Dispose();
-            using (var enumer = Components.GetEnumerator())
-                while (enumer.MoveNext())
-                    enumer.Current?.CallDisposed();
-            Components.Clear();
+            try
+            {
+                if (Formatter != null)
+                    Formatter.Dispose();
+                using (var enumer = Components.GetEnumerator())
+                    while (enumer.MoveNext())
+                        enumer.Current?.CallDisposed();
+                Components.Clear();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("FORM DEVIBUILD: "+ex.StackTrace);
+            }
         }
     }
 }

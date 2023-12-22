@@ -91,7 +91,7 @@
     <Compile Include="Modules\Base32.cs" />
     <Compile Include="Modules\BitParity.cs" />
     <Compile Include="Modules\ChaCha20.cs" />
-    <Compile Include="Modules\DefaultSet.cs" />
+    <Compile Include="Modules\DeviDefaultSet.cs" />
     <Compile Include="Modules\ElipticCurveDiffieHellman.cs" />
     <Compile Include="Modules\Imports.cs" />
     <Compile Include="Modules\IPMacMapper.cs" />

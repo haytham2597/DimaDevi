@@ -36,7 +36,7 @@ namespace DimaDevi.Formatters
 
         private RSAForm()
         {
-            DefaultSet.GetInstance().AddThis(this);
+            DeviDefaultSet.GetInstance().AddThis(this);
         }
         public RSAForm(JObject import) : this()
         {
@@ -155,7 +155,7 @@ namespace DimaDevi.Formatters
 
         public void Dispose()
         {
-            DefaultSet.GetInstance().SetThis(this);
+            DeviDefaultSet.GetInstance().SetThis(this);
         }
     }
 }

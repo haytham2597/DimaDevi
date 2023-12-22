@@ -18,11 +18,10 @@ namespace DimaDeviTest
             /*new Examples.SingletonComponent();
             new Examples.ValidationHardware();*/
             //new Examples.CompressAndDescompress();
-            var devi = new DeviBuild();
-            /*devi.AddBIOS(Enumerations.BIOS.All);
-            devi.AddCPU(Enumerations.CPU.ProcessorId | Enumerations.CPU.Name | Enumerations.CPU.Description);*/
-            devi.AddProcess(Process.GetProcessById(18132), Enumerations.ProcessInfo.All);
-            Console.WriteLine(devi.ToString());
+            DeviGeneralConfig.GetInstance().ExcludeNameComponentString = true;
+            var devi = new DeviBuild().AddMotherboard().AddCPU(Enumerations.CPU.Name).AddMacAddress(Enumerations.MacAddress.Up | Enumerations.MacAddress.Physical);
+            //var dla = devi.Components.Select(x => x.GetValue());
+            Console.WriteLine(devi.ToString("<blank>"));
             Console.WriteLine("Finish");
             Console.ReadKey();
         }
