@@ -35,6 +35,16 @@ namespace DimaDevi.Libs.Extensions
             return AddPublic(ecdh, ecdh1.GetPublicKey());
         }
 
+        public static int GetFormula(this RSACryptoServiceProvider rsa)
+        {
+            return ((rsa.KeySize - 384) / 8) + 37;
+        }
+        public static int GetCompleteSize(this RSACryptoServiceProvider rsa)
+        {
+            const int rest = 11;
+            return rsa.GetFormula() + rest;
+        }
+
         public static bool IsBase64(this string s)
         {
             s = s.Trim();

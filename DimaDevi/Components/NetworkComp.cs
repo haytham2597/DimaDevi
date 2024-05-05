@@ -59,6 +59,7 @@ namespace DimaDevi.Components
                 if (OperationalStatusList != null && OperationalStatusList.Count != 0)
                     inter = inter.Where(x => OperationalStatusList.Contains(x.OperationalStatus));
             }
+            inter = inter.Where(x => x.GetPhysicalAddress().ToString() != "000000000000" && x.GetPhysicalAddress().ToString() != "00000000000000E0"); //Theese are invalidated MAC
             return inter;
         }
         private Func<string, string> ResultReplacement()
@@ -77,7 +78,7 @@ namespace DimaDevi.Components
             //TODO: Detect VPN
             if (PreventVPN)
             {
-                var wm = new WMIComp("NetAdapterWithoutVPN", "Win32_NetworkAdapter", "MACAddress, PNPDeviceID", "PNPDeviceID", "PNPDeviceID LIKE \"PCI%\"");
+                var wm = new WMIComp("NetAdapterWithoutVPN", "Win32_NetworkAdapter", "MACAddress, PNPDeviceID", "PNPDeviceID", "PNPDeviceID LIKE \"PCI%\" AND NetEnabled='true'"); //VPN PNPDeviceID usually start with "Root" or "SWD"
                 var vals = wm.GetValues();
                 if (vals.All(x => x.ContainsKey("MACAddress")))
                 {

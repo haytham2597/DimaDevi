@@ -30,8 +30,9 @@ namespace DimaDevi
         {
             set => DeviGeneralConfig.GetInstance().RemoteWmi = value;
         }
-        
-        
+
+        public Func<string, string> FuncManipulateResult = null;
+
         /// <summary>
         /// Clear components after call ToString
         /// </summary>
@@ -275,7 +276,10 @@ namespace DimaDevi
             if (ClearAfterProcess)
                 ClearComponents();
             str = str.TrimEnd(separator.ToCharArray());
-            return Formatter != null ? Formatter.GetDevi(str, separator) : str;
+            var strResult = Formatter != null ? Formatter.GetDevi(str, separator) : str;
+            if (FuncManipulateResult != null)
+                return FuncManipulateResult(strResult);
+            return strResult;
         }
 
         public string ToString(IDeviFormatter formatter, string separator =null)

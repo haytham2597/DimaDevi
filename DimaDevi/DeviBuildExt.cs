@@ -51,7 +51,6 @@ namespace DimaDevi
             devi.Components[devi.Components.Count - 1].Replacement = func;
             return devi;
         }
-
         public static DeviBuild AddBIOS(this DeviBuild devi, Enumerations.BIOS bios)
         {
             var enumType = bios.GetType();

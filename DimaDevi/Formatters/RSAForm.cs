@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 using DimaDevi.Libs;
 using DimaDevi.Libs.Extensions;
@@ -66,38 +67,24 @@ namespace DimaDevi.Formatters
 
         public string Encrypt(string content, string publicKey)
         {
-            const int rest = 11;
-            string CipherContent = string.Empty;
             using (var rsa = new RSACryptoServiceProvider())
             {
                 rsa.FromXmlString(publicKey);
-                int Formula = ((rsa.KeySize - 384) / 8) + 37;
-                int completeSize = Formula + rest; //TODO: Implement Cipher Decipher by block of completeSize instaed of '\n'
-                byte[] ReCompute = new byte[] { };
-                var bytesContent = DeviGeneralConfig.GetInstance().Encoding.GetBytes(content);
-
-                int cont = Convert.ToInt32(bytesContent.Length / Formula) + 1;
-                int IndexFormula = 0;
-                Array.Resize(ref ReCompute, Formula - 1);
-                for (int i = 0; i < cont; i++)
+                int ChunkSize = rsa.GetCompleteSize();
+                int Formula = ChunkSize - 11;
+                int FormulaBlock = Formula - 1;
+                var BytesContent = DeviGeneralConfig.GetInstance().Encoding.GetBytes(content);
+                int Cont = Convert.ToInt32(BytesContent.Length / Formula) + 1;
+                byte[] Encrypted = new byte[ChunkSize * Cont];
+                for (int i = 0; i < Cont; i++)
                 {
-                    if (bytesContent.Length < Formula)
-                    {
-                        var bytesContentCip = rsa.Encrypt(bytesContent, usefOAEP);
-                        CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(bytesContentCip);
-                        break;
-                    }
-
-                    Array.Copy(bytesContent, (IndexFormula == 0) ? 0 : IndexFormula, ReCompute, 0, (IndexFormula == 0) ? Formula - 1 : (i == cont - 1) ? bytesContent.Length - IndexFormula : ReCompute.Length);
-                    if (i == cont - 1)
-                        Array.Resize(ref ReCompute, Array.FindLastIndex(ReCompute, item => item > 0) + 2);
-                    var byteRecompute = rsa.Encrypt(ReCompute, usefOAEP);
-                    CipherContent += ((i == 0) ? null : "\n") + Convert.ToBase64String(byteRecompute);
-                    IndexFormula += Formula - 1;
-                    Array.Clear(ReCompute, 0, ReCompute.Length);
+                    byte[] Compute = new byte[FormulaBlock];
+                    Buffer.BlockCopy(BytesContent, i * FormulaBlock, Compute, 0, (i == Cont - 1) ? BytesContent.Length - (i * FormulaBlock) : Compute.Length);
+                    var encry = rsa.Encrypt(Compute, false);
+                    Buffer.BlockCopy(encry, 0, Encrypted, ChunkSize * i, encry.Length);
                 }
+                return Convert.ToBase64String(Encrypted);
             }
-            return CipherContent;
         }
 
         public string Encrypt(byte[] content)
@@ -110,12 +97,15 @@ namespace DimaDevi.Formatters
             string result = string.Empty;
             using (var rsa = new RSACryptoServiceProvider())
             {
-                rsa.FromXmlString(PrivateKey);
-                string[] ler = content.Split('\n');
-                foreach (var dd in ler)
+                rsa.FromXmlString(this.PrivateKey);
+                int ChunkSize = rsa.GetCompleteSize();
+                byte[] cipherContent = Convert.FromBase64String(content);
+                int Cont = cipherContent.Length / ChunkSize;
+                for (int i = 0; i < Cont; i++)
                 {
-                    byte[] bytesCypherText = Convert.FromBase64String(dd);
-                    result += DeviGeneralConfig.GetInstance().Encoding.GetString(rsa.Decrypt(bytesCypherText, false));
+                    byte[] buf = new byte[ChunkSize];
+                    Buffer.BlockCopy(cipherContent, i * ChunkSize, buf, 0, ChunkSize);
+                    result += DeviGeneralConfig.GetInstance().Encoding.GetString(rsa.Decrypt(buf, false));
                 }
             }
             return result;
