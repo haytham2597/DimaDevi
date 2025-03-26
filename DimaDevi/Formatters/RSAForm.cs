@@ -126,20 +126,16 @@ namespace DimaDevi.Formatters
             using (var RSA_Csp = new RSACryptoServiceProvider())
             {
                 RSA_Csp.FromXmlString(PrivateKey);
-                return RSA_Csp.SignData(DeviGeneralConfig.GetInstance().Encoding.GetBytes(content), CryptoConfig.MapNameToOID("SHA512"));
+                return RSA_Csp.SignData(Convert.FromBase64String(content), CryptoConfig.MapNameToOID("SHA512"));
             }
         }
 
-        public bool VerifyData(string original, string signed)
+        public bool VerifyData(string original, byte[] signed)
         {
             using (var rsa = new RSACryptoServiceProvider())
             {
-                rsa.FromXmlString(PrivateKey);
-                using (SHA512Managed sha512 = new SHA512Managed())
-                {
-                    //byte[] hashed = sha512.ComputeHash(Encoding.Unicode.GetBytes(signed));
-                    return rsa.VerifyData(DeviGeneralConfig.GetInstance().Encoding.GetBytes(original), CryptoConfig.MapNameToOID("SHA512"), DeviGeneralConfig.GetInstance().Encoding.GetBytes(signed));
-                }
+                rsa.FromXmlString(PublicKey);
+                return rsa.VerifyData(Convert.FromBase64String(original), CryptoConfig.MapNameToOID("SHA512"), signed);
             }
         }
 

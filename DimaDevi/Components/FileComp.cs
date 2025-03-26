@@ -40,14 +40,16 @@ namespace DimaDevi.Components
                 return null;
             FileInfo file = new FileInfo(FilePath);
             List<byte[]> bytes = new List<byte[]>();
+            var dgc = DeviGeneralConfig.GetInstance();
+            byte[] GetB(string s) => dgc.Encoding.GetBytes(s);
             if (FileInfomation.HasFlag(Enumerations.FileInformation.Attributes))
-                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.Attributes.ToString()));
+                bytes.Add(GetB(file.Attributes.ToString()));
             if(FileInfomation.HasFlag(Enumerations.FileInformation.Name))
-                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.Name));
+                bytes.Add(GetB(file.Name));
             if (FileInfomation.HasFlag(Enumerations.FileInformation.CreationDate))
-                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.CreationTime.ToString("s")));
+                bytes.Add(GetB(file.CreationTime.ToString("s")));
             if (FileInfomation.HasFlag(Enumerations.FileInformation.ModifiedDate))
-                bytes.Add(DeviGeneralConfig.GetInstance().Encoding.GetBytes(file.LastWriteTime.ToString("s")));
+                bytes.Add(GetB(file.LastWriteTime.ToString("s")));
 
             if (FileInfomation.HasFlag(Enumerations.FileInformation.Content))
             {
@@ -60,9 +62,7 @@ namespace DimaDevi.Components
             }
 
             string result = Convert.ToBase64String(hash.ComputeHash(bytes.SelectMany(x => x).ToArray()));
-            if (Replacement != null)
-                return Replacement(result);
-            return result;
+            return Replacement != null ? Replacement(result) : result;
         }
 
         public void Dispose()

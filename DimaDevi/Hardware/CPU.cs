@@ -2,6 +2,7 @@
 {
     public sealed class CPUID
     {
+        //https://github.com/steinwurf/cpuid
         public bool SSE3;
         public bool PCLMULQDQ;
         public bool MONITOR;

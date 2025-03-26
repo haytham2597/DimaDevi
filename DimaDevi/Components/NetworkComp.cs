@@ -19,10 +19,7 @@ namespace DimaDevi.Components
         private IList<OperationalStatus> OperationalStatusList { set; get; }
         private readonly string IP;
         public bool PreventVPN = true;
-        public NetworkComp()
-        {
-
-        }
+        public NetworkComp() { }
 
         /// <summary>
         /// Get MAC from IP
@@ -32,10 +29,9 @@ namespace DimaDevi.Components
         public NetworkComp(string ip, Enumerations.MacAddress macAddress)
         {
             IP = ip;
+            MacAddresses = macAddress;
         }
-
         public NetworkComp(IPAddress ip, Enumerations.MacAddress macAddress) : this(ip.ToString(), macAddress) { }
-
         public NetworkComp(Enumerations.MacAddress macAddress)
         {
             MacAddresses = macAddress;

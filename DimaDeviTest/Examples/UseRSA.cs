@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using DimaDevi;
 using DimaDevi.Formatters;
 using DimaDevi.Libs;
@@ -15,8 +16,12 @@ namespace DimaDeviTest.Examples
             {
                 var encrypted = devi.ToString("#");
                 Console.WriteLine($"Encrypted: {encrypted}");
+                
                 var decrypted = rsa.Decrypt(encrypted);
+
                 Console.WriteLine($"Decrypted: {decrypted}");
+                var signed = rsa.GetSign(encrypted);
+                Console.WriteLine($"Is Verified: {rsa.VerifyData(encrypted, signed)}");
             }
         }
     }

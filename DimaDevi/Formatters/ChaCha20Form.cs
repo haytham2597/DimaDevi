@@ -18,10 +18,7 @@ namespace DimaDevi.Formatters
         private readonly bool PasswordGenerator;
         
         //TODO: Save Nonce, Key and Counter... Because in decryption need them.
-        private ChaCha20Form()
-        {
-
-        }
+        private ChaCha20Form() { }
         public ChaCha20Form(JObject import)
         {
             var fields = GetType().GetFields();
