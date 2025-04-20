@@ -235,5 +235,10 @@ namespace DimaDevi
             devi.AddComponents(new ProcessComp(proccess, procInfo) { BaseHardware = proccess.ProcessName });
             return devi;
         }
+
+        public static DeviBuild AddCache(this DeviBuild devi, Enumerations.Cache cache)
+        {
+            return devi.AddByFlags(cache.GetFlags());
+        }
     }
 }

@@ -10,8 +10,9 @@ namespace DimaDevi.Libs
             { nameof(Enumerations.CPU), "Win32_Processor WHERE DeviceID='CPU0'" },
             //{ nameof(Enumerations.CPU), "Win32_Processor" },
             { nameof(Enumerations.Motherboard), "Win32_BaseBoard" },
-            { nameof(Enumerations.Disk), "Win32_DiskDrive"},
-            { nameof(Enumerations.GPU), "Win32_VideoController"}
+            { nameof(Enumerations.Disk), "Win32_DiskDrive" },
+            { nameof(Enumerations.GPU), "Win32_VideoController" },
+            { nameof(Enumerations.Cache), "Win32_CacheMemory" }
         };
     }
 }

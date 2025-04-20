@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using DimaDevi;
 using DimaDevi.Components;
@@ -10,18 +11,47 @@ using DimaDevi.Formatters;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
 using Newtonsoft.Json;
-using static DimaDevi.Libs.Enumerations;
 
 namespace DimaDeviTest
 {
     class Program
     {
+        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr cpuid_vec(ref int len);
+
+        private static int[] GetArrayInt(IntPtr ptr, int len, int offset = 0)
+        {
+            int[] res = new int[len];
+            Marshal.Copy(ptr, res, offset, len);
+            return res;
+        }
         static void Main(string[] args)
         {
+            int len = 0;
+            IntPtr v = cpuid_vec(ref len);
+            int[] vv = GetArrayInt(v, len);
+            var cpuid = new CPUID(vv);
+
+            Console.WriteLine(JsonConvert.SerializeObject(cpuid, Formatting.Indented));
             /*new Examples.SingletonComponent();
             new Examples.ValidationHardware();*/
             //new Examples.CompressAndDescompress();
-            new Examples.UseRSA();
+            //new Examples.UseRSA();
+            var devi =new DeviBuild();
+            devi.AddCache(Enumerations.Cache.All);
+            foreach (var g in devi.ToGroup())
+            {
+                Console.WriteLine($"Group: {g.Key}");
+                using (var enumer = g.GetEnumerator())
+                {
+                    while (enumer.MoveNext())
+                    {
+                        if (enumer.Current == null)
+                            continue;
+                        Console.WriteLine($"- Name: {enumer.Current.Name}, Value: {enumer.Current.GetValue()}");
+                    }
+                }
+            }
             /*var nc = new NetworkComp(Enumerations.MacAddress.Physical | Enumerations.MacAddress.Up) { PreventVPN = true };
             var valalal = nc.GetValue();
             var wm = new WMIComp("NetAdapterWithoutVPN", "Win32_NetworkAdapter", "MACAddress, PNPDeviceID", "PNPDeviceID", "PNPDeviceID LIKE \"PCI%\"");

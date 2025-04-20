@@ -1,0 +1,17 @@
+// Copyright (c) 2013 Steinwurf ApS
+// All Rights Reserved
+//
+// Distributed under the "BSD License". See the accompanying LICENSE.rst file.
+
+#include "version.h"
+
+namespace cpuid
+{
+    inline namespace STEINWURF_CPUID_VERSION
+    {
+        std::string version()
+        {
+            return "9.0.1";
+        }
+    }
+}

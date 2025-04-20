@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 
 namespace DimaDevi.Libs
 {
@@ -67,6 +68,20 @@ namespace DimaDevi.Libs
             Description = NumberOfCores << 1,
             PartNumber = Description << 1,
             ThreadCount = PartNumber << 1,
+            All = ~0
+        }
+
+        [Flags]
+        public enum Cache
+        {
+            DeviceID=1,
+            BlockSize= DeviceID<<1,
+            CacheType = BlockSize<<1,
+            InstalledSize=CacheType<<1,
+            MaxCacheSize=InstalledSize<<1,
+            NumberOfBlocks=MaxCacheSize<<1,
+            Purpose=NumberOfBlocks <<1,
+            WritePolicy = Purpose << 1,
             All = ~0
         }
 
@@ -180,6 +195,25 @@ namespace DimaDevi.Libs
             Section2 = Section1 << 1,
             Section3 = Section2 << 1,
             Section4 = Section3 << 1,
+        }
+
+        public enum WritePolicy
+        {
+            Other,
+            Unkown,
+            NonSimultaneousWriting,
+            WriteThrough,
+            VariesWithAddress,
+            IOBased
+        }
+
+        public enum CacheType
+        {
+            Other,
+            Unkown,
+            Instruction,
+            Data,
+            Unified
         }
     }
 }
