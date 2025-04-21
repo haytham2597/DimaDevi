@@ -24,12 +24,12 @@ If you dont defined this the WMI is Local Computer by default
 | CPU       | Assembly   | AES        |
 | RAM       | File       | RSA        |
 | Disk | Devi | ChaCha20 |
-| Motherboard | Network | JSON |
+| Motherboard | Network | Json |
 | MacAddress | WMI | Hash |
 | BIOS | Registry | Support ECDH (Eliptic Curve Diffie-Helman) |
 | GPU | Hash Comp | XML |
-| | UUID | Base (32,64, hex) |
-| | Process (yeah you read well) | |
+| Cache CPU | UUID | Base (32,64, hex) |
+| CPU ID (Coming Soon) | Process (yeah you read well) | |
 
 ### Create Hardware 'Outside'
 
