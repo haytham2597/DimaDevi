@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DimaDevi.Hardware
+﻿namespace DimaDevi.Hardware
 {
     public sealed class CPUID
     {
