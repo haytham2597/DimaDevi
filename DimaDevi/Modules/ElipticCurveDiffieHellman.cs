@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DimaDevi.Modules
 {
     public sealed class ElipticCurveDiffieHellman : IDisposable
     {
-        private readonly ECDiffieHellmanCng ecdh;
-        private readonly CngKey CngKey;
+        private ECDiffieHellmanCng ecdh;
+        private CngKey CngKey;
         private byte[] privateKey;
         public ElipticCurveDiffieHellman(int key_size = 256)
         {
             CngKey = InitCngKey(key_size);
-            ecdh = new ECDiffieHellmanCng
+            ecdh = new ECDiffieHellmanCng(CngKey)
             {
                 KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash,
                 HashAlgorithm = CngAlgorithm.Sha256,
@@ -32,7 +34,7 @@ namespace DimaDevi.Modules
         public ElipticCurveDiffieHellman(ECDiffieHellmanPublicKey publicKey, int key_size = 256)
         {
             CngKey = InitCngKey(key_size);
-            ecdh = new ECDiffieHellmanCng
+            ecdh = new ECDiffieHellmanCng(CngKey)
             {
                 KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash,
                 HashAlgorithm = CngAlgorithm.Sha256,
@@ -97,7 +99,31 @@ namespace DimaDevi.Modules
 
         public void SetDerivate(ECDiffieHellmanPublicKey ecdh_publickey)
         {
-            privateKey = ecdh.DeriveKeyMaterial(CngKey.Import(ecdh_publickey.ToByteArray(), CngKeyBlobFormat.EccPublicBlob));
+            byte[] data = ecdh_publickey.ToByteArray();
+            if (data == null)
+                throw new Exception("ByteArray is null");
+            privateKey = ecdh.DeriveKeyMaterial(CngKey.Import(data, CngKeyBlobFormat.EccPublicBlob));
+        }
+
+        public string Export()
+        {
+            //https://davidtavarez.github.io/2019/implementing-elliptic-curve-diffie-hellman-c-sharp/
+            //https://stackoverflow.com/questions/48522005/c-sharp-importing-a-public-key-blob-into-ecdiffiehellmancng
+            //https://stackoverflow.com/questions/20505325/how-to-export-private-key-for-ecdiffiehellmancng
+            JObject job = new JObject();
+            job["ecdh"] = JToken.FromObject(ecdh.ExportParameters(true));
+            //job["cng"] = CngKey.Export(CngKeyBlobFormat.EccFullPrivateBlob);
+            return JsonConvert.SerializeObject(job, Formatting.Indented);
+        }
+
+        public void Import(string data)
+        {
+            var job = JObject.Parse(data);
+            ecdh.ImportParameters(job["ecdh"].ToObject<ECParameters>());
+            //ecdh = new ECDiffieHellmanCng(CngKey.Import(job["cng"].ToObject<byte[]>(), CngKeyBlobFormat.EccFullPrivateBlob));
+            //job["cng"] = CngKey.Export(CngKeyBlobFormat.GenericPrivateBlob);
+            //CngKey = CngKey.Import(job["cng"].ToObject<byte[]>(), CngKeyBlobFormat.GenericPrivateBlob);
+            //this.CngKey = CngKey.Import(keyBlob, CngKeyBlobFormat.EccFullPrivateBlob);
         }
 
         public void Dispose()
