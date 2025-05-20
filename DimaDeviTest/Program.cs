@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using DimaDevi;
-using DimaDevi.Components;
-using DimaDevi.Formatters;
 using DimaDevi.Hardware;
 using DimaDevi.Libs;
 using Newtonsoft.Json;
@@ -16,7 +8,7 @@ namespace DimaDeviTest
 {
     class Program
     {
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        /*[DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr cpuid_vec(ref int len);
 
         private static int[] GetArrayInt(IntPtr ptr, int len, int offset = 0)
@@ -24,13 +16,14 @@ namespace DimaDeviTest
             int[] res = new int[len];
             Marshal.Copy(ptr, res, offset, len);
             return res;
-        }
+        }*/
         static void Main(string[] args)
         {
-            int len = 0;
+            /*int len = 0;
             IntPtr v = cpuid_vec(ref len);
             int[] vv = GetArrayInt(v, len);
-            var cpuid = new CPUID(vv);
+            var cpuid = new CPUID(vv);*/
+            var cpuid = new CPUID();
 
             Console.WriteLine(JsonConvert.SerializeObject(cpuid, Formatting.Indented));
             /*new Examples.SingletonComponent();

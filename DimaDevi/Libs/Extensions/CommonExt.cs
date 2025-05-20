@@ -17,6 +17,10 @@ namespace DimaDevi.Libs.Extensions
 {
     public static class CommonExt
     {
+        public static Stream GetResource(string name)
+        {
+            return Assembly.GetExecutingAssembly().GetManifestResourceStream($"DimaDevi.Resources.{name}");
+        }
         public static Random rnd = new Random();
         public static ElipticCurveDiffieHellman AddPublic(this ElipticCurveDiffieHellman ecdh, ECDiffieHellmanPublicKey ecdh_publickey)
         {

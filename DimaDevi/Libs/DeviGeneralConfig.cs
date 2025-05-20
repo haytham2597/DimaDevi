@@ -46,6 +46,7 @@ namespace DimaDevi.Libs
         {
             IsObfuscated = nameof(Base32) == "Base32";
             DeviDefaultSet.GetInstance().AddThis(this);
+            
         }
 
         /// <summary>

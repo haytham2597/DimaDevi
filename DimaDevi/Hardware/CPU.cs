@@ -1,12 +1,55 @@
-﻿namespace DimaDevi.Hardware
+﻿using System;
+using MemoryModule;
+using DimaDevi.Libs.Extensions;
+using DimaDevi.Modules.Natives;
+
+namespace DimaDevi.Hardware
 {
     public sealed class CPUID
     {
+        public CPUID()
+        {
+#if !DEBUG
+            //TODO: Implement resolver memorymodule net
+            /*AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                //Resolver the memorymodule.dll
+            };*/
+            //This only work in release NOT DEBUG
+            string suffix = Environment.Is64BitProcess ? "64" : "";
+            string ns = "DimaDevi.Resources";
+            var st = CommonExt.GetResource($"MemoryModulePP{suffix}.dll");
+            var stcpuid = CommonExt.GetResource($"cpuid{suffix}.dll");
+            if (st == null || stcpuid == null)
+                throw new Exception("Invalid resource");
+            
+            var mm = NativeAssembly.Load(st);
+            var LdrLoadDllMemoryExW = mm.GetDelegate<CPUIDNative.LdrLoadDllMemoryExWDelegate>("LdrLoadDllMemoryExW");
+            var LdrUnloadDllMemory = mm.GetDelegate<CPUIDNative.LdrUnloadDllMemoryDelegate>("LdrUnloadDllMemory");
+            byte[] buff = new byte[stcpuid.Length];
+            stcpuid.Read(buff, 0, buff.Length);
+            LdrLoadDllMemoryExW(
+                out IntPtr handle,
+                out _,
+                CPUIDNative.LOAD_FLAGS_PASS_IMAGE_CHECK, // MemoryModulePP has a weird check that will somehow fail for our binaries.
+                buff,
+                UIntPtr.Zero, // This misleading parameter must always be 0.
+                "cpuid",
+                null
+            );
+
+            int len = 0;
+            IntPtr ptr = CPUIDNative.cpuid_vec(ref len);
+            int[] vec = CPUIDNative.GetArrayInt(ptr, len);
+            var f = this.GetType().GetFields();
+            for (int i = 0; i < f.Length; i++)
+                f[i].SetValue(this, vec[i]);
+            LdrUnloadDllMemory(handle);
+#endif
+        }
         public CPUID(int[] vec)
         {
             var f = this.GetType().GetFields();
-            /*if(vec.Length != f.Length)
-                throw new Exception("Not match vec");*/
             for (int i = 0; i < f.Length; i++)
                 f[i].SetValue(this, vec[i]);
         }
@@ -108,6 +151,5 @@
         public string Description { set; get; }
         public string PartNumber { set; get; }
         public int ThreadCount { set; get; }
-
     }
 }

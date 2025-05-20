@@ -6,7 +6,6 @@ using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-//using System.Management;
 using System.Reflection;
 using System.Windows.Forms;
 using DimaDevi.Components;
