@@ -29,7 +29,7 @@ If you dont defined this the WMI is Local Computer by default
 | BIOS | Registry | Support ECDH (Eliptic Curve Diffie-Helman) |
 | GPU | Hash Comp | XML |
 | Cache CPU | UUID | Base (32,64, hex) |
-| CPU ID (Coming Soon) | Process (yeah you read well) | |
+| CPU ID | Process (yeah you read well) | |
 
 ### Create Hardware 'Outside'
 
