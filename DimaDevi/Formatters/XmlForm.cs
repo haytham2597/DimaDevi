@@ -19,7 +19,7 @@ namespace DimaDevi.Formatters
         {
             if (string.IsNullOrEmpty(nameElement))
                 return;
-            this.NameElement = nameElement;
+            NameElement = nameElement;
         }
         /// <summary>
         /// Returns the device identifier string created by combining the specified <see cref="IDeviComponent"/> instances.

@@ -50,7 +50,7 @@ namespace DimaDevi.Components
         }
         public bool Equals(IDeviComponent other)
         {
-            return this.EqualsObject(other, new List<string>(){nameof(this.Result)});
+            return this.EqualsObject(other, new List<string>(){nameof(Result)});
         }
     }
 }

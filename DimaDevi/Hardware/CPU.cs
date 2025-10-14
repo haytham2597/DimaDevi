@@ -49,7 +49,7 @@ namespace DimaDevi.Hardware
         }
         public CPUID(int[] vec)
         {
-            var f = this.GetType().GetFields();
+            var f = GetType().GetFields();
             for (int i = 0; i < f.Length; i++)
                 f[i].SetValue(this, vec[i]);
         }

@@ -96,7 +96,7 @@ namespace DimaDevi.Formatters
             string result = string.Empty;
             using (var rsa = new RSACryptoServiceProvider())
             {
-                rsa.FromXmlString(this.PrivateKey);
+                rsa.FromXmlString(PrivateKey);
                 int ChunkSize = rsa.GetCompleteSize();
                 byte[] cipherContent = Convert.FromBase64String(content);
                 int Cont = cipherContent.Length / ChunkSize;

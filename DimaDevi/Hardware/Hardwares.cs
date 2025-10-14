@@ -29,7 +29,7 @@ namespace DimaDevi.Hardware
 
         public HardwareComponents AddComponent(Type enumType, string field)
         {
-            this.AddComp(enumType, field);
+            AddComp(enumType, field);
             return this;
         }
 

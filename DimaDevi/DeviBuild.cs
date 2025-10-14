@@ -47,7 +47,7 @@ namespace DimaDevi
 
         public DeviBuild()
         {
-            GetComponent = () => DeviGeneralConfig.GetInstance().AllowSingletonComponents ? DeviInstanceInvocation.GetInstance().Components : this.Components;
+            GetComponent = () => DeviGeneralConfig.GetInstance().AllowSingletonComponents ? DeviInstanceInvocation.GetInstance().Components : Components;
             Components = new ObservableCollection<IDeviComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
             
@@ -64,7 +64,7 @@ namespace DimaDevi
             }
         }
 
-        private void Components_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Components_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action != NotifyCollectionChangedAction.Add)
                 return;
@@ -411,8 +411,8 @@ namespace DimaDevi
         public void Move(int oldIndex, int newIndex)
         {
             var cop =Components[oldIndex];
-            this.Components.Remove(cop);
-            this.Components.Insert(newIndex, cop);
+            Components.Remove(cop);
+            Components.Insert(newIndex, cop);
         }
         public void Dispose()
         {

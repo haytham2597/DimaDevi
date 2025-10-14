@@ -51,7 +51,7 @@ namespace DimaDevi
             devi.Components[devi.Components.Count - 1].Replacement = func;
             return devi;
         }
-        public static DeviBuild AddBIOS(this DeviBuild devi, Enumerations.BIOS bios)
+        public static DeviBuild AddBIOS(this DeviBuild devi, BIOS bios)
         {
             var enumType = bios.GetType();
             var gca = enumType.GetCustomAttributes(typeof(Attrs.WMINameAttribute), true);
@@ -97,36 +97,36 @@ namespace DimaDevi
             return devi.AddComponents(deviComp);
         }
 
-        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All, bool preventVPN = true)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, MacAddress macAddress = MacAddress.All, bool preventVPN = true)
         {
             //TODO: Make automatic argument instance with reflection
             return devi.AddComponents(new NetworkComp(macAddress) { PreventVPN = preventVPN });
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, string ip, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All, bool preventVPN = true)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, string ip, MacAddress macAddress = MacAddress.All, bool preventVPN = true)
         {
             return devi.AddComponents(new NetworkComp(ip, macAddress) { PreventVPN = preventVPN });
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, IPAddress ip, Enumerations.MacAddress macAddress = Enumerations.MacAddress.All, bool preventVPN = true)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, IPAddress ip, MacAddress macAddress = MacAddress.All, bool preventVPN = true)
         {
             return devi.AddMacAddress(ip.ToString(), macAddress, preventVPN);
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces, bool preventVPN = true)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces, bool preventVPN = true)
         {
             return devi.AddComponents(new NetworkComp(macAddress, networkInterfaces) { PreventVPN = preventVPN });
         }
-        public static DeviBuild AddMacAddress(this DeviBuild devi, Enumerations.MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces, IList<OperationalStatus> operationalStatus, bool preventVPN = true)
+        public static DeviBuild AddMacAddress(this DeviBuild devi, MacAddress macAddress, IList<NetworkInterfaceType> networkInterfaces, IList<OperationalStatus> operationalStatus, bool preventVPN = true)
         {
             return devi.AddComponents(new NetworkComp(macAddress, networkInterfaces, operationalStatus) { PreventVPN = preventVPN });
         }
-        public static DeviBuild AddCPU(this DeviBuild devi, Enumerations.CPU cpus = Enumerations.CPU.ProcessorId)
+        public static DeviBuild AddCPU(this DeviBuild devi, CPU cpus = CPU.ProcessorId)
         {
             return devi.AddByFlags(cpus.GetFlags());
         }
-        public static DeviBuild AddRam(this DeviBuild devi, Enumerations.RAM rams = Enumerations.RAM.PartNumber)
+        public static DeviBuild AddRam(this DeviBuild devi, RAM rams = RAM.PartNumber)
         {
             return devi.AddByFlags(rams.GetFlags());
         }
-        public static DeviBuild AddMotherboard(this DeviBuild devi, Enumerations.Motherboard mothers = Enumerations.Motherboard.Product)
+        public static DeviBuild AddMotherboard(this DeviBuild devi, Motherboard mothers = Motherboard.Product)
         {
             return devi.AddByFlags(mothers.GetFlags());
         }
@@ -134,7 +134,7 @@ namespace DimaDevi
         {
             return devi.AddComponents(new FileComp(path, hash));
         }
-        public static DeviBuild AddFile(this DeviBuild devi, string path, Enumerations.FileInformation fileInformation, HashAlgorithm hash = null)
+        public static DeviBuild AddFile(this DeviBuild devi, string path, FileInformation fileInformation, HashAlgorithm hash = null)
         {
             return devi.AddComponents(new FileComp(path, fileInformation, hash));
         }
@@ -144,7 +144,7 @@ namespace DimaDevi
         /// <param name="devi"></param>
         /// <param name="assemblyEn"></param>
         /// <returns></returns>
-        public static DeviBuild AddSelf(this DeviBuild devi, Enumerations.AssemblyEn assemblyEn = Enumerations.AssemblyEn.PublicKeyToken)
+        public static DeviBuild AddSelf(this DeviBuild devi, AssemblyEn assemblyEn = AssemblyEn.PublicKeyToken)
         {
             return devi.AddComponents(new AssemblyComp(Assembly.GetEntryAssembly(), assemblyEn));
         }
@@ -155,18 +155,18 @@ namespace DimaDevi
         /// <param name="assembly"></param>
         /// <param name="assemblyEn"></param>
         /// <returns></returns>
-        public static DeviBuild AddAssembly(this DeviBuild devi, Assembly assembly, Enumerations.AssemblyEn assemblyEn = Enumerations.AssemblyEn.PublicKeyToken)
+        public static DeviBuild AddAssembly(this DeviBuild devi, Assembly assembly, AssemblyEn assemblyEn = AssemblyEn.PublicKeyToken)
         {
             return devi.AddComponents(new AssemblyComp(assembly, assemblyEn));
         }
 
-        public static DeviBuild AddGPU(this DeviBuild devi, Enumerations.GPU gpu = Enumerations.GPU.Name)
+        public static DeviBuild AddGPU(this DeviBuild devi, GPU gpu = GPU.Name)
         {
             return devi.AddByFlags(gpu.GetFlags());
         }
-        public static DeviBuild AddDisk(this DeviBuild devi, Enumerations.Disk disk = Enumerations.Disk.FirmwareRevision)
+        public static DeviBuild AddDisk(this DeviBuild devi, Disk disk = Disk.FirmwareRevision)
         {
-            if (disk.HasFlag(Enumerations.Disk.Main))
+            if (disk.HasFlag(Disk.Main))
             {
                 var flags=disk.GetFlags();
                 using (var enumer = flags.GetEnumerator())
@@ -175,7 +175,7 @@ namespace DimaDevi
                     {
                         if (enumer.Current == null)
                             continue;
-                        if ((Enumerations.Disk)enumer.Current == Enumerations.Disk.Main)
+                        if ((Disk)enumer.Current == Disk.Main)
                             continue;
                         var te = enumer.Current?.GetType().Name;
                         if (te == null)
@@ -236,7 +236,7 @@ namespace DimaDevi
             return devi;
         }
 
-        public static DeviBuild AddCache(this DeviBuild devi, Enumerations.Cache cache)
+        public static DeviBuild AddCache(this DeviBuild devi, Cache cache)
         {
             return devi.AddByFlags(cache.GetFlags());
         }

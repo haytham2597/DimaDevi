@@ -18,7 +18,7 @@ namespace DimaDevi.Libs
             public string Name;
             public WMINameAttribute(string name)
             {
-                this.Name = name;
+                Name = name;
             }
         }
     }

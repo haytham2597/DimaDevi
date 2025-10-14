@@ -36,7 +36,7 @@ namespace DimaDevi.Formatters
         private DeriveBytes deriveBytes = null;
         private RijndaelManaged InitManaged(DeriveBytes key, CipherMode cipher, PaddingMode padding)
         {
-            this.deriveBytes = key;
+            deriveBytes = key;
             RijndaelManaged AES = new RijndaelManaged { KeySize = 256, BlockSize = 128 };
             AES.Key = key.GetBytes(AES.KeySize / 8);
             AES.IV = key.GetBytes(AES.BlockSize / 8);

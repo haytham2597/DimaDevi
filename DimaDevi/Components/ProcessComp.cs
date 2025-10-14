@@ -15,7 +15,7 @@ namespace DimaDevi.Components
         public string Name { get; }
         public ProcessComp(Process proc)
         {
-            this.Name = proc.MainWindowTitle;
+            Name = proc.MainWindowTitle;
             if (Environment.Is64BitProcess)
             {
                 var m = proc.MainModule;
@@ -63,7 +63,7 @@ namespace DimaDevi.Components
         }
         public bool Equals(IDeviComponent other)
         {
-            return this.EqualsObject(other, new List<string>(){nameof(this.Result)});
+            return this.EqualsObject(other, new List<string>(){nameof(Result)});
         }
     }
 }
