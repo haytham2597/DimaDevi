@@ -50,7 +50,6 @@ namespace DimaDevi
             GetComponent = () => DeviGeneralConfig.GetInstance().AllowSingletonComponents ? DeviInstanceInvocation.GetInstance().Components : Components;
             Components = new ObservableCollection<IDeviComponent>();
             Components.CollectionChanged += Components_CollectionChanged;
-            
             //Load user-defined components
             var hard = HardwareComponents.GetInstance().GetHardware();
             for (int i = 0; i < hard.Count; i++)
