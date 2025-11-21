@@ -46,11 +46,33 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugJson45|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugJson45\</OutputPath>
+    <DefineConstants>DEBUGJS45;DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseJson45|AnyCPU'">
+    <OutputPath>bin\ReleaseJson45\</OutputPath>
+    <DefineConstants>RELEASEJS45;TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MemoryModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MemoryModule.0.2.0-dev.52\lib\netstandard2.0\MemoryModule.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json" Condition="'$(Configuration)'=='DebugJson45' Or '$(Configuration)'=='ReleaseJson45'">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Frameworks for Net\NewtonSoftJson\v4.5.0.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" Condition="'$(Configuration)'=='Debug' Or '$(Configuration)'=='Release'">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Frameworks for Net\NewtonSoftJson\v130r1\Bin\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -98,6 +120,7 @@
     <Compile Include="Libs\DeviGeneralConfig.cs" />
     <Compile Include="Libs\Extensions\ArrayExt.cs" />
     <Compile Include="Libs\Extensions\CommonExt.cs" />
+    <Compile Include="Libs\Extensions\JsonExt.cs" />
     <Compile Include="Libs\Extensions\ReflectionExt.cs" />
     <Compile Include="Libs\Pendings.cs" />
     <Compile Include="Libs\Property.cs" />

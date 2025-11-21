@@ -155,7 +155,7 @@ namespace DimaDevi.Libs.Extensions
             if (props.Length != jo.Count)
                 return false;
             for (int i = 0; i < props.Length; i++)
-                if(!jo.ContainsKey(props[i].Name))
+                if(!jo.JObjectContains(props[i].Name))
                     return false;
             return true;
         }
@@ -167,7 +167,7 @@ namespace DimaDevi.Libs.Extensions
             if (fields.Length != jo.Count)
                 return false;
             for (int i = 0; i < fields.Length; i++)
-                if (!jo.ContainsKey(fields[i].Name))
+                if (!jo.JObjectContains(fields[i].Name))
                     return false;
             return true;
         }

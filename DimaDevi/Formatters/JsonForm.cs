@@ -41,14 +41,14 @@ namespace DimaDevi.Formatters
                 var splElem = spl[i].Split('=');
                 if (splElem.Length != 2)
                     continue;
-                if (jo.ContainsKey(splElem[0]))
+                if (jo.JObjectContains(splElem[0]))
                 {
                     int n = 0;
                     do
                     {
                         n++;
                         splElem[0] += n.ToString();
-                    } while (jo.ContainsKey(splElem[0]));
+                    } while (jo.JObjectContains(splElem[0]));
                 }
                 jo.Add(splElem[0], splElem[1]); //Cause exception if the name is same
             }
