@@ -1,9 +1,4 @@
-﻿using System;
-using DimaDevi.Libs.Extensions;
-using DimaDevi.Modules.Natives;
-using MemoryModule;
-
-namespace DimaDevi.Hardware
+﻿namespace DimaDevi.Hardware
 {
     public sealed class CPUID
     {
