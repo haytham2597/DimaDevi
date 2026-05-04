@@ -1,10 +1,13 @@
-﻿namespace DimaDevi.Hardware
+﻿#if !DEBUGJS45 && !RELEASEJS45
+using MemoryModule;
+#endif
+namespace DimaDevi.Hardware
 {
     public sealed class CPUID
     {
         public CPUID()
         {
-#if !DEBUG
+#if !DEBUGJS45 && !RELEASEJS45
             //TODO: Implement resolver memorymodule net
             /*AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {

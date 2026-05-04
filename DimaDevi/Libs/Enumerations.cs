@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Reflection;
 
 namespace DimaDevi.Libs
 {
+    [Obfuscation(Feature = "renaming", Exclude = true, ApplyToMembers = true)]
     public static class Enumerations
     {
         

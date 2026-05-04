@@ -1,8 +1,6 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-namespace DimaDevi.Modules.Natives
+﻿namespace DimaDevi.Modules.Natives
 {
+#if !(DEBUGJS45 || RELEASEJS45)
     public static class CPUIDNative
     {
         [DllImport("cpuid", CallingConvention = CallingConvention.Cdecl)]
@@ -29,4 +27,5 @@ namespace DimaDevi.Modules.Natives
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate bool LdrUnloadDllMemoryDelegate([In] IntPtr BaseAddress);
     }
+#endif
 }

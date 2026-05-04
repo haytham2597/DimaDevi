@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Reflection;
 
 namespace DimaDevi.Libs
 {
+    [Obfuscation(Feature = "renaming", Exclude = true, ApplyToMembers = true)]
     internal class Attrs
     {
         public class MethodNameAttribute : Attribute
