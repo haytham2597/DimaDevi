@@ -1,4 +1,8 @@
-﻿#if !DEBUGJS45 && !RELEASEJS45
+﻿
+using System;
+using DimaDevi.Libs.Extensions;
+using DimaDevi.Modules.Natives;
+#if !DEBUGJS45 && !RELEASEJS45
 using MemoryModule;
 #endif
 namespace DimaDevi.Hardware

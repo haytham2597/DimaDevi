@@ -1,4 +1,7 @@
-﻿namespace DimaDevi.Modules.Natives
+﻿using System;
+using System.Runtime.InteropServices;
+
+namespace DimaDevi.Modules.Natives
 {
 #if !(DEBUGJS45 || RELEASEJS45)
     public static class CPUIDNative
