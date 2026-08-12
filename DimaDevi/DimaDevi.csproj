@@ -37,15 +37,6 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>DimaDevi.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugLib|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugLib\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugJson45|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugJson45\</OutputPath>
@@ -138,7 +129,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Debug' Or '$(Configuration)'=='Release'">
-   <None Include="app.config" />
+    <None Include="app.config" />
     <None Include="DimaDevi.pfx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\MemoryModulePP.dll" />
